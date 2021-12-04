@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.Cognebus.ActionMode" parent="Widget.AppCompat.ActionMode">
+        <item name="titleTextStyle">?attr/textAppearanceHeadline6</item>
+        <item name="subtitleTextStyle">?attr/textAppearanceSubtitle1</item>
+        <item name="background">@color/grey_900</item>
+    </style>
+
+    <style name="Widget.Cognebus.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox" >
+        <item name="hintTextColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Widget.Cognebus.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu" >
+        <item name="hintTextColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Widget.Cognebus.TextInputLayout.FlashcardBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" >
+        <item name="hintEnabled">false</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <style name="Widget.Cognebus.FlashcardEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+</resources>

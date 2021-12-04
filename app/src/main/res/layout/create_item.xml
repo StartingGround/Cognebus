@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_normal"
+    android:layout_marginTop="@dimen/margin_normal"
+    android:layout_marginBottom="@dimen/margin_normal"
+    android:insetTop="@dimen/inset_nonexistent"
+    android:insetBottom="@dimen/inset_nonexistent"
+    android:backgroundTint="@color/green_300"
+    android:text="@string/directories_create_button">
+
+</com.google.android.material.button.MaterialButton>

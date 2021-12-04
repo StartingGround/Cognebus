@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="answerFragment"
+            type="com.startingground.cognebus.flashcard.AnswerFragment" />
+
+        <variable
+            name="sharedFlashcardViewModel"
+            type="com.startingground.cognebus.flashcard.FlashcardViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".flashcard.AnswerFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/top_app_bar_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/top_app_bar"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/flashcard_answer_top_app_bar"
+                app:navigationContentDescription="@string/flashcard_answer_navigation_icon_content_description"
+                app:navigationIcon="@drawable/ic_left_24"
+                app:title="@string/flashcard_answer_fragment_top_app_bar_title" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_app_bar_layout">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/answer_text_field"
+                style="@style/Widget.Cognebus.TextInputLayout.FlashcardBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="@{() -> answerFragment.onAnswerTextFieldClicked()}"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/Widget.Cognebus.FlashcardEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/flashcard_answer_fragment_answer_text_field_label"
+                    android:text="@{sharedFlashcardViewModel.flashcard.answerText}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

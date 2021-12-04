@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MathView">
+        <attr name="text" format="string"/>
+        <attr name="textZoom" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwitchCognebus">
+        <attr name="titleText" format="string"/>
+        <attr name="summaryText" format="string"/>
+    </declare-styleable>
+</resources>

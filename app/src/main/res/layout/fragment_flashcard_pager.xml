@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="flashcardPagerFragment"
+            type="com.startingground.cognebus.flashcard.FlashcardPagerFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".flashcard.FlashcardPagerFragment">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/flashcard_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/input_toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/input_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageButton
+                android:id="@+id/insert_image_from_camera_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/transparent"
+                android:contentDescription="@string/flashcard_pager_fragment_insert_image_from_camera_button_content_description"
+                android:onClick="@{() -> flashcardPagerFragment.onGetImageFromCameraButton()}"
+                android:src="@drawable/ic_take_picture_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/insert_image_from_gallery_button"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/insert_image_from_gallery_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/transparent"
+                android:contentDescription="@string/flashcard_pager_fragment_insert_image_from_gallery_button_content_description"
+                android:onClick="@{() -> flashcardPagerFragment.onGetImageFromGalleryButton()}"
+                android:src="@drawable/ic_insert_image_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/insert_image_from_camera_button" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

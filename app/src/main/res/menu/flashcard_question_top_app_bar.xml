@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/move_to_answer"
+        android:icon="@drawable/ic_right_24"
+        android:title="@string/flashcard_question_top_app_bar_move_to_answer_title"
+        android:contentDescription="@string/flashcard_question_top_app_bar_move_to_answer_content_description"
+        app:showAsAction="always" />
+
+</menu>

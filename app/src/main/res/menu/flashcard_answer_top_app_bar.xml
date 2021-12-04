@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/save_flashcard"
+        android:title="@string/flashcard_answer_top_app_bar_save_flashcard_title"
+        android:contentDescription="@string/flashcard_answer_top_app_bar_save_flashcard_content_description"
+        app:showAsAction="always" />
+</menu>

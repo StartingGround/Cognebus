@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="settingsViewModel"
+            type="com.startingground.cognebus.settings.SettingsViewModel" />
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        tools:context=".settings.SettingsFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_big"
+                android:background="@color/grey_700"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/options_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:text="@string/settings_fragment_default_file_options_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <com.startingground.cognebus.customviews.SwitchCognebus
+                android:id="@+id/enable_html_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_small"
+                android:checked="@{settingsViewModel.enableHTML}"
+                android:onClick="@{(view) -> settingsViewModel.onEnableHtmlChanged(view)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/options_label"
+                app:summaryText="@string/file_fragment_enable_html_switch_subtext"
+                app:titleText="@string/file_fragment_enable_html_switch_label" />
+
+            <com.startingground.cognebus.customviews.SwitchCognebus
+                android:id="@+id/repetition_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_small"
+                android:checked="@{settingsViewModel.repetitionEnabled}"
+                android:onClick="@{(view) -> settingsViewModel.onRepetitionEnabledChanged(view)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/enable_html_switch"
+                app:summaryText="@string/file_fragment_repetition_switch_subtext"
+                app:titleText="@string/file_fragment_repetition_switch_label" />
+
+            <com.startingground.cognebus.customviews.SwitchCognebus
+                android:id="@+id/continue_repetition_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_small"
+                android:checked="@{settingsViewModel.continueRepetition}"
+                android:onClick="@{(view) -> settingsViewModel.onContinueRepetitionChanged(view)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/repetition_switch"
+                app:summaryText="@string/file_fragment_continue_repetition_switch_subtext"
+                app:titleText="@string/file_fragment_continue_repetition_switch_label" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_normal"
+                app:flexWrap="wrap"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/continue_repetition_switch">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cycle_increment_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:hint="@string/file_fragment_cycle_increment_edit_text_hint"
+                    app:errorEnabled="true"
+                    app:layout_flexGrow="1"
+                    app:layout_minWidth="160dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:maxLength="9"
+                        android:text="@{Integer.toString(settingsViewModel.cycleIncrement)}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/max_days_per_cycle_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:hint="@string/file_fragment_max_days_per_cycle_edit_text_hint"
+                    app:errorEnabled="true"
+                    app:layout_flexGrow="1"
+                    app:layout_minWidth="175dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:maxLength="9"
+                        android:text="@{Integer.toString(settingsViewModel.maxDaysPerCycle)}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>

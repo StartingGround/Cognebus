@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainMenuFragment">
+    <fragment
+        android:id="@+id/mainMenuFragment"
+        android:name="com.startingground.cognebus.mainmenu.MainMenuFragment"
+        android:label="MainMenuFragment"
+        tools:layout="@layout/fragment_main_menu">
+        <action
+            android:id="@+id/action_mainMenuFragment_to_directoriesFragment"
+            app:destination="@id/directoriesFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_practicePagerFragment2"
+            app:destination="@id/practicePagerFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/directoriesFragment"
+        android:name="com.startingground.cognebus.directories.DirectoriesFragment"
+        android:label="DirectoriesFragment"
+        tools:layout="@layout/fragment_directories">
+        <argument
+            android:name="folderId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="folderIdIsNull"
+            app:argType="boolean"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_directoriesFragment_to_createFolderOrFileSelectionFragment"
+            app:destination="@id/createFolderOrFileSelectionFragment" />
+        <action
+            android:id="@+id/action_directoriesFragment_self"
+            app:destination="@id/directoriesFragment" />
+        <action
+            android:id="@+id/action_directoriesFragment_to_nav_file"
+            app:destination="@id/nav_file">
+            <argument
+                android:name="fileId"
+                app:argType="long" />
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true"/>
+        </action>
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFolderOrFileSelectionFragment"
+        android:name="com.startingground.cognebus.createfolderorfile.CreateFolderOrFileSelectionFragment"
+        android:label="fragment_create_folder_or_file_selection"
+        tools:layout="@layout/fragment_create_folder_or_file_selection" >
+        <argument
+            android:name="folderId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="folderIdIsNull"
+            app:argType="boolean"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_createFolderOrFileSelectionFragment_to_createFolderOrFileFragment"
+            app:destination="@id/createFolderOrFileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFolderOrFileFragment"
+        android:name="com.startingground.cognebus.createfolderorfile.CreateFolderOrFileFragment"
+        android:label="fragment_create_folder_or_file"
+        tools:layout="@layout/fragment_create_folder_or_file" >
+        <argument
+            android:name="folderId"
+            app:argType="long" />
+        <argument
+            android:name="folderIdIsNull"
+            app:argType="boolean" />
+        <argument
+            android:name="inputType"
+            app:argType="integer" />
+    </fragment>
+    <navigation android:id="@+id/nav_file"
+        app:startDestination="@id/fileFragment">
+        <fragment
+            android:id="@+id/fileFragment"
+            android:name="com.startingground.cognebus.file.FileFragment"
+            android:label="FileFragment"
+            tools:layout="@layout/fragment_file"
+            app:startDestination="@id/action_fileFragment_to_practicePagerFragment">
+            <argument
+                android:name="fileId"
+                app:argType="long" />
+            <action
+                android:id="@+id/action_fileFragment_to_flashcardPagerFragment"
+                app:destination="@id/flashcardPagerFragment" />
+            <action
+                android:id="@+id/action_fileFragment_to_practicePagerFragment"
+                app:destination="@id/practicePagerFragment" />
+            <action
+                android:id="@+id/action_fileFragment_to_flashcardsListFragment"
+                app:destination="@id/flashcardsListFragment" />
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/flashcardPagerFragment"
+            android:name="com.startingground.cognebus.flashcard.FlashcardPagerFragment"
+            android:label="fragment_flashcard_pager"
+            tools:layout="@layout/fragment_flashcard_question" >
+            <argument
+                android:name="fileId"
+                app:argType="long" />
+            <argument
+                android:name="flashcardId"
+                app:argType="long" />
+        </fragment>
+        <fragment
+            android:id="@+id/practicePagerFragment"
+            android:name="com.startingground.cognebus.practice.PracticePagerFragment"
+            android:label="fragment_practice_pager"
+            tools:layout="@layout/fragment_question_practice" />
+        <fragment
+            android:id="@+id/flashcardsListFragment"
+            android:name="com.startingground.cognebus.flashcardslist.FlashcardsListFragment"
+            android:label="fragment_flashcards_list"
+            tools:layout="@layout/fragment_flashcards_list" >
+            <action
+                android:id="@+id/action_flashcardsListFragment_to_flashcardPagerFragment"
+                app:destination="@id/flashcardPagerFragment" />
+            <argument
+                android:name="fileId"
+                app:argType="long" />
+            <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
+                android:name="enableHtml"
+                app:argType="boolean"
+                android:defaultValue="false" />
+        </fragment>
+    </navigation>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.startingground.cognebus.settings.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
+    <fragment
+        android:id="@+id/practicePagerFragment2"
+        android:name="com.startingground.cognebus.practice.PracticePagerFragment"
+        android:label="fragment_practice_pager"
+        tools:layout="@layout/fragment_question_practice" />
+</navigation>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="createViewModel"
+            type="com.startingground.cognebus.createfolderorfile.CreateViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".createfolderorfile.CreateFolderOrFileFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/create_folder_or_file_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            app:errorEnabled="true"
+            tools:hint="@string/create_folder_or_file_fragment_folder_edit_text_hint"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/create_folder_or_file_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{createViewModel.fileOrFolderText}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_folder_or_file_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:onClick="@{() -> createViewModel.onCreateButton()}"
+            app:layout_constraintTop_toBottomOf="@id/create_folder_or_file_edit_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/create_file_or_folder_selection_folder_button"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

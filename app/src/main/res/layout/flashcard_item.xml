@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flashcard_card_view_item"
+    app:cardElevation="5dp"
+    android:checkable="true"
+    android:focusable="true"
+    android:clickable="true"
+    app:checkedIconTint="@color/primaryDarkColor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_small"
+    android:layout_marginTop="@dimen/margin_big">
+
+    <com.startingground.cognebus.customviews.MathView
+        android:id="@+id/question_math_view_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</com.google.android.material.card.MaterialCardView>

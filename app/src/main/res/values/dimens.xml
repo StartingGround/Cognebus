@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_huge">40dp</dimen>
+    <dimen name="margin_big">24dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="inset_nonexistent">0dp</dimen>
+    <dimen name="inset_normal">16dp</dimen>
+    <dimen name="selected_folder_stroke_width">3dp</dimen>
+</resources>

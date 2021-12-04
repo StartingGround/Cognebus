@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="createFolderOrFileSelectionFragment"
+            type="com.startingground.cognebus.createfolderorfile.CreateFolderOrFileSelectionFragment" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".createfolderorfile.CreateFolderOrFileSelectionFragment">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_folder_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:onClick="@{() -> createFolderOrFileSelectionFragment.onFolderButton()}"
+            android:text="@string/create_file_or_folder_selection_folder_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/create_file_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_file_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:onClick="@{() -> createFolderOrFileSelectionFragment.onFileButton()}"
+            android:text="@string/create_file_or_folder_selection_file_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_folder_button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
