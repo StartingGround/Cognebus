@@ -11,7 +11,7 @@ class DirectoriesViewModelFactory(
     private val folderId: Long?,
     private val dataViewModel: DataViewModel,
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DirectoriesViewModel::class.java)){
             return DirectoriesViewModel(database, folderId, dataViewModel) as T
         }

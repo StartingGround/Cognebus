@@ -10,7 +10,7 @@ class PracticeViewModelFactory(
     private val application: Application,
     private val dataViewModel: DataViewModel
 ): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PracticeViewModel::class.java)){
             return  PracticeViewModel(application, dataViewModel) as T
         }

@@ -12,7 +12,7 @@ class FlashcardsListVieModelFactory(
     private val dataViewModel: DataViewModel,
     private val enableHtml: Boolean
     ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(FlashcardsListViewModel::class.java)){
             return FlashcardsListViewModel(database, fileId, dataViewModel, enableHtml) as T
         }

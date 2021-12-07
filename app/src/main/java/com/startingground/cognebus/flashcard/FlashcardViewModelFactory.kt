@@ -11,7 +11,7 @@ class FlashcardViewModelFactory(
     private val fileId: Long,
     private val dataViewModel: DataViewModel?
     ): ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(FlashcardViewModel::class.java)) {
             return FlashcardViewModel(database, fileId, dataViewModel) as T
         }

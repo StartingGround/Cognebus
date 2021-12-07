@@ -14,7 +14,7 @@ class CreateViewModelFactory(
     private val dataViewModel: DataViewModel,
     private val application: Application
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun<T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(CreateViewModel::class.java)) {
             return CreateViewModel(database, folderId, inputType, dataViewModel, application) as T
         }

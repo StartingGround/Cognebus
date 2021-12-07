@@ -11,7 +11,7 @@ class FileViewModelFactory(
     private val fileId: Long,
     private val dataViewModel: DataViewModel
     ) : ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(FileViewModel::class.java)){
             return FileViewModel(database, fileId, dataViewModel) as T
         }
