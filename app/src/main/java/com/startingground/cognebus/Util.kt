@@ -53,13 +53,37 @@ fun prepareStringForPractice(context: Context, inputText: String, enableHTML: Bo
         }
     }
 
-    if(enableHTML) return filterSpecialCharacters(text)
+    text = text.replace(" ", "&nbsp;")
+
+    if(enableHTML){
+        text = filterAllTagsForWhiteSpaces(text)
+        return filterSpecialCharacters(text)
+    }
 
     text = text.replace("<", "&lt;")
     text = text.replace(">", "&gt;")
     text = reverseImageTag(text)
+    text = filterImgTagsForWhiteSpaces(text)
 
     return filterSpecialCharacters(text)
+}
+
+private fun filterImgTagsForWhiteSpaces(inputText: String): String{
+    val imageTagRegex = Regex("<img[^<>]+>")
+
+    val text = imageTagRegex.replace(inputText){
+        it.value.replace("&nbsp;", " ")
+    }
+    return text
+}
+
+private fun filterAllTagsForWhiteSpaces(inputText: String): String{
+    val tagRegex = Regex("<[^<>]+>")
+
+    val text = tagRegex.replace(inputText){
+        it.value.replace("&nbsp;", " ")
+    }
+    return text
 }
 
 private fun filterSpecialCharacters(inputText: String): String{

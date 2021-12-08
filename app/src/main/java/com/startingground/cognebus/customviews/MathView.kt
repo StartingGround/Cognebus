@@ -67,7 +67,7 @@ class MathView : WebView {
             update()
     }
 
-    var textAlign: TextAlign by Delegates.observable(TextAlign.CENTER) { _, old, new ->
+    var textAlign: TextAlign by Delegates.observable(TextAlign.START) { _, old, new ->
         if (old != new)
             update()
     }
@@ -97,7 +97,7 @@ class MathView : WebView {
                 "M.parseMath(s);document.body.style.color = \"$textColor\";" +
                 "document.body.style.background = \"$backgroundColor\";" +
                 "document.body.style.textAlign = \"${textAlign.toString().lowercase()}\";" +
-                "document.body.style.wordBreak = \"break-all\";" +
+                "document.body.style.wordBreak = \"break-word\";" +
                 "document.write(s);</script></body>",
         "text/html", "UTF-8", null)
 
