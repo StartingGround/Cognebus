@@ -1,6 +1,7 @@
 package com.startingground.cognebus
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -126,7 +127,7 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
         }
     }
 
-    fun createImageFile(imageId: Long): File?{
+    fun createImageFileOrGetExisting(imageId: Long): File?{
         return try {
             val context = getApplication<Application>().applicationContext
             val imageDirectory = context.getExternalFilesDir("images")
@@ -164,6 +165,18 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
         with(preferences.edit()){
             putBoolean(SHOW_DOLLAR_SIGN_ALERT, state)
             apply()
+        }
+    }
+
+    fun saveImageBitmapToUri(imageBitmap: Bitmap, imageId: Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            val imageFile = createImageFileOrGetExisting(imageId)
+            val fileOutputStream = FileOutputStream(imageFile)
+
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+
+            fileOutputStream.flush()
+            fileOutputStream.close()
         }
     }
 }

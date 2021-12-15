@@ -121,6 +121,9 @@
             <argument
                 android:name="flashcardId"
                 app:argType="long" />
+            <action
+                android:id="@+id/action_flashcardPagerFragment_to_imageCropFragment"
+                app:destination="@id/imageCropFragment" />
         </fragment>
         <fragment
             android:id="@+id/practicePagerFragment"
@@ -145,6 +148,15 @@
                 android:name="enableHtml"
                 app:argType="boolean"
                 android:defaultValue="false" />
+        </fragment>
+        <fragment
+            android:id="@+id/imageCropFragment"
+            android:name="com.startingground.cognebus.CropImageFragment"
+            android:label="fragment_crop_image"
+            tools:layout="@layout/fragment_crop_image" >
+            <argument
+                android:name="imageId"
+                app:argType="long" />
         </fragment>
     </navigation>
     <fragment

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/rotate_image"
+        android:icon="@drawable/ic_cognebus_rotate_right_24"
+        android:title="@string/crop_image_top_app_bar_rotate_image"
+        android:contentDescription="@string/crop_image_top_app_bar_rotate_image_content_description"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/crop_image"
+        android:title="@string/crop_image_top_app_bar_crop_image"
+        android:contentDescription="@string/crop_image_top_app_bar_crop_image_content_description"
+        app:showAsAction="always" />
+</menu>

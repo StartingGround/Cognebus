@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -94,20 +95,24 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
 
     override val getImageFromCamera = registerForActivityResult(ActivityResultContracts.TakePicture()){
-        if(it) {
-            placeImageTagInsideAnswerText()
-        }
+        if(!it) return@registerForActivityResult
+
+        placeImageTagInsideAnswerText()
+
+        openImageForCropping()
     }
 
-    
+
     override val getImageFromGallery = registerForActivityResult(ActivityResultContracts.GetContent()){ uri: Uri? ->
-        if(uri != null) {
-            val imageIsSaved = sharedFlashcardViewModel.saveImageToFileFromGalleryImageUri(uri)
-            if(!imageIsSaved) return@registerForActivityResult
-            placeImageTagInsideAnswerText()
-        }
+        if(uri == null) return@registerForActivityResult
+
+        val imageIsSaved = sharedFlashcardViewModel.saveImageToFileFromGalleryImageUri(uri)
+        if (!imageIsSaved) return@registerForActivityResult
+        placeImageTagInsideAnswerText()
+
+        openImageForCropping()
     }
-    
+
 
     private fun placeImageTagInsideAnswerText(){
         val imageId = sharedFlashcardViewModel.getAddedImageId()
@@ -115,6 +120,13 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
         val (textCursorPositionStart, textCursorPositionEnd) = sharedFlashcardViewModel.getTextCursorPositions()
         binding.questionTextField.editText?.text?.replace(textCursorPositionStart, textCursorPositionEnd, imageTagText)
         sharedFlashcardViewModel.addQuestionText(binding.questionTextField.editText?.text?.toString() ?: "")
+    }
+
+
+    private fun openImageForCropping(){
+        val imageId = sharedFlashcardViewModel.getAddedImageId()
+        val action = FlashcardPagerFragmentDirections.actionFlashcardPagerFragmentToImageCropFragment(imageId)
+        findNavController().navigate(action)
     }
 
 

@@ -68,7 +68,7 @@ class FlashcardViewModel(
 
     fun saveImageToFileFromGalleryImageUri(galleryImageUri: Uri): Boolean{
         val imageId = getAddedImageId()
-        val imageFile = dataViewModel?.createImageFile(imageId) ?: return false
+        val imageFile = dataViewModel?.createImageFileOrGetExisting(imageId) ?: return false
 
         dataViewModel.copyFileFromUri(galleryImageUri, imageFile)
         return true
@@ -78,7 +78,7 @@ class FlashcardViewModel(
     fun getImageFromCamera(fragment: Fragment){
         viewModelScope.launch {
             val imageId = _flashcard?.createImageInDatabase() ?: return@launch
-            val imageFile = dataViewModel?.createImageFile(imageId) ?: return@launch
+            val imageFile = dataViewModel?.createImageFileOrGetExisting(imageId) ?: return@launch
             val imageUri = FileProvider.getUriForFile(fragment.requireContext(), "com.startingground.cognebus", imageFile)
             sendIntentToTakePicture(imageUri, fragment)
         }

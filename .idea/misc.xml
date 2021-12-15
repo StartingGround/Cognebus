@@ -12,8 +12,10 @@
         <entry key="app/src/main/res/drawable/ic_check_circle_24.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/drawable/ic_check_circle_outline_24.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/drawable/ic_close_24.xml" value="0.1537037037037037" />
+        <entry key="app/src/main/res/drawable/ic_delete_forever_24.xml" value="0.1537037037037037" />
         <entry key="app/src/main/res/drawable/ic_image_24.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.13518518518518519" />
+        <entry key="app/src/main/res/drawable/ic_right_24.xml" value="0.121875" />
         <entry key="app/src/main/res/drawable/ic_twotone_check_circle_24.xml" value="0.2282051282051282" />
         <entry key="app/src/main/res/drawable/ic_twotone_check_circle_outline_24.xml" value="0.2282051282051282" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.10486322188449848" />
@@ -25,6 +27,7 @@
         <entry key="app/src/main/res/layout/fragment_answer_practice.xml" value="0.25925925925925924" />
         <entry key="app/src/main/res/layout/fragment_create_folder_or_file.xml" value="0.15" />
         <entry key="app/src/main/res/layout/fragment_create_folder_or_file_selection.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/fragment_crop_image.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_directories.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_file.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_file_practice_order_dropdown_item.xml" value="0.1621376811594203" />
@@ -38,6 +41,7 @@
         <entry key="app/src/main/res/layout/fragment_question_practice.xml" value="0.10486322188449848" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.18840579710144928" />
         <entry key="app/src/main/res/layout/settings_fragment.xml" value="0.22" />
+        <entry key="app/src/main/res/menu/crop_image_top_app_bar.xml" value="0.215625" />
         <entry key="app/src/main/res/menu/directories_contextual_action_bar.xml" value="0.25925925925925924" />
         <entry key="app/src/main/res/menu/directories_top_app_bar.xml" value="0.2" />
         <entry key="app/src/main/res/menu/flashcard_answer_top_app_bar.xml" value="0.17" />

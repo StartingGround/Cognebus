@@ -71,4 +71,12 @@
     <string name="dollar_sign_alert_title">To use $ in flashcard you need to write it like \\$</string>
     <string name="dollar_sign_alert_ok">OK</string>
     <string name="dollar_sign_alert_dont_show_again">Don\'t show again</string>
+
+    <!-- fragment_crop_image -->
+    <string name="crop_image_top_app_bar_crop_image">CROP</string>
+    <string name="crop_image_top_app_bar_crop_image_content_description">Crop image.</string>
+    <string name="crop_image_top_app_bar_rotate_image">Rotate</string>
+    <string name="crop_image_top_app_bar_rotate_image_content_description">Rotate image.</string>
+    <string name="crop_image_dialog_image_not_cropped_message">Unable to crop image.</string>
+    <string name="crop_image_dialog_image_not_cropped_positive_button">OK</string>
 </resources>
