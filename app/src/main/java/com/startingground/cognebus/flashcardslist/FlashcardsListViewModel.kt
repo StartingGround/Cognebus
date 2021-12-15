@@ -80,6 +80,16 @@ class FlashcardsListViewModel(
             val selectedFlashcards = allFlashcards.filter{
                 tracker.isSelected(it.flashcardId)
             }
+
+            //If we skip deselection app will crash when in list of N flashcards we delete N flashcards
+            //This happens because selection tracker will be removing selected items gradually, N-1, then another change N-2, ...
+            // But all flashcards are already deleted and because of that fragment is popped from backstack and it happens probably
+            // while ui is deleted and flashcardsListViewModel still alive and tries to refresh contextual bars selected item counter,
+            // which doesn't exist at that moment.
+            for(flashcard in selectedFlashcards){
+                tracker.deselect(flashcard.flashcardId)
+            }
+
             dataViewModel.deleteFlashcardList(selectedFlashcards)
         }
     }
