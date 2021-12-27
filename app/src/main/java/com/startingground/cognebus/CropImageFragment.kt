@@ -84,7 +84,7 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
     override fun onCropImageComplete(view: CropImageView, result: CropImageView.CropResult) {
         if (result.error != null) {
             MaterialAlertDialogBuilder(requireContext())
-                .setMessage(R.string.crop_image_dialog_image_not_cropped_message)
+                .setTitle(R.string.crop_image_dialog_image_not_cropped_message)
                 .setPositiveButton(R.string.crop_image_dialog_image_not_cropped_positive_button){ _, _ ->}
                 .show()
 
