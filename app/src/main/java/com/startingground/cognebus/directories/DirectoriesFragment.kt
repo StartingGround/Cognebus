@@ -10,10 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.startingground.cognebus.DataViewModel
-import com.startingground.cognebus.DataViewModelFactory
-import com.startingground.cognebus.R
+import com.startingground.cognebus.*
 import com.startingground.cognebus.database.CognebusDatabase
+import com.startingground.cognebus.database.entity.FileDB
+import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.databinding.FragmentDirectoriesBinding
 
 class DirectoriesFragment : Fragment() {
@@ -28,6 +28,7 @@ class DirectoriesFragment : Fragment() {
     private lateinit var adapter: DirectoriesAdapter
     private lateinit var directoriesViewModel: DirectoriesViewModel
     private lateinit var dataViewModel: DataViewModel
+    private lateinit var sharedClipboardViewModel: ClipboardViewModel
 
     private var selectionTracker: SelectionTracker<String>? = null
 
@@ -67,6 +68,9 @@ class DirectoriesFragment : Fragment() {
         directoriesViewModel = ViewModelProvider(this, directoriesViewModelFactory)
             .get(DirectoriesViewModel::class.java)
 
+        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
+        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
+
         adapter = DirectoriesAdapter(this)
 
         return binding.root
@@ -83,6 +87,31 @@ class DirectoriesFragment : Fragment() {
 
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.paste -> {
+                    onPasteButton()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        sharedClipboardViewModel.thereIsContentReadyToBePasted.observe(viewLifecycleOwner){
+            binding.topAppBar.menu.findItem(R.id.paste).isEnabled = it
+        }
+
+        sharedClipboardViewModel.errorCopyingToSourceFolder.observe(viewLifecycleOwner){
+            if(!it) return@observe
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.directories_error_copying_to_source_folder_message)
+                .setPositiveButton(R.string.directories_error_copying_to_source_folder_positive_button){ _, _ ->}
+                .show()
+
+            sharedClipboardViewModel.removeErrorCopyingToSourceFolder()
         }
 
         directoriesViewModel.folders.observe(viewLifecycleOwner) {
@@ -174,8 +203,18 @@ class DirectoriesFragment : Fragment() {
                     onDeleteButton()
                     true
                 }
-                R.id.select_all ->{
+                R.id.select_all -> {
                     adapter.selectAll()
+                    true
+                }
+                R.id.cut -> {
+                    onCopyButton(adapter.currentList, cutEnabled = true)
+                    selectionTracker?.clearSelection()
+                    true
+                }
+                R.id.copy -> {
+                    onCopyButton(adapter.currentList)
+                    selectionTracker?.clearSelection()
                     true
                 }
                 else -> false
@@ -216,7 +255,7 @@ class DirectoriesFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    fun onDeleteButton(){
+    private fun onDeleteButton(){
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.directories_delete_selected_items_dialog))
             .setNegativeButton(getString(R.string.directories_delete_dialog_negative_button)){ _, _ ->
@@ -225,5 +264,19 @@ class DirectoriesFragment : Fragment() {
                 directoriesViewModel.deleteSelectedItems(adapter.currentList)
             }
             .show()
+    }
+
+    private fun onCopyButton(availableItems: List<DirectoryItem>, cutEnabled: Boolean = false){
+        val selectedFileItems: List<DirectoryItem> = availableItems.filter { it.content is FileDB && (selectionTracker?.isSelected(it.itemId) ?: false) }
+        val selectedFiles: List<FileDB> = selectedFileItems.map { it.content as FileDB }
+
+        val selectedFolderItems: List<DirectoryItem> = availableItems.filter { it.content is Folder && (selectionTracker?.isSelected(it.itemId) ?: false)}
+        val selectedFolders: List<Folder> = selectedFolderItems.map { it.content as Folder }
+
+        sharedClipboardViewModel.copySelectedFilesAndFolders(selectedFiles, selectedFolders, cutEnabled = cutEnabled)
+    }
+
+    private fun onPasteButton(){
+        sharedClipboardViewModel.pasteSelectedToFolder(directoriesViewModel.folderId)
     }
 }

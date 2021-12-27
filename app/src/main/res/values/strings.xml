@@ -19,6 +19,8 @@
     <string name="directories_delete_dialog_positive_button">Delete</string>
     <string name="directories_folder_button_content_description_template">Folder: %s</string>
     <string name="directories_file_button_content_description_template">File: %s</string>
+    <string name="directories_error_copying_to_source_folder_message">Can\'t copy folder into itself.</string>
+    <string name="directories_error_copying_to_source_folder_positive_button">OK</string>
     <string name="create_file_or_folder_selection_folder_button">Folder</string>
     <string name="create_file_or_folder_selection_file_button">File</string>
     <string name="create_folder_or_file_fragment_create_folder_button">Create Folder</string>
@@ -79,4 +81,9 @@
     <string name="crop_image_top_app_bar_rotate_image_content_description">Rotate image.</string>
     <string name="crop_image_dialog_image_not_cropped_message">Unable to crop image.</string>
     <string name="crop_image_dialog_image_not_cropped_positive_button">OK</string>
+
+    <!-- not grouped -->
+    <string name="cut">Cut</string>
+    <string name="copy">Copy</string>
+    <string name="paste">Paste</string>
 </resources>

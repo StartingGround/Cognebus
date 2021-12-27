@@ -11,8 +11,8 @@ import com.startingground.cognebus.database.entity.Folder
 
 class DirectoriesViewModel(database: CognebusDatabase, val folderId: Long?, private val dataViewModel: DataViewModel) : ViewModel() {
 
-    val folders = database.folderDatabaseDao.getFoldersByParentFolderId(folderId)
-    val files = database.fileDatabaseDao.getFilesByFolderId(folderId)
+    val folders = database.folderDatabaseDao.getLiveDataFoldersByParentFolderId(folderId)
+    val files = database.fileDatabaseDao.getLiveDataFilesByFolderId(folderId)
 
 
     private var selectionTracker: SelectionTracker<String>? = null

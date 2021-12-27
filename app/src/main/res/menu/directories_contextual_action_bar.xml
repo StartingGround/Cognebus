@@ -13,4 +13,16 @@
         android:title="@string/select_all"
         android:contentDescription="@string/select_all_content_description"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/cut"
+        android:title="@string/cut"
+        android:contentDescription="@string/cut"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/copy"
+        android:title="@string/copy"
+        android:contentDescription="@string/copy"
+        app:showAsAction="never" />
 </menu>

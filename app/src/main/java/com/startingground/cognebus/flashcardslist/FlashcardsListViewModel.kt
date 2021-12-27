@@ -16,7 +16,7 @@ class FlashcardsListViewModel(
     private val enableHtml: Boolean
     ): ViewModel() {
 
-    private val flashcards = database.flashcardDatabaseDao.getFlashcardsByFileId(fileId)
+    private val flashcards = database.flashcardDatabaseDao.getLiveDataFlashcardsByFileId(fileId)
     private val _flashcardsAdapter: MutableLiveData<List<FlashcardAdapterItem>> = MutableLiveData()
     val flashcardAdapter: LiveData<List<FlashcardAdapterItem>> get() = _flashcardsAdapter
 

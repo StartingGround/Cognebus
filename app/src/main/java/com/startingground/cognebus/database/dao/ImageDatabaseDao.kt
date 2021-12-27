@@ -23,4 +23,7 @@ interface ImageDatabaseDao {
 
     @Query("SELECT image_id FROM image WHERE flashcard_id = :flashcardId")
     fun getImageIdsByFlashcardId(flashcardId: Long): LiveData<List<Long>>
+
+    @Query("select * FROM image WHERE flashcard_id = :flashcardId")
+    suspend fun getImagesByFlashcardId(flashcardId: Long): List<ImageDB>
 }

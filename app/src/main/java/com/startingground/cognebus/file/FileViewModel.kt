@@ -24,7 +24,7 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
     private val _file: LiveData<FileDB> = database.fileDatabaseDao.getFileByFileId(fileId) ?: MutableLiveData()
     val file: LiveData<FileDB> get() = _file
 
-    private val _flashcards: LiveData<List<FlashcardDB>> = database.flashcardDatabaseDao.getFlashcardsByFileId(fileId)
+    private val _flashcards: LiveData<List<FlashcardDB>> = database.flashcardDatabaseDao.getLiveDataFlashcardsByFileId(fileId)
 
     val fileContainsFlashcards: LiveData<Boolean> = Transformations.map(_flashcards){
         it.isNotEmpty()

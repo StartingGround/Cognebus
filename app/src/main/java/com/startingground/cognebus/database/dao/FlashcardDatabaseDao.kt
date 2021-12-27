@@ -25,7 +25,10 @@ interface FlashcardDatabaseDao {
     suspend fun getFlashcardByFlashcardId(flashcardId: Long): FlashcardDB
 
     @Query("SELECT * FROM flashcard WHERE file_id = :fileId")
-    fun getFlashcardsByFileId(fileId: Long): LiveData<List<FlashcardDB>>
+    suspend fun getFlashcardsByFileId(fileId: Long): List<FlashcardDB>
+
+    @Query("SELECT * FROM flashcard WHERE file_id = :fileId")
+    fun getLiveDataFlashcardsByFileId(fileId: Long): LiveData<List<FlashcardDB>>
 
     @Query( "SELECT * FROM flashcard WHERE repetition_date < :date AND repetition_enabled = 1 AND " +
             "(" +

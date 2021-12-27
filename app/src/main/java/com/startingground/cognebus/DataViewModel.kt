@@ -91,7 +91,7 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
         }
     }
 
-    private fun deleteUnusedImages() {
+    fun deleteUnusedImages() {
         viewModelScope.launch {
             val context = getApplication<Application>().applicationContext
             val unusedImages = database.imageDatabaseDao.getUnusedImages()
