@@ -1,52 +1,18 @@
 <resources>
+    <!-- Global -->
     <string name="app_name">Cognebus</string>
-    <string name="image_html_tag_template"> &lt;img src=\"%d\" width=\"100%%\"&gt; </string>
-    <string name="files_button">Flashcards</string>
-    <string name="repetition_button">Repetition</string>
-    <string name="settings_button">Settings</string>
-    <string name="directories_title_files">Files</string>
-    <string name="directories_create_button">Create New Folder/File</string>
     <string name="delete">delete</string>
     <string name="delete_content_description">delete</string>
-    <string name="more">more</string>
-    <string name="directories_more_content_description">more</string>
     <string name="selected_counter">%1$d selected</string>
     <string name="select_all">Select All</string>
     <string name="select_all_content_description">Select All</string>
     <string name="go_back_navigation_icon_content_description">Go back.</string>
-    <string name="directories_delete_selected_items_dialog">Delete selected items?</string>
-    <string name="directories_delete_dialog_negative_button">Cancel</string>
-    <string name="directories_delete_dialog_positive_button">Delete</string>
-    <string name="directories_folder_button_content_description_template">Folder: %s</string>
-    <string name="directories_file_button_content_description_template">File: %s</string>
-    <string name="directories_error_copying_to_source_folder_message">Can\'t copy folder into itself.</string>
-    <string name="directories_error_copying_to_source_folder_positive_button">OK</string>
-    <string name="create_file_or_folder_selection_folder_button">Folder</string>
-    <string name="create_file_or_folder_selection_file_button">File</string>
-    <string name="create_folder_or_file_fragment_create_folder_button">Create Folder</string>
-    <string name="create_folder_or_file_fragment_create_file_button">Create File</string>
-    <string name="create_folder_or_file_fragment_invalid_input_error">Invalid input!</string>
-    <string name="create_folder_or_file_fragment_already_exists_error">Already exists!</string>
-    <string name="create_folder_or_file_fragment_folder_edit_text_hint">Folder Name</string>
-    <string name="create_folder_or_file_fragment_file_edit_text_hint">File Name</string>
-    <string name="file_fragment_practice_button">Practice</string>
-    <string name="file_fragment_add_flashcard_button">Add Flashcard</string>
-    <string name="file_fragment_view_flashcards_button">View Flashcards</string>
-    <string name="file_fragment_enable_html_switch_label">HTML Tags</string>
-    <string name="file_fragment_enable_html_switch_subtext">Enables use of HTML tags inside flashcards.</string>
-    <string name="file_fragment_repetition_switch_label">Repetition</string>
-    <string name="file_fragment_repetition_switch_subtext">Repeat flashcards every 0, 1, 3, 7, 15, 30 days.</string>
-    <string name="file_fragment_continue_repetition_switch_label">Continue Repetition</string>
-    <string name="file_fragment_continue_repetition_switch_subtext">Continue repeating flashcards after default period.</string>
-    <string name="file_fragment_cycle_increment_edit_text_hint">Cycle Increment</string>
-    <string name="file_fragment_max_days_per_cycle_edit_text_hint">Max Days Per Cycle</string>
-    <string name="file_fragment_cycle_increment_edit_text_invalid_input_error">Invalid input!</string>
-    <string name="file_fragment_cycle_increment_edit_text_value_under_error">Value under %1$d!</string>
-    <string name="file_fragment_max_days_per_cycle_edit_text_invalid_input_error">Invalid input!</string>
-    <string name="file_fragment_max_days_per_cycle_edit_text_value_under_error">Value under %1$d</string>
-    <string name="file_fragment_practice_order_dropdown_menu_hint">Practice Order</string>
-    <string name="file_fragment_options_label">OPTIONS</string>
-    <string name="settings_fragment_default_file_options_label">DEFAULT FILE OPTIONS</string>
+    <string name="cut">Cut</string>
+    <string name="copy">Copy</string>
+    <string name="paste">Paste</string>
+
+    <!-- Flashcard -->
+    <string name="image_html_tag_template"> &lt;img src=\"%d\" width=\"100%%\"&gt; </string>
     <string name="flashcard_pager_fragment_insert_image_from_camera_button_content_description">Take picture.</string>
     <string name="flashcard_pager_fragment_insert_image_from_gallery_button_content_description">Insert image.</string>
     <string name="flashcard_question_fragment_top_app_bar_title">Question</string>
@@ -60,6 +26,63 @@
     <string name="flashcard_answer_top_app_bar_save_flashcard_content_description">Save flashcard.</string>
     <string name="flashcard_question_fragment_question_text_empty_field_error">Empty field!</string>
     <string name="flashcard_answer_fragment_answer_text_empty_field_error">Empty field!</string>
+    <string name="dollar_sign_alert_title">To use $ in flashcard you need to write it like \\$</string>
+    <string name="dollar_sign_alert_ok">OK</string>
+    <string name="dollar_sign_alert_dont_show_again">Don\'t show again</string>
+
+    <!-- Main Menu -->
+    <string name="files_button">Flashcards</string>
+    <string name="repetition_button">Repetition</string>
+    <string name="settings_button">Settings</string>
+
+    <!-- Directories -->
+    <string name="directories_title_files">Files</string>
+    <string name="directories_create_button">Create New Folder/File</string>
+    <string name="directories_delete_selected_items_dialog">Delete selected items?</string>
+    <string name="directories_delete_dialog_negative_button">Cancel</string>
+    <string name="directories_delete_dialog_positive_button">Delete</string>
+    <string name="directories_folder_button_content_description_template">Folder: %s</string>
+    <string name="directories_file_button_content_description_template">File: %s</string>
+    <string name="directories_error_copying_to_source_folder_message">Can\'t copy folder into itself.</string>
+    <string name="directories_error_copying_to_source_folder_positive_button">OK</string>
+
+    <!-- Create Folder Or File Selection -->
+    <string name="create_file_or_folder_selection_folder_button">Folder</string>
+    <string name="create_file_or_folder_selection_file_button">File</string>
+
+    <!-- Create Folder Or File -->
+    <string name="create_folder_or_file_fragment_create_folder_button">Create Folder</string>
+    <string name="create_folder_or_file_fragment_create_file_button">Create File</string>
+    <string name="create_folder_or_file_fragment_invalid_input_error">Invalid input!</string>
+    <string name="create_folder_or_file_fragment_already_exists_error">Already exists!</string>
+    <string name="create_folder_or_file_fragment_folder_edit_text_hint">Folder Name</string>
+    <string name="create_folder_or_file_fragment_file_edit_text_hint">File Name</string>
+
+    <!-- File -->
+    <string name="file_fragment_practice_button">Practice</string>
+    <string name="file_fragment_add_flashcard_button">Add Flashcard</string>
+    <string name="file_fragment_view_flashcards_button">View Flashcards</string>
+    <string name="file_fragment_practice_order_dropdown_menu_hint">Practice Order</string>
+    <string name="file_fragment_options_label">OPTIONS</string>
+
+    <!-- File && Settings -->
+    <string name="file_fragment_enable_html_switch_label">HTML Tags</string>
+    <string name="file_fragment_enable_html_switch_subtext">Enables use of HTML tags inside flashcards.</string>
+    <string name="file_fragment_repetition_switch_label">Repetition</string>
+    <string name="file_fragment_repetition_switch_subtext">Repeat flashcards every 0, 1, 3, 7, 15, 30 days.</string>
+    <string name="file_fragment_continue_repetition_switch_label">Continue Repetition</string>
+    <string name="file_fragment_continue_repetition_switch_subtext">Continue repeating flashcards after default period.</string>
+    <string name="file_fragment_cycle_increment_edit_text_hint">Cycle Increment</string>
+    <string name="file_fragment_max_days_per_cycle_edit_text_hint">Max Days Per Cycle</string>
+    <string name="file_fragment_cycle_increment_edit_text_invalid_input_error">Invalid input!</string>
+    <string name="file_fragment_cycle_increment_edit_text_value_under_error">Value under %1$d!</string>
+    <string name="file_fragment_max_days_per_cycle_edit_text_invalid_input_error">Invalid input!</string>
+    <string name="file_fragment_max_days_per_cycle_edit_text_value_under_error">Value under %1$d</string>
+
+    <!-- Settings -->
+    <string name="settings_fragment_default_file_options_label">DEFAULT FILE OPTIONS</string>
+
+    <!-- Practice -->
     <string name="practice_question_fragment_top_app_bar_title">Question</string>
     <string name="practice_question_top_app_bar_move_to_answer_title">Go to answer.</string>
     <string name="practice_question_top_app_bar_move_to_answer_content_description">Go to answer.</string>
@@ -67,12 +90,11 @@
     <string name="practice_answer_fragment_top_app_bar_title">Answer</string>
     <string name="answer_practice_correct_answer_button_text">Finish</string>
     <string name="answer_practice_incorrect_answer_button_text">Skip</string>
+
+    <!-- Flashcards List -->
     <string name="flashcards_list_delete_selected_flashcards_dialog">Delete selected flashcards?</string>
     <string name="flashcards_list_delete_dialog_negative_button">Cancel</string>
     <string name="flashcards_list_delete_dialog_positive_button">Delete</string>
-    <string name="dollar_sign_alert_title">To use $ in flashcard you need to write it like \\$</string>
-    <string name="dollar_sign_alert_ok">OK</string>
-    <string name="dollar_sign_alert_dont_show_again">Don\'t show again</string>
 
     <!-- fragment_crop_image -->
     <string name="crop_image_top_app_bar_crop_image">CROP</string>
@@ -82,8 +104,4 @@
     <string name="crop_image_dialog_image_not_cropped_message">Unable to crop image.</string>
     <string name="crop_image_dialog_image_not_cropped_positive_button">OK</string>
 
-    <!-- not grouped -->
-    <string name="cut">Cut</string>
-    <string name="copy">Copy</string>
-    <string name="paste">Paste</string>
 </resources>

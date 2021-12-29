@@ -44,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="@string/create_file_or_folder_selection_folder_button"/>
+            tools:text="@string/create_folder_or_file_fragment_create_file_button"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
