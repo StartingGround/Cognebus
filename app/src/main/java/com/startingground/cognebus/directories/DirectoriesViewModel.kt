@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
-import com.startingground.cognebus.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder

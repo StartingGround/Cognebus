@@ -2,7 +2,7 @@ package com.startingground.cognebus.flashcard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.startingground.cognebus.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB

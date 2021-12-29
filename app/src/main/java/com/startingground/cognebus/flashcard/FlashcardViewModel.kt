@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.startingground.cognebus.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import kotlinx.coroutines.launch
 
 class FlashcardViewModel(

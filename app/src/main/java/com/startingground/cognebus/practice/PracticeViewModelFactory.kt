@@ -3,7 +3,7 @@ package com.startingground.cognebus.practice
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.startingground.cognebus.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 
 @Suppress("UNCHECKED_CAST")
 class PracticeViewModelFactory(

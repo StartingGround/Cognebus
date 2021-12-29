@@ -15,6 +15,10 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.databinding.FragmentDirectoriesBinding
+import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
+import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 
 class DirectoriesFragment : Fragment() {
 

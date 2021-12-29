@@ -3,7 +3,7 @@ package com.startingground.cognebus.createfolderorfile
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
-import com.startingground.cognebus.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB

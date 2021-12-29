@@ -3,7 +3,7 @@ package com.startingground.cognebus.createfolderorfile
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.startingground.cognebus.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.database.CognebusDatabase
 
 @Suppress("UNCHECKED_CAST")

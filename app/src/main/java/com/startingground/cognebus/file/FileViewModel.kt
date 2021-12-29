@@ -11,6 +11,7 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Sorting
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.utilities.*
 
 class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataViewModel: DataViewModel): ViewModel(){

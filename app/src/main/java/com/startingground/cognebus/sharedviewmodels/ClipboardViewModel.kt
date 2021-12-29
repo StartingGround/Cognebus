@@ -1,4 +1,4 @@
-package com.startingground.cognebus
+package com.startingground.cognebus.sharedviewmodels
 
 import androidx.core.net.toUri
 import androidx.lifecycle.*

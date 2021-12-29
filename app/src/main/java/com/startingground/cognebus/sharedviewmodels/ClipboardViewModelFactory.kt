@@ -1,4 +1,4 @@
-package com.startingground.cognebus
+package com.startingground.cognebus.sharedviewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

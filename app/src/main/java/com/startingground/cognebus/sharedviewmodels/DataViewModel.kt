@@ -1,4 +1,4 @@
-package com.startingground.cognebus
+package com.startingground.cognebus.sharedviewmodels
 
 import android.app.Application
 import android.graphics.Bitmap
@@ -158,7 +158,8 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
 
 
     fun getShowDollarSignAlert(): Boolean{
-        return preferences.getBoolean(SHOW_DOLLAR_SIGN_ALERT, true
+        return preferences.getBoolean(
+            SHOW_DOLLAR_SIGN_ALERT, true
         )
     }
 

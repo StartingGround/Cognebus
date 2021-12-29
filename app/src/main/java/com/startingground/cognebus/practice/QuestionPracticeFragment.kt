@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.startingground.cognebus.DataViewModel
-import com.startingground.cognebus.DataViewModelFactory
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentQuestionPracticeBinding
 
