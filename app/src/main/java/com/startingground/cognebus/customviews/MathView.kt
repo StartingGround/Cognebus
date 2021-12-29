@@ -32,8 +32,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
-import com.startingground.cognebus.MAX_CLICK_TIME
 import com.startingground.cognebus.R
+import com.startingground.cognebus.utilities.MAX_CLICK_TIME
 import kotlin.properties.Delegates
 
 

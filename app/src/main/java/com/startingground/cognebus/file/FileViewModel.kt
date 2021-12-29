@@ -11,6 +11,7 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Sorting
+import com.startingground.cognebus.utilities.*
 
 class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataViewModel: DataViewModel): ViewModel(){
 
@@ -65,7 +66,7 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
     fun onCycleIncrementChanged(text: String){
         if(_file.value == null) return
 
-        val errorText = getErrorForInvalidIntegerValueInString(
+        val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
             dataViewModel.getStringFromResources(R.string.file_fragment_cycle_increment_edit_text_invalid_input_error),
             MINIMAL_CYCLE_INCREMENT,
@@ -88,7 +89,7 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
     fun onMaxDaysPerCycleChanged(text: String){
         if(_file.value == null) return
 
-        val errorText = getErrorForInvalidIntegerValueInString(
+        val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
             dataViewModel.getStringFromResources(R.string.file_fragment_max_days_per_cycle_edit_text_invalid_input_error),
             MINIMAL_MAX_DAYS_PER_CYCLE,

@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
-import com.startingground.cognebus.getBeginningOfNextDayInMilliseconds
+import com.startingground.cognebus.utilities.TimeCognebusUtils
 import kotlinx.coroutines.launch
 
 class MainMenuViewModel(private val database: CognebusDatabase): ViewModel() {
@@ -16,7 +16,7 @@ class MainMenuViewModel(private val database: CognebusDatabase): ViewModel() {
         flashcardsForRepetition?.removeObserver(flashcardsForRepetitionObserver)
         _readyForRepetition.value = false
 
-        flashcardsForRepetition = database.flashcardDatabaseDao.getFlashcardsForRepetition(getBeginningOfNextDayInMilliseconds())
+        flashcardsForRepetition = database.flashcardDatabaseDao.getFlashcardsForRepetition(TimeCognebusUtils.getBeginningOfNextDayInMilliseconds())
         flashcardsForRepetition?.observeForever(flashcardsForRepetitionObserver)
     }
 

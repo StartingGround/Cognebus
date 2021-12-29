@@ -5,6 +5,8 @@ import androidx.lifecycle.*
 import com.startingground.cognebus.*
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
+import com.startingground.cognebus.utilities.FlashcardUtils
+import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
 import java.util.*
 
 class PracticeViewModel(application: Application, private val dataViewModel: DataViewModel) : AndroidViewModel(application){
@@ -43,7 +45,7 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
 
         val enableHTML = files[it?.fileId]?.enableHtml ?: false
         val text = it?.question ?: return@map ""
-        prepareStringForPractice(context, text, enableHTML)
+        FlashcardUtils.prepareStringForPractice(context, text, enableHTML)
     }
 
 
@@ -52,7 +54,7 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
 
         val enableHTML = files[it?.fileId]?.enableHtml ?: false
         val text = it?.answer ?: return@map ""
-        prepareStringForPractice(context, text, enableHTML)
+        FlashcardUtils.prepareStringForPractice(context, text, enableHTML)
     }
 
 

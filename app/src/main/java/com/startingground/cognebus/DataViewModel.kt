@@ -11,6 +11,8 @@ import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.database.entity.ImageDB
+import com.startingground.cognebus.utilities.FlashcardUtils
+import com.startingground.cognebus.utilities.ImageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
@@ -96,7 +98,7 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
             val context = getApplication<Application>().applicationContext
             val unusedImages = database.imageDatabaseDao.getUnusedImages()
 
-            unusedImages.forEach { deleteImageFileById(it.imageId, context) }
+            unusedImages.forEach { ImageUtils.deleteImageFileById(it.imageId, context) }
 
             database.imageDatabaseDao.deleteList(unusedImages)
         }
@@ -106,7 +108,7 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
         viewModelScope.launch {
             val context = getApplication<Application>().applicationContext
 
-            images.forEach { deleteImageFileById(it.imageId, context) }
+            images.forEach { ImageUtils.deleteImageFileById(it.imageId, context) }
 
             database.imageDatabaseDao.deleteList(images)
         }
@@ -148,7 +150,7 @@ class DataViewModel(app: Application) : AndroidViewModel(app){
 
     fun prepareStringForPracticeCaller(inputText: String, enableHTML: Boolean): String{
         val context = getApplication<Application>().applicationContext
-        return prepareStringForPractice(context, inputText, enableHTML)
+        return FlashcardUtils.prepareStringForPractice(context, inputText, enableHTML)
     }
 
 

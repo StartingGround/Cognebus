@@ -7,10 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.startingground.cognebus.MINIMAL_CYCLE_INCREMENT
-import com.startingground.cognebus.MINIMAL_MAX_DAYS_PER_CYCLE
 import com.startingground.cognebus.R
-import com.startingground.cognebus.getErrorForInvalidIntegerValueInString
+import com.startingground.cognebus.utilities.MINIMAL_CYCLE_INCREMENT
+import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
+import com.startingground.cognebus.utilities.StringUtils
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -91,7 +91,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun onCycleIncrementChanged(text: String){
         val context = getApplication<Application>().applicationContext
-        val errorText = getErrorForInvalidIntegerValueInString(
+        val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
             context.getString(R.string.file_fragment_cycle_increment_edit_text_invalid_input_error),
             MINIMAL_CYCLE_INCREMENT,
@@ -116,7 +116,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun onMaxDaysPerCycleChanged(text: String){
         val context = getApplication<Application>().applicationContext
-        val errorText = getErrorForInvalidIntegerValueInString(
+        val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
             context.getString(R.string.file_fragment_max_days_per_cycle_edit_text_invalid_input_error),
             MINIMAL_MAX_DAYS_PER_CYCLE,
