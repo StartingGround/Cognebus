@@ -1,4 +1,4 @@
-package com.startingground.cognebus
+package com.startingground.cognebus.customviews
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.canhub.cropper.CropImageView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.startingground.cognebus.DataViewModel
+import com.startingground.cognebus.DataViewModelFactory
+import com.startingground.cognebus.R
 
 class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener {
 

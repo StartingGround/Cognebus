@@ -151,7 +151,7 @@
         </fragment>
         <fragment
             android:id="@+id/imageCropFragment"
-            android:name="com.startingground.cognebus.CropImageFragment"
+            android:name="com.startingground.cognebus.customviews.CropImageFragment"
             android:label="fragment_crop_image"
             tools:layout="@layout/fragment_crop_image" >
             <argument
