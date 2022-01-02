@@ -47,6 +47,7 @@
         <entry key="app/src/main/res/menu/flashcard_answer_top_app_bar.xml" value="0.17" />
         <entry key="app/src/main/res/menu/flashcard_question_top_app_bar.xml" value="0.215625" />
         <entry key="app/src/main/res/menu/flashcards_list_contextual_action_bar.xml" value="0.215625" />
+        <entry key="app/src/main/res/menu/flashcards_list_top_app_bar.xml" value="0.1712962962962963" />
         <entry key="app/src/main/res/menu/practice_question_top_app_bar.xml" value="0.215625" />
         <entry key="app/src/main/res/xml/test.xml" value="0.33" />
       </map>

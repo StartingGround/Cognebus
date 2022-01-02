@@ -37,4 +37,7 @@ interface FlashcardDatabaseDao {
                 "(last_increase > 30 AND file_id IN (SELECT file_id FROM file WHERE repetition_enabled = 1 AND continue_repetition_after_default_period = 1))" +
             ")")
     fun getFlashcardsForRepetition(date: Long): LiveData<List<FlashcardDB>>
+
+    @Query("SELECT * FROM flashcard WHERE flashcard_id IN (:flashcardIdList)")
+    fun getLiveDataFlashcardsInFlashcardIdList(flashcardIdList: List<Long>): LiveData<List<FlashcardDB>>
 }

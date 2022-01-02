@@ -3,40 +3,50 @@ package com.startingground.cognebus.sharedviewmodels
 import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
+import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.utilities.FileDBUtils
+import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.FolderUtils
 import kotlinx.coroutines.launch
 
 
+enum class SelectedType{ DIRECTORIES, FLASHCARDS }
+
 class ClipboardViewModel(private val database: CognebusDatabase, private val dataViewModel: DataViewModel) : ViewModel(){
+
+    //Files and folders part ----------------------------------------------------------------------------------------------------
+
     private var selectedFilesDatabase: LiveData<List<FileDB>> = liveData { }
     private var selectedFoldersDatabase: LiveData<List<Folder>> = liveData {  }
 
-    private var _thereIsContentReadyToBePasted: MediatorLiveData<Boolean> = MediatorLiveData()
-    val thereIsContentReadyToBePasted: LiveData<Boolean> get() = _thereIsContentReadyToBePasted
+    private val _thereIsContentReadyToBePastedInDirectories: MediatorLiveData<Boolean> = MediatorLiveData()
+    val thereIsContentReadyToBePastedInDirectories: LiveData<Boolean> get() = _thereIsContentReadyToBePastedInDirectories
 
     init {
-        _thereIsContentReadyToBePasted.value = false
+        _thereIsContentReadyToBePastedInDirectories.value = false
     }
 
 
-    private fun addObserversForConfirmingAvailabilityOfSelectedItems(){
-        _thereIsContentReadyToBePasted.addSource(selectedFilesDatabase, observerForConfirmingAvailabilityOfSelectedItems)
-        _thereIsContentReadyToBePasted.addSource(selectedFoldersDatabase, observerForConfirmingAvailabilityOfSelectedItems)
+    private fun addObserversForConfirmingAvailabilityOfSelectedItemsInDirectories(){
+        _thereIsContentReadyToBePastedInDirectories.addSource(selectedFilesDatabase, observerForConfirmingAvailabilityOfSelectedItemsInDirectories)
+        _thereIsContentReadyToBePastedInDirectories.addSource(selectedFoldersDatabase, observerForConfirmingAvailabilityOfSelectedItemsInDirectories)
     }
 
 
-    private fun removeObserversForConfirmingAvailabilityOfSelectedItems(){
-        _thereIsContentReadyToBePasted.removeSource(selectedFilesDatabase)
-        _thereIsContentReadyToBePasted.removeSource(selectedFoldersDatabase)
-        _thereIsContentReadyToBePasted.value = false
+    private fun removeObserversForConfirmingAvailabilityOfSelectedItemsInDirectories(){
+        _thereIsContentReadyToBePastedInDirectories.removeSource(selectedFilesDatabase)
+        _thereIsContentReadyToBePastedInDirectories.removeSource(selectedFoldersDatabase)
+        _thereIsContentReadyToBePastedInDirectories.value = false
     }
 
 
-    private val observerForConfirmingAvailabilityOfSelectedItems = Observer<Any>{
-        if(selectedFilesIds.isEmpty() && selectedFoldersIds.isEmpty()){
-            _thereIsContentReadyToBePasted.value = false
+    private var selectedCopyType: SelectedType = SelectedType.DIRECTORIES
+
+
+    private val observerForConfirmingAvailabilityOfSelectedItemsInDirectories = Observer<Any>{
+        if((selectedFilesIds.isEmpty() && selectedFoldersIds.isEmpty()) || selectedCopyType != SelectedType.DIRECTORIES){
+            _thereIsContentReadyToBePastedInDirectories.value = false
             return@Observer
         }
 
@@ -46,12 +56,12 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
         val filesMatch = selectedFilesIds.containsAll(selectedFilesDatabaseIds) && selectedFilesDatabaseIds.containsAll(selectedFilesIds)
         val foldersMatch = selectedFoldersIds.containsAll(selectedFoldersDatabaseIds) && selectedFoldersDatabaseIds.containsAll(selectedFoldersIds)
         if(!filesMatch || !foldersMatch){
-            _thereIsContentReadyToBePasted.value = false
+            _thereIsContentReadyToBePastedInDirectories.value = false
             return@Observer
         }
 
         determineOriginFolder()
-        _thereIsContentReadyToBePasted.value = true
+        _thereIsContentReadyToBePastedInDirectories.value = true
     }
 
 
@@ -72,7 +82,8 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
 
 
     fun copySelectedFilesAndFolders(files: List<FileDB>, folders: List<Folder>, cutEnabled: Boolean = false){
-        removeObserversForConfirmingAvailabilityOfSelectedItems()
+        removeObserversForConfirmingAvailabilityOfSelectedItemsInDirectories()
+        removeObserverForConfirmingAvailabilityOfSelectedFlashcards()
         cutSelected = cutEnabled
 
         selectedFilesIds = files.map { it.fileId }
@@ -81,7 +92,8 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
         selectedFilesDatabase = database.fileDatabaseDao.getLiveDataFilesInFileIdList(selectedFilesIds)
         selectedFoldersDatabase = database.folderDatabaseDao.getLiveDataFoldersInFolderIdList(selectedFoldersIds)
 
-        addObserversForConfirmingAvailabilityOfSelectedItems()
+        selectedCopyType = SelectedType.DIRECTORIES
+        addObserversForConfirmingAvailabilityOfSelectedItemsInDirectories()
     }
 
 
@@ -95,7 +107,7 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
 
 
     fun pasteSelectedToFolder(destinationFolder: Long?){
-        if(_thereIsContentReadyToBePasted.value != true) return
+        if(_thereIsContentReadyToBePastedInDirectories.value != true) return
 
         if(originFolder == destinationFolder) return
 
@@ -126,7 +138,6 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
             }
 
             dataViewModel.deleteUnusedImages()
-
             cutSelected = false
         }
     }
@@ -143,5 +154,87 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
         }
 
         return false
+    }
+
+
+    //Flashcards part -------------------------------------------------------------------------------------------------------
+
+    private var selectedFlashcardsDatabase: LiveData<List<FlashcardDB>> = liveData{ }
+
+    private val _thereAreFlashcardsToBePasted: MediatorLiveData<Boolean> = MediatorLiveData()
+    val thereAreFlashcardsToBePasted: LiveData<Boolean> get() = _thereAreFlashcardsToBePasted
+
+    init {
+        _thereAreFlashcardsToBePasted.value = false
+    }
+
+
+    private fun addObserverForConfirmingAvailabilityOfSelectedFlashcards(){
+        _thereAreFlashcardsToBePasted.addSource(selectedFlashcardsDatabase, observerForConfirmingAvailabilityOfSelectedFlashcards)
+    }
+
+
+    private fun removeObserverForConfirmingAvailabilityOfSelectedFlashcards(){
+        _thereAreFlashcardsToBePasted.removeSource(selectedFlashcardsDatabase)
+        _thereAreFlashcardsToBePasted.value = false
+    }
+
+
+    private val observerForConfirmingAvailabilityOfSelectedFlashcards = Observer<List<FlashcardDB>> {
+        if(selectedFlashcardsIds.isEmpty() || selectedCopyType != SelectedType.FLASHCARDS){
+            _thereAreFlashcardsToBePasted.value = false
+            return@Observer
+        }
+
+        val selectedFlashcardsDatabaseIds: List<Long> = selectedFlashcardsDatabase.value?.map{ it.flashcardId } ?: listOf()
+
+        val flashcardsMatch = selectedFlashcardsDatabaseIds.containsAll(selectedFlashcardsIds)
+                && selectedFlashcardsIds.containsAll(selectedFlashcardsDatabaseIds)
+        if(!flashcardsMatch){
+            _thereAreFlashcardsToBePasted.value = false
+            return@Observer
+        }
+
+        _thereAreFlashcardsToBePasted.value = true
+    }
+
+
+    private var selectedFlashcardsIds: List<Long> = listOf()
+
+
+    fun copySelectedFlashcards(flashcards: List<FlashcardDB>, cutEnabled: Boolean = false){
+        removeObserverForConfirmingAvailabilityOfSelectedFlashcards()
+        removeObserversForConfirmingAvailabilityOfSelectedItemsInDirectories()
+        cutSelected = cutEnabled
+
+        selectedFlashcardsIds = flashcards.map { it.flashcardId }
+
+        selectedFlashcardsDatabase = database.flashcardDatabaseDao.getLiveDataFlashcardsInFlashcardIdList(selectedFlashcardsIds)
+
+        selectedCopyType = SelectedType.FLASHCARDS
+        addObserverForConfirmingAvailabilityOfSelectedFlashcards()
+    }
+
+
+    fun pasteSelectedFlashcardsToFile(destinationFileId: Long){
+        if(_thereAreFlashcardsToBePasted.value != true) return
+
+        val originFileId: Long = selectedFlashcardsDatabase.value!!.first().fileId
+        if(destinationFileId == originFileId) return
+
+        viewModelScope.launch {
+            selectedFlashcardsDatabase.value?.let {
+                if(it.isEmpty()) return@let
+
+                FlashcardUtils.copyFlashcardsTo(it, destinationFileId, database, dataViewModel)
+
+                if(!cutSelected) return@let
+
+                database.flashcardDatabaseDao.deleteList(it)
+            }
+
+            dataViewModel.deleteUnusedImages()
+            cutSelected = false
+        }
     }
 }

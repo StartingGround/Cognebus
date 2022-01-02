@@ -16,12 +16,15 @@ import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.databinding.FragmentFlashcardsListBinding
+import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
+import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
 
 class FlashcardsListFragment : Fragment() {
 
     private lateinit var adapter: FlashcardsListAdapter
     private lateinit var flashcardsListViewModel: FlashcardsListViewModel
     private lateinit var dataViewModel: DataViewModel
+    private lateinit var sharedClipboardViewModel: ClipboardViewModel
 
     private lateinit var binding: FragmentFlashcardsListBinding
 
@@ -50,6 +53,9 @@ class FlashcardsListFragment : Fragment() {
         val flashcardsListViewModelFactory = FlashcardsListVieModelFactory(database, fileId, dataViewModel, enableHtml)
         flashcardsListViewModel = ViewModelProvider(this, flashcardsListViewModelFactory).get(FlashcardsListViewModel::class.java)
 
+        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
+        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
+
         adapter = FlashcardsListAdapter(this)
     }
 
@@ -75,6 +81,20 @@ class FlashcardsListFragment : Fragment() {
 
         binding.topAppBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.paste -> {
+                    onPasteButton()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        sharedClipboardViewModel.thereAreFlashcardsToBePasted.observe(viewLifecycleOwner){
+            binding.topAppBar.menu.findItem(R.id.paste).isEnabled = it
         }
 
         flashcardsListViewModel.flashcardAdapter.observe(viewLifecycleOwner){
@@ -139,8 +159,18 @@ class FlashcardsListFragment : Fragment() {
                     onDeleteButton()
                     true
                 }
-                R.id.select_all ->{
+                R.id.select_all -> {
                     adapter.selectAll()
+                    true
+                }
+                R.id.cut -> {
+                    onCopyButton(cutEnabled = true)
+                    selectionTracker?.clearSelection()
+                    true
+                }
+                R.id.copy -> {
+                    onCopyButton()
+                    selectionTracker?.clearSelection()
                     true
                 }
                 else -> false
@@ -171,5 +201,19 @@ class FlashcardsListFragment : Fragment() {
                 flashcardsListViewModel.deleteSelectedFlashcards(flashcards)
             }
             .show()
+    }
+
+
+    private fun onCopyButton(cutEnabled: Boolean = false){
+        val selectedFlashcardsAdapter: List<FlashcardAdapterItem> = adapter.currentList
+            .filter { selectionTracker?.isSelected(it.flashcard.flashcardId) ?: false }
+        val selectedFlashcards: List<FlashcardDB> = selectedFlashcardsAdapter.map { it.flashcard }
+
+        sharedClipboardViewModel.copySelectedFlashcards(selectedFlashcards, cutEnabled = cutEnabled)
+    }
+
+
+    private fun onPasteButton(){
+        sharedClipboardViewModel.pasteSelectedFlashcardsToFile(fileId)
     }
 }

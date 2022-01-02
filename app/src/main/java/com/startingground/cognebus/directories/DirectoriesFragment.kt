@@ -103,7 +103,7 @@ class DirectoriesFragment : Fragment() {
             }
         }
 
-        sharedClipboardViewModel.thereIsContentReadyToBePasted.observe(viewLifecycleOwner){
+        sharedClipboardViewModel.thereIsContentReadyToBePastedInDirectories.observe(viewLifecycleOwner){
             binding.topAppBar.menu.findItem(R.id.paste).isEnabled = it
         }
 
