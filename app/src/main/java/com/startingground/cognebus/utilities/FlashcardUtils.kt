@@ -1,6 +1,9 @@
 package com.startingground.cognebus.utilities
 
 import android.content.Context
+import com.startingground.cognebus.database.CognebusDatabase
+import com.startingground.cognebus.database.entity.FlashcardDB
+import com.startingground.cognebus.sharedviewmodels.DataViewModel
 
 object FlashcardUtils {
     fun prepareStringForPractice(context: Context, inputText: String, enableHTML: Boolean): String{
@@ -73,5 +76,18 @@ object FlashcardUtils {
             text = reverseImageTag(text, lessThanIndex)
         }
         return text
+    }
+
+
+    suspend fun copyFlashcardsTo(flashcardList: List<FlashcardDB>, destinationFileId: Long, database: CognebusDatabase, dataViewModel: DataViewModel){
+        flashcardList.forEach {
+            val flashcardCopy = it.copy(flashcardId = 0L, fileId = destinationFileId)
+            val flashcardCopyId = database.flashcardDatabaseDao.insert(flashcardCopy)
+
+            val images = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
+            if(images.isEmpty()) return@forEach
+
+            ImageUtils.copyImagesTo(images, flashcardCopyId, database, dataViewModel)
+        }
     }
 }

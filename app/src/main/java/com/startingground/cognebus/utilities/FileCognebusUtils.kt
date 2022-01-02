@@ -19,6 +19,7 @@ object FileCognebusUtils {
         destinationFileChannel.close()
     }
 
+
     fun createFileOrGetExisting(directory: String, fileName: String, context: Context): File?{
         return try {
             val fileDirectory = context.getExternalFilesDir(directory)
