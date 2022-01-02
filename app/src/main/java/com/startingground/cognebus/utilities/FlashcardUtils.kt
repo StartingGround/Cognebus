@@ -18,9 +18,8 @@ object FlashcardUtils {
             }
         }
 
-        text = text.replace(" ", "&nbsp;")
-
         if(enableHTML){
+            text = text.replace(" ", "&nbsp;<wbr>")
             text = filterAllTagsForWhiteSpaces(text)
             return filterSpecialCharacters(text)
         }
@@ -28,27 +27,28 @@ object FlashcardUtils {
         text = text.replace("<", "&lt;")
         text = text.replace(">", "&gt;")
         text = reverseImageTag(text)
-        text = filterImgTagsForWhiteSpaces(text)
 
+        text = text.replace(" ", "&nbsp;<wbr>")
+        text = filterImgTagsForWhiteSpaces(text)
         return filterSpecialCharacters(text)
     }
 
 
     private fun filterImgTagsForWhiteSpaces(inputText: String): String{
-        val imageTagRegex = Regex("<img[^<>]+>")
+        val imageTagRegex = Regex("<img([^<>]|<wbr>)+>")
 
         val text = imageTagRegex.replace(inputText){
-            it.value.replace("&nbsp;", " ")
+            it.value.replace("&nbsp;<wbr>", " ")
         }
         return text
     }
 
 
     private fun filterAllTagsForWhiteSpaces(inputText: String): String{
-        val tagRegex = Regex("<[^<>]+>")
+        val tagRegex = Regex("<([^<>]|<wbr>)+>")
 
         val text = tagRegex.replace(inputText){
-            it.value.replace("&nbsp;", " ")
+            it.value.replace("&nbsp;<wbr>", " ")
         }
         return text
     }
