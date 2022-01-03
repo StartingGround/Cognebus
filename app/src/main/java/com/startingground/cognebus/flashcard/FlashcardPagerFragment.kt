@@ -56,7 +56,8 @@ class FlashcardPagerFragment : Fragment() {
         val flashcardViewModelFactory = FlashcardViewModelFactory(
             database,
             fileId ?: throw IllegalArgumentException("fileId can't be null"),
-            dataViewModel
+            dataViewModel,
+            application
         )
         val sharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
 

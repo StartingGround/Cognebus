@@ -37,7 +37,7 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
         val application = requireNotNull(this.activity).application
         val database = CognebusDatabase.getInstance(application)
 
-        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null, application)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 
@@ -57,6 +57,7 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
         binding.questionFragment = this
         binding.sharedFlashcardViewModel = sharedFlashcardViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.questionMathView.settings.allowFileAccess = true
 
         binding.topAppBar.setNavigationOnClickListener {
             activity?.onBackPressed()
@@ -66,7 +67,11 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
         binding.topAppBar.setOnMenuItemClickListener {
             when(it.itemId){
-                R.id.move_to_answer ->{
+                R.id.preview -> {
+                    sharedFlashcardViewModel.onPreviewButton()
+                    true
+                }
+                R.id.move_to_answer -> {
                     viewPager?.currentItem = 1
                     true
                 }
@@ -76,6 +81,10 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
         sharedFlashcardViewModel.questionError.observe(viewLifecycleOwner){
             binding.questionTextField.error = it
+        }
+
+        sharedFlashcardViewModel.previewModeIsEnabled.observe(viewLifecycleOwner){
+            changeViewsOnPreviewButton(it)
         }
 
         binding.questionTextField.editText?.doOnTextChanged { text, _, _, _ ->
@@ -90,6 +99,27 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
                     }
                     .show()
             }
+        }
+    }
+
+
+    private fun changeViewsOnPreviewButton(previewIsEnabled: Boolean){
+        if(previewIsEnabled){
+            binding.topAppBar.menu.findItem(R.id.preview).setIcon(R.drawable.ic_visibility_off_24)
+            binding.topAppBar.menu.findItem(R.id.preview).setTitle(R.string.flashcard_top_app_bar_disable_preview)
+            binding.topAppBar.menu.findItem(R.id.preview).contentDescription =
+                getString(R.string.flashcard_top_app_bar_disable_preview_content_description)
+
+            binding.questionNestedScrollView.visibility = View.GONE
+            binding.questionMathViewNestedScrollView.visibility = View.VISIBLE
+        } else{
+            binding.topAppBar.menu.findItem(R.id.preview).setIcon(R.drawable.ic_visibility_24)
+            binding.topAppBar.menu.findItem(R.id.preview).setTitle(R.string.flashcard_top_app_bar_preview)
+            binding.topAppBar.menu.findItem(R.id.preview).contentDescription =
+                getString(R.string.flashcard_top_app_bar_preview_content_description)
+
+            binding.questionNestedScrollView.visibility = View.VISIBLE
+            binding.questionMathViewNestedScrollView.visibility = View.GONE
         }
     }
 

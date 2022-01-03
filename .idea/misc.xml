@@ -18,6 +18,7 @@
         <entry key="app/src/main/res/drawable/ic_right_24.xml" value="0.121875" />
         <entry key="app/src/main/res/drawable/ic_twotone_check_circle_24.xml" value="0.2282051282051282" />
         <entry key="app/src/main/res/drawable/ic_twotone_check_circle_outline_24.xml" value="0.2282051282051282" />
+        <entry key="app/src/main/res/drawable/ic_visibility_off_24.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.10486322188449848" />
         <entry key="app/src/main/res/layout/create_item.xml" value="0.22" />
         <entry key="app/src/main/res/layout/file_item.xml" value="0.25" />
@@ -31,7 +32,7 @@
         <entry key="app/src/main/res/layout/fragment_directories.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_file.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_file_practice_order_dropdown_item.xml" value="0.1621376811594203" />
-        <entry key="app/src/main/res/layout/fragment_flashcard_answer.xml" value="0.16168478260869565" />
+        <entry key="app/src/main/res/layout/fragment_flashcard_answer.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_flashcard_pager.xml" value="0.10486322188449848" />
         <entry key="app/src/main/res/layout/fragment_flashcard_question.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/fragment_flashcards_list.xml" value="0.22" />

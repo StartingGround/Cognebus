@@ -29,6 +29,10 @@
     <string name="dollar_sign_alert_title">To use $ in flashcard you need to write it like \\$</string>
     <string name="dollar_sign_alert_ok">OK</string>
     <string name="dollar_sign_alert_dont_show_again">Don\'t show again</string>
+    <string name="flashcard_top_app_bar_preview">Preview</string>
+    <string name="flashcard_top_app_bar_preview_content_description">Preview</string>
+    <string name="flashcard_top_app_bar_disable_preview">Disable Preview</string>
+    <string name="flashcard_top_app_bar_disable_preview_content_description">Disable Preview</string>
 
     <!-- Main Menu -->
     <string name="files_button">Flashcards</string>

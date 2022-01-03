@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/preview"
+        android:icon="@drawable/ic_visibility_24"
+        android:title="@string/flashcard_top_app_bar_preview"
+        android:contentDescription="@string/flashcard_top_app_bar_preview_content_description"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/save_flashcard"
         android:title="@string/flashcard_answer_top_app_bar_save_flashcard_title"

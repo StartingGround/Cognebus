@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/preview"
+        android:icon="@drawable/ic_visibility_24"
+        android:title="@string/flashcard_top_app_bar_preview"
+        android:contentDescription="@string/flashcard_top_app_bar_preview_content_description"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/move_to_answer"
         android:icon="@drawable/ic_right_24"
         android:title="@string/flashcard_question_top_app_bar_move_to_answer_title"

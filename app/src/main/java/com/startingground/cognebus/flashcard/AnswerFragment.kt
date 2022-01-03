@@ -36,7 +36,7 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
         val application = requireNotNull(this.activity).application
         val database = CognebusDatabase.getInstance(application)
 
-        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null, application)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 
@@ -56,6 +56,7 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
         binding.answerFragment = this
         binding.sharedFlashcardViewModel = sharedFlashcardViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.answerMathView.settings.allowFileAccess = true
 
         val viewPager: ViewPager2? = activity?.findViewById(R.id.flashcard_pager)
 
@@ -65,12 +66,20 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
         binding.topAppBar.setOnMenuItemClickListener {
             when(it.itemId){
+                R.id.preview -> {
+                    sharedFlashcardViewModel.onPreviewButton()
+                    true
+                }
                 R.id.save_flashcard -> {
                     onSaveFlashcardButton()
                     true
                 }
                 else -> false
             }
+        }
+
+        sharedFlashcardViewModel.previewModeIsEnabled.observe(viewLifecycleOwner){
+            changeViewsOnPreviewButton(it)
         }
 
         sharedFlashcardViewModel.answerError.observe(viewLifecycleOwner){
@@ -93,6 +102,27 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
                     }
                     .show()
             }
+        }
+    }
+
+
+    private fun changeViewsOnPreviewButton(previewIsEnabled: Boolean){
+        if(previewIsEnabled){
+            binding.topAppBar.menu.findItem(R.id.preview).setIcon(R.drawable.ic_visibility_off_24)
+            binding.topAppBar.menu.findItem(R.id.preview).setTitle(R.string.flashcard_top_app_bar_disable_preview)
+            binding.topAppBar.menu.findItem(R.id.preview).contentDescription =
+                getString(R.string.flashcard_top_app_bar_disable_preview_content_description)
+
+            binding.answerNestedScrollView.visibility = View.GONE
+            binding.answerMathViewNestedScrollView.visibility = View.VISIBLE
+        } else{
+            binding.topAppBar.menu.findItem(R.id.preview).setIcon(R.drawable.ic_visibility_24)
+            binding.topAppBar.menu.findItem(R.id.preview).setTitle(R.string.flashcard_top_app_bar_preview)
+            binding.topAppBar.menu.findItem(R.id.preview).contentDescription =
+                getString(R.string.flashcard_top_app_bar_preview_content_description)
+
+            binding.answerNestedScrollView.visibility = View.VISIBLE
+            binding.answerMathViewNestedScrollView.visibility = View.GONE
         }
     }
 
