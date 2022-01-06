@@ -3,6 +3,7 @@ package com.startingground.cognebus.flashcardslist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
@@ -59,6 +60,14 @@ class FlashcardsListAdapter(
         fun bind(flashcardItem: FlashcardAdapterItem){
             questionMathView.text = flashcardItem.questionText
 
+            val foregroundColor = if(flashcardItem.flashcard.repetitionEnabled){
+                ContextCompat.getColorStateList(materialCardView.context, R.color.flashcard_item_foreground_default)
+            } else{
+                ContextCompat.getColorStateList(materialCardView.context, R.color.flashcard_item_foreground_disabled)
+            }
+
+            materialCardView.setCardForegroundColor(foregroundColor)
+
             flashcard = flashcardItem.flashcard
         }
 
@@ -94,6 +103,6 @@ class FlashcardsListDiffCallback : DiffUtil.ItemCallback<FlashcardAdapterItem>()
     }
 
     override fun areContentsTheSame(oldItem: FlashcardAdapterItem, newItem: FlashcardAdapterItem): Boolean {
-        return oldItem.flashcard.question == newItem.flashcard.question
+        return oldItem.flashcard.question == newItem.flashcard.question &&  oldItem.flashcard.repetitionEnabled == newItem.flashcard.repetitionEnabled
     }
 }

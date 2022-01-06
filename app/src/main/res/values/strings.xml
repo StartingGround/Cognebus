@@ -10,6 +10,10 @@
     <string name="cut">Cut</string>
     <string name="copy">Copy</string>
     <string name="paste">Paste</string>
+    <string name="repetition_on">Repetition On</string>
+    <string name="repetition_on_content_description">Repetition On</string>
+    <string name="repetition_off">Repetition Off</string>
+    <string name="repetition_off_content_description">Repetition Off</string>
 
     <!-- Flashcard -->
     <string name="image_html_tag_template"> &lt;img src=\"%d\" width=\"100%%\"&gt; </string>

@@ -173,6 +173,16 @@ class FlashcardsListFragment : Fragment() {
                     selectionTracker?.clearSelection()
                     true
                 }
+                R.id.repetition_on -> {
+                    flashcardsListViewModel.changeRepetitionState(true, adapter.currentList)
+                    selectionTracker?.clearSelection()
+                    true
+                }
+                R.id.repetition_off -> {
+                    flashcardsListViewModel.changeRepetitionState(false, adapter.currentList)
+                    selectionTracker?.clearSelection()
+                    true
+                }
                 else -> false
             }
         }

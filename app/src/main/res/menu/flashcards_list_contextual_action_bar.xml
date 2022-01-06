@@ -25,4 +25,16 @@
         android:title="@string/copy"
         android:contentDescription="@string/copy"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/repetition_on"
+        android:title="@string/repetition_on"
+        android:contentDescription="@string/repetition_on_content_description"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/repetition_off"
+        android:title="@string/repetition_off"
+        android:contentDescription="@string/repetition_off_content_description"
+        app:showAsAction="never" />
 </menu>

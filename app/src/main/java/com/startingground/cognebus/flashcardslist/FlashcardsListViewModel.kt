@@ -93,4 +93,17 @@ class FlashcardsListViewModel(
             dataViewModel.deleteFlashcardList(selectedFlashcards)
         }
     }
+
+
+    fun changeRepetitionState(state: Boolean, allFlashcards: List<FlashcardAdapterItem>){
+        val selectedFlashcardsAdapter: List<FlashcardAdapterItem> = allFlashcards
+            .filter { selectionTracker?.isSelected(it.flashcard.flashcardId) ?: false }
+        val selectedFlashcards: List<FlashcardDB> = selectedFlashcardsAdapter.map { it.flashcard }
+
+        selectedFlashcards.forEach {
+            it.repetitionEnabled = state
+        }
+
+        dataViewModel.updateFlashcardsInDatabase(selectedFlashcards)
+    }
 }
