@@ -68,5 +68,12 @@ class QuestionPracticeFragment : Fragment() {
                 else -> false
             }
         }
+
+        binding?.topAppBar?.title = getString(R.string.practice_question_fragment_top_app_bar_title, 0, 0)
+
+        sharedPracticeViewModel?.flashcardNumber?.observe(viewLifecycleOwner){
+            val (currentFlashcardNumber, totalNumberOfFlashcards) = it
+            binding?.topAppBar?.title = getString(R.string.practice_question_fragment_top_app_bar_title, currentFlashcardNumber, totalNumberOfFlashcards)
+        }
     }
 }

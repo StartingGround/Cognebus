@@ -91,7 +91,7 @@
     <string name="settings_fragment_default_file_options_label">DEFAULT FILE OPTIONS</string>
 
     <!-- Practice -->
-    <string name="practice_question_fragment_top_app_bar_title">Question</string>
+    <string name="practice_question_fragment_top_app_bar_title">Question %1$d/%2$d</string>
     <string name="practice_question_top_app_bar_move_to_answer_title">Go to answer.</string>
     <string name="practice_question_top_app_bar_move_to_answer_content_description">Go to answer.</string>
     <string name="practice_answer_navigation_icon_content_description">Go to question.</string>

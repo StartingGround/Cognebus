@@ -20,6 +20,11 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
 
     private var inRepetitionMode: Boolean = false
 
+    private val _flashcardNumber: MutableLiveData<Pair<Int,Int>> = MutableLiveData(0 to 0)
+    val flashcardNumber: LiveData<Pair<Int, Int>> get() = _flashcardNumber
+
+    private var totalNumberOfFlashcards = 0
+
     fun setFlashcards(flashcards: MutableList<FlashcardDB>, usedFiles: MutableList<FileDB>, repetitionMode: Boolean){
         inRepetitionMode = repetitionMode
 
@@ -28,6 +33,7 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
         files.clear()
 
         flashcardsForPractice.addAll(flashcards)
+        totalNumberOfFlashcards = flashcardsForPractice.size
 
         val usedFilesPairs = usedFiles.map { it.fileId to it }
 
@@ -83,6 +89,10 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
     private fun getNextFlashcard(){
         if(flashcardsForPractice.isNotEmpty()) {
             _currentFlashcard.value = flashcardsForPractice.removeFirst()
+
+            val currentFlashcardNumber = totalNumberOfFlashcards - flashcardsForPractice.size
+            _flashcardNumber.value = currentFlashcardNumber to totalNumberOfFlashcards
+
             return
         }
 
@@ -90,6 +100,10 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
             flashcardsForPractice.addAll(incorrectlyAnsweredFlashcards)
             incorrectlyAnsweredFlashcards.clear()
             _currentFlashcard.value = flashcardsForPractice.removeFirst()
+
+            val currentFlashcardNumber = totalNumberOfFlashcards - flashcardsForPractice.size
+            _flashcardNumber.value = currentFlashcardNumber to totalNumberOfFlashcards
+
             return
         }
 

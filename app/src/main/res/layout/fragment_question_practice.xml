@@ -30,8 +30,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/practice_question_top_app_bar"
                 app:navigationContentDescription="@string/go_back_navigation_icon_content_description"
-                app:navigationIcon="@drawable/ic_arrow_back_24"
-                app:title="@string/practice_question_fragment_top_app_bar_title" />
+                app:navigationIcon="@drawable/ic_arrow_back_24" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
