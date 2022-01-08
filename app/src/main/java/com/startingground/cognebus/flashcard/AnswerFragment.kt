@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
@@ -191,8 +192,9 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
     private fun onSaveFlashcardButton(){
         val flashcardIsSaved = sharedFlashcardViewModel.saveFlashcardToDatabase()
-        if(flashcardIsSaved){
-            findNavController().popBackStack()
-        }
+        if(!flashcardIsSaved) return
+
+        Toast.makeText(context, R.string.flashcard_saved_toast, Toast.LENGTH_SHORT).show()
+        findNavController().popBackStack()
     }
 }

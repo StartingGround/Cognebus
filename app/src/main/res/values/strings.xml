@@ -37,6 +37,7 @@
     <string name="flashcard_top_app_bar_preview_content_description">Preview</string>
     <string name="flashcard_top_app_bar_disable_preview">Disable Preview</string>
     <string name="flashcard_top_app_bar_disable_preview_content_description">Disable Preview</string>
+    <string name="flashcard_saved_toast">Flashcard saved.</string>
 
     <!-- Main Menu -->
     <string name="files_button">Flashcards</string>
