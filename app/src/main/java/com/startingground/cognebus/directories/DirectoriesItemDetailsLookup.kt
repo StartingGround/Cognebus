@@ -12,7 +12,8 @@ class DirectoriesItemDetailsLookup(private val recyclerView: RecyclerView) : Ite
     }
 
     object EMPTY_DIRECTORIES_ITEM : ItemDetails<String>() {
-        override fun getSelectionKey(): String = CreateItem.CREATE
+        const val NONE = "none"
+        override fun getSelectionKey(): String = NONE
         override fun getPosition(): Int = Integer.MAX_VALUE
     }
 }

@@ -39,7 +39,7 @@ class DirectoriesViewModel(database: CognebusDatabase, val folderId: Long?, priv
 
     private val directoriesSelectionPredicate = object : SelectionTracker.SelectionPredicate<String>(){
         override fun canSetStateForKey(key: String, nextState: Boolean): Boolean {
-            return key != CreateItem.CREATE
+            return key != DirectoriesItemDetailsLookup.EMPTY_DIRECTORIES_ITEM.NONE
         }
 
         override fun canSetStateAtPosition(position: Int, nextState: Boolean): Boolean {

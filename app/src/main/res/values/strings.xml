@@ -46,7 +46,7 @@
 
     <!-- Directories -->
     <string name="directories_title_files">Files</string>
-    <string name="directories_create_button">Create New Folder/File</string>
+    <string name="directories_create_button_content_description">Create New Folder/File</string>
     <string name="directories_delete_selected_items_dialog">Delete selected items?</string>
     <string name="directories_delete_dialog_negative_button">Cancel</string>
     <string name="directories_delete_dialog_positive_button">Delete</string>

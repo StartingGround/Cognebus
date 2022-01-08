@@ -39,5 +39,16 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/folder_item" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="@dimen/margin_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/directories_create_button_content_description"
+            app:backgroundTint="@color/green_300"
+            app:srcCompat="@drawable/ic_add_24" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -33,17 +33,3 @@ class FileItem(file: FileDB) : DirectoryItem{
         return false
     }
 }
-
-class CreateItem : DirectoryItem{
-
-    companion object{
-        const val CREATE = "create"
-    }
-
-    override val itemId: String = CREATE
-    override val content: Any = CREATE
-
-    override fun isContentSame(otherItem: DirectoryItem): Boolean {
-        return otherItem.content == CREATE
-    }
-}

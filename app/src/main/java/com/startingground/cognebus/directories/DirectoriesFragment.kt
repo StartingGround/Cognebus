@@ -25,7 +25,6 @@ class DirectoriesFragment : Fragment() {
     companion object{
         const val TYPE_FOLDER = 1
         const val TYPE_FILE = 2
-        const val TYPE_CREATE = 3
     }
 
     private lateinit var binding: FragmentDirectoriesBinding
@@ -131,6 +130,8 @@ class DirectoriesFragment : Fragment() {
         adapter.selectionTracker = selectionTracker
         selectionTracker?.addObserver(selectionTrackerObserver)
 
+        binding.createButton.setOnClickListener { onCreateButton() }
+
         //If fragment is destroyed while selection is ongoing and recreated, we call this to show contextual top app bar again
         selectionTrackerObserver.onSelectionChanged()
 
@@ -171,7 +172,6 @@ class DirectoriesFragment : Fragment() {
                 FileItem(file)
             }
         }
-        allItems += CreateItem()
         adapter.submitList(allItems)
     }
 

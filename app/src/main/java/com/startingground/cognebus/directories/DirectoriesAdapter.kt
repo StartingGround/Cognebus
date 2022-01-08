@@ -3,7 +3,6 @@ package com.startingground.cognebus.directories
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
@@ -27,7 +26,7 @@ class DirectoriesAdapter(
         return when(viewType){
             DirectoriesFragment.TYPE_FOLDER -> FolderViewHolder.create(parent, directoriesFragment)
             DirectoriesFragment.TYPE_FILE -> FileViewHolder.create(parent, directoriesFragment)
-            else -> CreateViewHolder.create(parent, directoriesFragment)
+            else -> throw Exception("Creating this view tye not supported")
         }
     }
 
@@ -35,7 +34,6 @@ class DirectoriesAdapter(
         when(getItemViewType(position)){
             DirectoriesFragment.TYPE_FOLDER -> (holder as FolderViewHolder).bind(getItem(position), folderButtonContentDescriptionTemplate)
             DirectoriesFragment.TYPE_FILE -> (holder as FileViewHolder).bind(getItem(position), fileButtonContentDescriptionTemplate)
-            DirectoriesFragment.TYPE_CREATE -> (holder as CreateViewHolder).bind()
         }
 
         selectionTracker?.let{
@@ -48,7 +46,7 @@ class DirectoriesAdapter(
         return when(getItem(position).content){
             is Folder -> DirectoriesFragment.TYPE_FOLDER
             is FileDB -> DirectoriesFragment.TYPE_FILE
-            else -> DirectoriesFragment.TYPE_CREATE
+            else -> throw Exception("Getting this item view type not supported")
         }
     }
 
@@ -139,34 +137,6 @@ class DirectoriesAdapter(
                     directoriesFragment.onFileButton(fileViewHolder.fileId, fileViewHolder.fileName)
                 }
                 return fileViewHolder
-            }
-        }
-    }
-
-    class CreateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), ItemViewHolder{
-        val createButton: Button = itemView.findViewById(R.id.create_button)
-
-        override fun getItemDetails(): ItemDetailsLookup.ItemDetails<String> =
-            object : ItemDetailsLookup.ItemDetails<String>(){
-                override fun getPosition(): Int = adapterPosition
-
-                override fun getSelectionKey(): String = CreateItem.CREATE
-            }
-
-        fun bind(){
-        }
-
-        override fun selected(selected: Boolean) {
-        }
-
-        companion object{
-            fun create(parent: ViewGroup, directoriesFragment: DirectoriesFragment) : CreateViewHolder{
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.create_item, parent, false)
-                val createViewHolder = CreateViewHolder(view)
-                createViewHolder.createButton.setOnClickListener {
-                    directoriesFragment.onCreateButton()
-                }
-                return createViewHolder
             }
         }
     }
