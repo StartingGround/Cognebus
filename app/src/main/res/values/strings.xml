@@ -67,7 +67,7 @@
     <string name="create_folder_or_file_fragment_file_edit_text_hint">File Name</string>
 
     <!-- File -->
-    <string name="file_fragment_practice_button">Practice</string>
+    <string name="file_fragment_practice_button">Practice %1$d/%2$d</string>
     <string name="file_fragment_add_flashcard_button">Add Flashcard</string>
     <string name="file_fragment_view_flashcards_button">View Flashcards</string>
     <string name="file_fragment_practice_order_dropdown_menu_hint">Practice Order</string>

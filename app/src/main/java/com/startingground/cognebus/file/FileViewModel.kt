@@ -32,6 +32,14 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
         it.isNotEmpty()
     }
 
+    val numberOfFlashcardsForPractice: LiveData<Pair<Int, Int>> = Transformations.map(_flashcards){ flashcards ->
+        val totalNumberOfFlashcards: Int = flashcards.size
+        var numberOfFlashcardsForPractice: Int = flashcards.filter { !it.answeredInPractice }.size
+        if (numberOfFlashcardsForPractice == 0) numberOfFlashcardsForPractice = totalNumberOfFlashcards
+
+        Pair(numberOfFlashcardsForPractice, totalNumberOfFlashcards)
+    }
+
 
     fun onSortingSelected(sortingId: Long){
         _file.value?.sortingId = sortingId + 1

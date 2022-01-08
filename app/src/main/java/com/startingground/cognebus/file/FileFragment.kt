@@ -97,6 +97,13 @@ class FileFragment : Fragment() {
         }
 
         fileViewModel.sortingList.observe(viewLifecycleOwner, sortingListObserver)
+
+        binding.practiceButton.text = getString(R.string.file_fragment_practice_button, 0, 0)
+
+        fileViewModel.numberOfFlashcardsForPractice.observe(viewLifecycleOwner){
+            val (numberOfFlashcardsForPractice, totalNumberOfFlashcards) = it
+            binding.practiceButton.text = getString(R.string.file_fragment_practice_button, numberOfFlashcardsForPractice, totalNumberOfFlashcards)
+        }
     }
 
 
