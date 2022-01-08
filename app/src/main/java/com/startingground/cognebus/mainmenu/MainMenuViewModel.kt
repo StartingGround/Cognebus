@@ -30,9 +30,12 @@ class MainMenuViewModel(private val database: CognebusDatabase): ViewModel() {
 
     private val filesForRepetition: MutableLiveData<List<FileDB>> = MutableLiveData(mutableListOf())
 
+    private val _numberOfFlashcardsForRepetition: MutableLiveData<Int> = MutableLiveData(0)
+    val numberOfFlashcardsForRepetition: LiveData<Int> get() = _numberOfFlashcardsForRepetition
 
     private val flashcardsForRepetitionObserver = Observer<List<FlashcardDB>> { flashcards ->
         _readyForRepetition.value = false
+        _numberOfFlashcardsForRepetition.value = 0
         val filesToGet = flashcards.map { it.fileId }
         if(filesToGet.isEmpty()) return@Observer
 
@@ -41,6 +44,7 @@ class MainMenuViewModel(private val database: CognebusDatabase): ViewModel() {
             if(files.isEmpty()) return@launch
 
             filesForRepetition.value = files
+            _numberOfFlashcardsForRepetition.value = flashcardsForRepetition?.value?.size ?: 0
             _readyForRepetition.value = true
         }
     }

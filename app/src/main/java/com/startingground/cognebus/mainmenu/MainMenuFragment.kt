@@ -57,6 +57,12 @@ class MainMenuFragment : Fragment() {
         binding.mainMenuFragment = this
         binding.mainMenuViewModel = mainMenuViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        binding.repetition.text = getString(R.string.repetition_button, 0)
+
+        mainMenuViewModel.numberOfFlashcardsForRepetition.observe(viewLifecycleOwner){
+            binding.repetition.text = getString(R.string.repetition_button, it)
+        }
     }
 
 

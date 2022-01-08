@@ -25,7 +25,7 @@
             android:layout_margin="@dimen/margin_normal"
             android:enabled="@{mainMenuViewModel.readyForRepetition}"
             android:onClick="@{() -> mainMenuFragment.onRepetitionButtonClicked()}"
-            android:text="@string/repetition_button"
+            tools:text="@string/repetition_button"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/files"
             app:layout_constraintTop_toTopOf="parent"

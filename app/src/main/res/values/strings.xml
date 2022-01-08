@@ -40,7 +40,7 @@
 
     <!-- Main Menu -->
     <string name="files_button">Flashcards</string>
-    <string name="repetition_button">Repetition</string>
+    <string name="repetition_button">Repetition  %d</string>
     <string name="settings_button">Settings</string>
 
     <!-- Directories -->

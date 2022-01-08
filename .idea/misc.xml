@@ -30,13 +30,13 @@
         <entry key="app/src/main/res/layout/fragment_create_folder_or_file_selection.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_crop_image.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_directories.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/fragment_file.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_file.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_file_practice_order_dropdown_item.xml" value="0.1621376811594203" />
         <entry key="app/src/main/res/layout/fragment_flashcard_answer.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_flashcard_pager.xml" value="0.10486322188449848" />
         <entry key="app/src/main/res/layout/fragment_flashcard_question.xml" value="0.16168478260869565" />
         <entry key="app/src/main/res/layout/fragment_flashcards_list.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_main_menu.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_main_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_practice_pager.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_question.xml" value="0.10486322188449848" />
         <entry key="app/src/main/res/layout/fragment_question_practice.xml" value="0.10486322188449848" />
