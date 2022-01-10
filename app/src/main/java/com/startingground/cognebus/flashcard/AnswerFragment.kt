@@ -21,7 +21,7 @@ import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentFlashcardAnswerBinding
 
-class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
+class AnswerFragment : Fragment(), InputToolbarInterface {
 
     private lateinit var binding: FragmentFlashcardAnswerBinding
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
@@ -91,6 +91,20 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
             if(it != null)  viewPager?.currentItem = 0
         }
 
+        sharedFlashcardViewModel.getImageFromGalleryTrigger.observe(viewLifecycleOwner){
+            if(it != IntentCaller.ANSWER) return@observe
+            sharedFlashcardViewModel.clearIntentTriggers()
+            getImageFromGallery.launch("image/*")
+        }
+
+        sharedFlashcardViewModel.getImageFromCameraTrigger.observe(viewLifecycleOwner){
+            val caller = it.first
+            val uri = it.second
+            if(caller != IntentCaller.ANSWER || uri == null) return@observe
+            sharedFlashcardViewModel.clearIntentTriggers()
+            getImageFromCamera.launch(uri)
+        }
+
         binding.answerTextField.editText?.doOnTextChanged { text, _, _, _ ->
             sharedFlashcardViewModel.addAnswerText(text.toString())
 
@@ -128,7 +142,7 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
     }
 
 
-    override val getImageFromCamera = registerForActivityResult(ActivityResultContracts.TakePicture()){
+    private val getImageFromCamera = registerForActivityResult(ActivityResultContracts.TakePicture()){
         if(!it) return@registerForActivityResult
 
         placeImageTagInsideAnswerText()
@@ -137,7 +151,7 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
     }
 
 
-    override val getImageFromGallery = registerForActivityResult(ActivityResultContracts.GetContent()){ uri: Uri? ->
+    private val getImageFromGallery = registerForActivityResult(ActivityResultContracts.GetContent()){ uri: Uri? ->
         if(uri == null) return@registerForActivityResult
 
         val imageIsSaved = sharedFlashcardViewModel.saveImageToFileFromGalleryImageUri(uri)
@@ -176,12 +190,12 @@ class AnswerFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
     override fun onGetImageFromCameraButton() {
         saveAnswersCursorPositions()
-        sharedFlashcardViewModel.getImageFromCamera(this)
+        sharedFlashcardViewModel.getImageFromCamera(IntentCaller.ANSWER)
     }
 
     override fun onGetImageFromGalleryButton() {
         saveAnswersCursorPositions()
-        sharedFlashcardViewModel.getImageFromGallery(this)
+        sharedFlashcardViewModel.getImageFromGallery(IntentCaller.ANSWER)
     }
 
     private fun saveAnswersCursorPositions(){

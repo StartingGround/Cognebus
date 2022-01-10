@@ -3,6 +3,7 @@ package com.startingground.cognebus.sharedviewmodels
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import com.startingground.cognebus.database.entity.ImageDB
@@ -64,5 +65,11 @@ class DataViewModel(app: Application) : DatabaseInputViewModel(app){
             putBoolean(SHOW_DOLLAR_SIGN_ALERT, state)
             apply()
         }
+    }
+
+
+    fun getUriForFile(file: File): Uri{
+        val context = getApplication<Application>().applicationContext
+        return FileProvider.getUriForFile(context, "com.startingground.cognebus", file)
     }
 }

@@ -2,8 +2,6 @@ package com.startingground.cognebus.flashcard
 
 import android.app.Application
 import android.net.Uri
-import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.startingground.cognebus.*
 import com.startingground.cognebus.database.CognebusDatabase
@@ -57,18 +55,16 @@ class FlashcardViewModel(
     }
 
 
-    fun getImageFromGallery(fragment: Fragment){
+    private val _getImageFromGalleryTrigger: MutableLiveData<IntentCaller> = MutableLiveData(IntentCaller.NONE)
+    val getImageFromGalleryTrigger: LiveData<IntentCaller> get() = _getImageFromGalleryTrigger
+
+    fun getImageFromGallery(caller: IntentCaller){
         viewModelScope.launch {
             _flashcard?.createImageInDatabase("holder")
-            sendIntentToGetImageFromGallery(fragment)
+            _getImageFromGalleryTrigger.value = caller
         }
     }
 
-    private fun sendIntentToGetImageFromGallery(fragment: Fragment){
-        if(fragment is IntentInterface){
-            fragment.getImageFromGallery.launch("image/*")
-        }
-    }
 
     fun saveImageToFileFromGalleryImageUri(galleryImageUri: Uri): Boolean{
         val context = getApplication<Application>().applicationContext
@@ -84,20 +80,25 @@ class FlashcardViewModel(
     }
 
 
-    fun getImageFromCamera(fragment: Fragment){
+    private val _getImageFromCameraTrigger: MutableLiveData<Pair<IntentCaller, Uri?>> = MutableLiveData(IntentCaller.NONE to null)
+    val getImageFromCameraTrigger: LiveData<Pair<IntentCaller, Uri?>> get() = _getImageFromCameraTrigger
+
+
+    fun getImageFromCamera(caller: IntentCaller){
         viewModelScope.launch {
             _flashcard?.createImageInDatabase("jpg")
             val image = getAddedImage()
             val imageFile = dataViewModel?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return@launch
-            val imageUri = FileProvider.getUriForFile(fragment.requireContext(), "com.startingground.cognebus", imageFile)
-            sendIntentToTakePicture(imageUri, fragment)
+            val imageUri =dataViewModel.getUriForFile(imageFile)
+
+            _getImageFromCameraTrigger.value = caller to imageUri
         }
     }
 
-    private fun sendIntentToTakePicture(imageUri: Uri, fragment: Fragment){
-        if(fragment is IntentInterface){
-            fragment.getImageFromCamera.launch(imageUri)
-        }
+
+    fun clearIntentTriggers(){
+        _getImageFromGalleryTrigger.value = IntentCaller.NONE
+        _getImageFromCameraTrigger.value = IntentCaller.NONE to null
     }
 
 
@@ -198,3 +199,5 @@ class FlashcardViewModel(
         _answerPreviewText.value = FlashcardUtils.prepareStringForPractice(context, answerText, enableHTML, imageList)
     }
 }
+
+enum class IntentCaller{ NONE, QUESTION, ANSWER }
