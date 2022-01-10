@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
@@ -15,9 +17,7 @@ import com.startingground.cognebus.customviews.MathView
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.flashcardslist.FlashcardsListAdapter.FlashcardViewHolder
 
-class FlashcardsListAdapter(
-    private val flashcardsListFragment: FlashcardsListFragment,
-) : ListAdapter<FlashcardAdapterItem, FlashcardViewHolder>(FlashcardsListDiffCallback()  ) {
+class FlashcardsListAdapter : ListAdapter<FlashcardAdapterItem, FlashcardViewHolder>(FlashcardsListDiffCallback()  ) {
 
     init {
         setHasStableIds(true)
@@ -26,8 +26,21 @@ class FlashcardsListAdapter(
     var selectionTracker: SelectionTracker<Long>? = null
 
 
+    private val _flashcardClicked: MutableLiveData<FlashcardDB?> = MutableLiveData(null)
+    val flashcardClicked: LiveData<FlashcardDB?> get() = _flashcardClicked
+
+    fun clearFlashcardClickTrigger(){
+        _flashcardClicked.value = null
+    }
+
+    fun onFlashcardClicked(flashcardDB: FlashcardDB?){
+        if(flashcardDB == null) return
+        _flashcardClicked.value = flashcardDB
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashcardViewHolder {
-        return FlashcardViewHolder.create(parent, flashcardsListFragment)
+        return FlashcardViewHolder.create(parent, this)
     }
 
 
@@ -72,13 +85,13 @@ class FlashcardsListAdapter(
         }
 
         companion object{
-            fun create(parent: ViewGroup, flashcardsListFragment: FlashcardsListFragment) : FlashcardViewHolder{
+            fun create(parent: ViewGroup, adapter: FlashcardsListAdapter) : FlashcardViewHolder{
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.flashcard_item, parent, false)
                 val flashcardViewHolder = FlashcardViewHolder(view)
 
                 flashcardViewHolder.questionMathView.settings.allowFileAccess = true
                 flashcardViewHolder.questionMathView.setCustomClickHandler {
-                    flashcardsListFragment.onFlashcardClick(flashcardViewHolder.flashcard)
+                    adapter.onFlashcardClicked(flashcardViewHolder.flashcard)
                 }
 
                 return flashcardViewHolder

@@ -56,7 +56,7 @@ class FlashcardsListFragment : Fragment() {
         val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
         sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
 
-        adapter = FlashcardsListAdapter(this)
+        adapter = FlashcardsListAdapter()
     }
 
 
@@ -108,6 +108,12 @@ class FlashcardsListFragment : Fragment() {
 
         adapter.selectionTracker = selectionTracker
         selectionTracker?.addObserver(selectionTrackerObserver)
+
+        adapter.flashcardClicked.observe(viewLifecycleOwner){
+            if(it == null) return@observe
+
+            onFlashcardClick(it)
+        }
 
         //If fragment is destroyed while selection is ongoing and recreated, we call this to show contextual top app bar again
         selectionTrackerObserver.onSelectionChanged()
@@ -193,10 +199,12 @@ class FlashcardsListFragment : Fragment() {
     }
 
 
-    fun onFlashcardClick(flashcard: FlashcardDB?){
+    private fun onFlashcardClick(flashcard: FlashcardDB){
+        adapter.clearFlashcardClickTrigger()
+
         if((selectionTracker?.selection?.size() ?: 0) > 0) return
 
-        val action = FlashcardsListFragmentDirections.actionFlashcardsListFragmentToFlashcardPagerFragment(fileId, flashcard?.flashcardId ?: 0L)
+        val action = FlashcardsListFragmentDirections.actionFlashcardsListFragmentToFlashcardPagerFragment(fileId, flashcard.flashcardId)
         findNavController().navigate(action)
     }
 
