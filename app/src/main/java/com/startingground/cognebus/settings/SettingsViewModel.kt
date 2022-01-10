@@ -20,12 +20,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         const val CONTINUE_REPETITION_KEY = "continue_repetition"
         const val CYCLE_INCREMENT_KEY = "cycle_increment"
         const val MAX_DAYS_PER_CYCLE_KEY = "max_days_per_cycle"
+        const val CONSECUTIVE_FLASHCARD_CREATION_KEY = "consecutive_flashcard_creation"
 
         const val ENABLE_HTML_DEFAULT_VALUE = false
         const val REPETITION_ENABLED_DEFAULT_VALUE = true
         const val CONTINUE_REPETITION_DEFAULT_VALUE = false
         const val CYCLE_INCREMENT_DEFAULT_VALUE: Int = 15
         const val MAX_DAYS_PER_CYCLE_DEFAULT_VALUE: Int = 60
+        const val CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE = false
     }
 
     private val preferences = PreferenceManager.getDefaultSharedPreferences(application.applicationContext)
@@ -132,5 +134,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             apply()
         }
         _maxDaysPerCycle.value = value
+    }
+
+    private val _consecutiveFlashcardCreation: MutableLiveData<Boolean> = MutableLiveData(
+        preferences.getBoolean(CONSECUTIVE_FLASHCARD_CREATION_KEY, CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE)
+    )
+    val consecutiveFlashcardCreation: LiveData<Boolean> get() = _consecutiveFlashcardCreation
+
+    fun onConsecutiveFlashcardCreationChanged(view: View){
+        switchValueChangedHandler(view, CONSECUTIVE_FLASHCARD_CREATION_KEY, _consecutiveFlashcardCreation)
     }
 }

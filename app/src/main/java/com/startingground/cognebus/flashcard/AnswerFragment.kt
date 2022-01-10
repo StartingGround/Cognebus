@@ -15,16 +15,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentFlashcardAnswerBinding
+import com.startingground.cognebus.settings.SettingsViewModel
 
 class AnswerFragment : Fragment(), InputToolbarInterface {
 
     private lateinit var binding: FragmentFlashcardAnswerBinding
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
+
+    private var consecutiveFlashcardCreationIsEnabled: Boolean = false
 
 
     override fun onCreateView(
@@ -46,6 +50,13 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
             isEnabled = false
             activity?.onBackPressed()
         }
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        consecutiveFlashcardCreationIsEnabled = preferences.getBoolean(
+            SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_KEY,
+            SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE
+        )
 
         return binding.root
     }
@@ -206,10 +217,18 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
 
 
     private fun onSaveFlashcardButton(){
+        val thereIsExistingFlashcard: Boolean = sharedFlashcardViewModel.flashcard?.thereIsExistingFlashcard() ?: false
         val flashcardIsSaved = sharedFlashcardViewModel.saveFlashcardToDatabase()
         if(!flashcardIsSaved) return
 
         Toast.makeText(context, R.string.flashcard_saved_toast, Toast.LENGTH_SHORT).show()
+
+        if(consecutiveFlashcardCreationIsEnabled && !thereIsExistingFlashcard){
+            val action = FlashcardPagerFragmentDirections.actionFlashcardPagerFragmentSelf(sharedFlashcardViewModel.fileId, 0L)
+            findNavController().navigate(action)
+            return
+        }
+
         findNavController().popBackStack()
     }
 }

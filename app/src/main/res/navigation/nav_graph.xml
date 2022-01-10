@@ -124,6 +124,11 @@
             <action
                 android:id="@+id/action_flashcardPagerFragment_to_imageCropFragment"
                 app:destination="@id/imageCropFragment" />
+            <action
+                android:id="@+id/action_flashcardPagerFragment_self"
+                app:destination="@id/flashcardPagerFragment"
+                app:popUpTo="@id/flashcardPagerFragment"
+                app:popUpToInclusive="true" />
         </fragment>
         <fragment
             android:id="@+id/practicePagerFragment"

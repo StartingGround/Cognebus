@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class FlashcardViewModel(
     private val database: CognebusDatabase,
-    private val fileId: Long,
+    val fileId: Long,
     private val dataViewModel: DataViewModel?,
     app: Application
     ): AndroidViewModel(app){
