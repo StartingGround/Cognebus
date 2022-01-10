@@ -45,7 +45,7 @@ class FileFragment : Fragment() {
         val fileViewModelFactory = FileViewModelFactory(database, fileId, dataViewModel)
         fileViewModel = ViewModelProvider(this, fileViewModelFactory).get(FileViewModel::class.java)
 
-        val practiceViewModelFactory = PracticeViewModelFactory(application, dataViewModel)
+        val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
         sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
     }
 

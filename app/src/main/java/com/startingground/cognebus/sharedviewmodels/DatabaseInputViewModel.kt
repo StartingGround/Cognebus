@@ -90,7 +90,7 @@ open class DatabaseInputViewModel(app: Application) : AndroidViewModel(app){
             val context = getApplication<Application>().applicationContext
             val unusedImages = database.imageDatabaseDao.getUnusedImages()
 
-            unusedImages.forEach { ImageUtils.deleteImageFileById(it.imageId, context) }
+            unusedImages.forEach { ImageUtils.deleteImageFileById(it.imageId, it.fileExtension, context) }
 
             database.imageDatabaseDao.deleteList(unusedImages)
         }
@@ -100,7 +100,7 @@ open class DatabaseInputViewModel(app: Application) : AndroidViewModel(app){
         viewModelScope.launch {
             val context = getApplication<Application>().applicationContext
 
-            images.forEach { ImageUtils.deleteImageFileById(it.imageId, context) }
+            images.forEach { ImageUtils.deleteImageFileById(it.imageId, it.fileExtension, context) }
 
             database.imageDatabaseDao.deleteList(images)
         }

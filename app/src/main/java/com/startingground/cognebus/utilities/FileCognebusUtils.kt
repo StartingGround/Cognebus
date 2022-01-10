@@ -2,6 +2,7 @@ package com.startingground.cognebus.utilities
 
 import android.content.Context
 import android.net.Uri
+import android.webkit.MimeTypeMap
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -31,5 +32,12 @@ object FileCognebusUtils {
         } catch(e: Exception) {
             null
         }
+    }
+
+
+    fun getFileExtensionFromExternalUri(uri: Uri, context: Context): String?{
+        val mimeType = context.contentResolver.getType(uri)
+        val mime = MimeTypeMap.getSingleton()
+        return mime.getExtensionFromMimeType(mimeType)
     }
 }

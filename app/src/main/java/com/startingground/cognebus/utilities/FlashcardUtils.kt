@@ -3,19 +3,21 @@ package com.startingground.cognebus.utilities
 import android.content.Context
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
+import com.startingground.cognebus.database.entity.ImageDB
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 
 object FlashcardUtils {
-    fun prepareStringForPractice(context: Context, inputText: String, enableHTML: Boolean): String{
+    fun prepareStringForPractice(context: Context, inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
         val imageRegex = Regex("src=\"\\d+\"")
         val imageIdRegex = Regex("\\d+")
 
         var text = imageRegex.replace(inputText){
+
             imageIdRegex.replace(it.value) index@{ imageId ->
-                val imageFile = ImageUtils.getImageFile(imageId.value.toLong(), context)
-                if(imageFile?.exists() != true){
-                    return@index "null"
-                }
+                val imageIdNumber = imageId.value.toLong()
+                val imageDB = imageList.find {img -> imageIdNumber == img.imageId } ?: return@index imageId.value
+
+                val imageFile = ImageUtils.getImageFile(imageDB.imageId, imageDB.fileExtension, context) ?: return@index imageId.value
 
                 "file://" + imageFile.absolutePath
             }

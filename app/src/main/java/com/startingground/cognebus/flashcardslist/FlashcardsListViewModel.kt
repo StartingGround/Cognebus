@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
+import com.startingground.cognebus.database.entity.ImageDB
 import kotlinx.coroutines.launch
 
 class FlashcardsListViewModel(
@@ -23,8 +24,9 @@ class FlashcardsListViewModel(
     private val flashcardObserver = Observer<List<FlashcardDB>>{
         viewModelScope.launch {
              _flashcardsAdapter.value = it.map { flashcard ->
-                val questionText = dataViewModel.prepareStringForPracticeCaller(flashcard.question, enableHtml)
-                FlashcardAdapterItem(questionText, flashcard)
+                 val imageList: List<ImageDB> = database.imageDatabaseDao.getImagesByFlashcardId(flashcard.flashcardId)
+                 val questionText = dataViewModel.prepareStringForPracticeCaller(flashcard.question, enableHtml, imageList)
+                 FlashcardAdapterItem(questionText, flashcard)
             }
         }
     }

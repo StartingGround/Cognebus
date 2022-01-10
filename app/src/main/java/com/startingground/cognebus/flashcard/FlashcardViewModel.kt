@@ -8,7 +8,9 @@ import androidx.lifecycle.*
 import com.startingground.cognebus.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
+import com.startingground.cognebus.database.entity.ImageDB
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.FileCognebusUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import kotlinx.coroutines.launch
 
@@ -57,20 +59,25 @@ class FlashcardViewModel(
 
     fun getImageFromGallery(fragment: Fragment){
         viewModelScope.launch {
-            _flashcard?.createImageInDatabase() ?: return@launch
+            _flashcard?.createImageInDatabase("holder")
             sendIntentToGetImageFromGallery(fragment)
         }
     }
 
     private fun sendIntentToGetImageFromGallery(fragment: Fragment){
         if(fragment is IntentInterface){
-            fragment.getImageFromGallery.launch("image/jpeg")
+            fragment.getImageFromGallery.launch("image/*")
         }
     }
 
     fun saveImageToFileFromGalleryImageUri(galleryImageUri: Uri): Boolean{
-        val imageId = getAddedImageId()
-        val imageFile = dataViewModel?.createImageFileOrGetExisting(imageId) ?: return false
+        val context = getApplication<Application>().applicationContext
+
+        val fileExtension = FileCognebusUtils.getFileExtensionFromExternalUri(galleryImageUri, context) ?: return false
+        val image = getAddedImage()
+        image.fileExtension = fileExtension
+        dataViewModel?.updateImagesInDatabase(listOf(image))
+        val imageFile = dataViewModel?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return false
 
         dataViewModel.copyFileFromUri(galleryImageUri, imageFile)
         return true
@@ -79,8 +86,9 @@ class FlashcardViewModel(
 
     fun getImageFromCamera(fragment: Fragment){
         viewModelScope.launch {
-            val imageId = _flashcard?.createImageInDatabase() ?: return@launch
-            val imageFile = dataViewModel?.createImageFileOrGetExisting(imageId) ?: return@launch
+            _flashcard?.createImageInDatabase("jpg")
+            val image = getAddedImage()
+            val imageFile = dataViewModel?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return@launch
             val imageUri = FileProvider.getUriForFile(fragment.requireContext(), "com.startingground.cognebus", imageFile)
             sendIntentToTakePicture(imageUri, fragment)
         }
@@ -93,8 +101,8 @@ class FlashcardViewModel(
     }
 
 
-    fun getAddedImageId(): Long{
-        return _flashcard?.getIdOfLastCreatedImageInDatabase() ?: throw Exception("getAddedImageId can't be executed!")
+    fun getAddedImage(): ImageDB{
+        return _flashcard?.getLastCreatedImageInDatabase() ?: throw Exception("getAddedImageId can't be executed!")
     }
 
 
@@ -181,10 +189,12 @@ class FlashcardViewModel(
 
         val enableHTML = fileDB?.value?.enableHtml ?: false
 
+        val imageList: List<ImageDB> = _flashcard?.getImageListForPreview() ?: listOf()
+
         val questionText = _flashcard?.questionText?.value ?: ""
-        _questionPreviewText.value = FlashcardUtils.prepareStringForPractice(context, questionText, enableHTML)
+        _questionPreviewText.value = FlashcardUtils.prepareStringForPractice(context, questionText, enableHTML, imageList)
 
         val answerText = _flashcard?.answerText?.value ?: ""
-        _answerPreviewText.value = FlashcardUtils.prepareStringForPractice(context, answerText, enableHTML)
+        _answerPreviewText.value = FlashcardUtils.prepareStringForPractice(context, answerText, enableHTML, imageList)
     }
 }

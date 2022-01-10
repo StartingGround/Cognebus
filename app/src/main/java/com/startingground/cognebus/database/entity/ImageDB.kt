@@ -20,5 +20,8 @@ data class ImageDB(
     val imageId: Long,
 
     @ColumnInfo(name = FLASHCARD_ID, defaultValue = "NULL")
-    var flashcardId: Long?
+    var flashcardId: Long?,
+
+    @ColumnInfo(name = "file_extension")
+    var fileExtension: String
 )

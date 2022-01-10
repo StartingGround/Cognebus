@@ -3,14 +3,16 @@ package com.startingground.cognebus.practice
 import android.app.Application
 import androidx.lifecycle.*
 import com.startingground.cognebus.*
+import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
+import kotlinx.coroutines.launch
 import java.util.*
 
-class PracticeViewModel(application: Application, private val dataViewModel: DataViewModel) : AndroidViewModel(application){
+class PracticeViewModel(application: Application,private val database: CognebusDatabase, private val dataViewModel: DataViewModel) : AndroidViewModel(application){
 
 
     private var flashcardsForPractice: MutableList<FlashcardDB> = mutableListOf()
@@ -47,22 +49,44 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
     val currentFlashcard: LiveData<FlashcardDB?> get() = _currentFlashcard
 
 
-    val currentQuestionText: LiveData<String> = Transformations.map(_currentFlashcard){
-        val context = getApplication<Application>().applicationContext
+    private val _currentQuestionText: MediatorLiveData<String> = MediatorLiveData()
 
-        val enableHTML = files[it?.fileId]?.enableHtml ?: false
-        val text = it?.question ?: return@map ""
-        FlashcardUtils.prepareStringForPractice(context, text, enableHTML)
+    init {
+        _currentQuestionText.value = ""
+        _currentQuestionText.addSource(_currentFlashcard){
+            val context = getApplication<Application>().applicationContext
+
+            _currentQuestionText.value = ""
+            viewModelScope.launch {
+                val enableHTML = files[it?.fileId]?.enableHtml ?: false
+                val text = it?.question ?: return@launch
+                val imageList = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
+                _currentQuestionText.value = FlashcardUtils.prepareStringForPractice(context, text, enableHTML, imageList)
+            }
+        }
     }
 
+    val currentQuestionText: LiveData<String> get() = _currentQuestionText
 
-    val currentAnswerText: LiveData<String> = Transformations.map(_currentFlashcard){
-        val context = getApplication<Application>().applicationContext
 
-        val enableHTML = files[it?.fileId]?.enableHtml ?: false
-        val text = it?.answer ?: return@map ""
-        FlashcardUtils.prepareStringForPractice(context, text, enableHTML)
+    private val _currentAnswerText: MediatorLiveData<String> = MediatorLiveData()
+
+    init {
+        _currentAnswerText.value = ""
+        _currentAnswerText.addSource(_currentFlashcard){
+            val context = getApplication<Application>().applicationContext
+
+            _currentAnswerText.value = ""
+            viewModelScope.launch {
+                val enableHTML = files[it?.fileId]?.enableHtml ?: false
+                val text = it?.answer ?: return@launch
+                val imageList = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
+                _currentAnswerText.value = FlashcardUtils.prepareStringForPractice(context, text, enableHTML, imageList)
+            }
+        }
     }
+
+    val currentAnswerText: LiveData<String> get() = _currentAnswerText
 
 
     fun onCorrectAnswerButton(){
@@ -134,5 +158,12 @@ class PracticeViewModel(application: Application, private val dataViewModel: Dat
         time.timeInMillis = flashcard.repetitionDate
         time.add(Calendar.DAY_OF_YEAR, flashcard.lastIncrease)
         flashcard.repetitionDate = time.timeInMillis
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        _currentAnswerText.removeSource(_currentFlashcard)
+        _currentQuestionText.removeSource(_currentFlashcard)
     }
 }

@@ -10,18 +10,18 @@ import java.io.File
 import java.io.FileOutputStream
 
 object ImageUtils {
-    fun deleteImageFileById(imageId: Long, context: Context){
-        val imageFile = getImageFile(imageId, context) ?: return
+    fun deleteImageFileById(imageId: Long, fileExtension: String, context: Context){
+        val imageFile = getImageFile(imageId, fileExtension, context) ?: return
         if(imageFile.exists()){
             imageFile.delete()
         }
     }
 
 
-    fun getImageFile(imageId: Long, context: Context): File?{
+    fun getImageFile(imageId: Long, fileExtension: String, context: Context): File?{
         return try {
             val imageDirectory = context.getExternalFilesDir("images")
-            File(imageDirectory, "$imageId.jpg")
+            File(imageDirectory, "$imageId.$fileExtension")
         } catch(e: Exception) {
             null
         }
@@ -40,14 +40,15 @@ object ImageUtils {
 
     suspend fun copyImagesTo(imageList: List<ImageDB>, destinationFlashcardId: Long, database: CognebusDatabase, dataViewModel: DataViewModel){
         imageList.forEach {
-            val imageCopy = it.copy(imageId = 0L, flashcardId = destinationFlashcardId)
+            var imageCopy = it.copy(imageId = 0L, flashcardId = destinationFlashcardId)
             val imageCopyId = database.imageDatabaseDao.insert(imageCopy)
+            imageCopy = database.imageDatabaseDao.getImageByImageId(imageCopyId)
 
-            val imageFile = dataViewModel.createImageFileOrGetExisting(it.imageId) ?: throw Exception("Could not get original image file!")
-            val imageCopyFile = dataViewModel.createImageFileOrGetExisting(imageCopyId) ?: throw Exception("Could not create copy of image file")
+            val imageFile = dataViewModel.createImageFileOrGetExisting(it.imageId, it.fileExtension) ?: throw Exception("Could not get original image file!")
+            val imageCopyFile = dataViewModel.createImageFileOrGetExisting(imageCopy.imageId, imageCopy.fileExtension) ?: throw Exception("Could not create copy of image file")
             dataViewModel.copyFileFromUri(imageFile.toUri(), imageCopyFile)
 
-            replaceImageIdsInsideFlashcard(it.imageId, imageCopyId, destinationFlashcardId, database)
+            replaceImageIdsInsideFlashcard(it.imageId, imageCopy.imageId, destinationFlashcardId, database)
         }
     }
 

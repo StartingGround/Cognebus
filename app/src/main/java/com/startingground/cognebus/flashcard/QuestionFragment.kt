@@ -145,8 +145,8 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
 
     private fun placeImageTagInsideAnswerText(){
-        val imageId = sharedFlashcardViewModel.getAddedImageId()
-        val imageTagText = getString(R.string.image_html_tag_template, imageId)
+        val image = sharedFlashcardViewModel.getAddedImage()
+        val imageTagText = getString(R.string.image_html_tag_template, image.imageId)
         val (textCursorPositionStart, textCursorPositionEnd) = sharedFlashcardViewModel.getTextCursorPositions()
         binding.questionTextField.editText?.text?.replace(textCursorPositionStart, textCursorPositionEnd, imageTagText)
         sharedFlashcardViewModel.addQuestionText(binding.questionTextField.editText?.text?.toString() ?: "")
@@ -154,8 +154,9 @@ class QuestionFragment : Fragment(), IntentInterface, InputToolbarInterface {
 
 
     private fun openImageForCropping(){
-        val imageId = sharedFlashcardViewModel.getAddedImageId()
-        val action = FlashcardPagerFragmentDirections.actionFlashcardPagerFragmentToImageCropFragment(imageId)
+        val image = sharedFlashcardViewModel.getAddedImage()
+        if(image.fileExtension == "gif") return
+        val action = FlashcardPagerFragmentDirections.actionFlashcardPagerFragmentToImageCropFragment(image.imageId, image.fileExtension)
         findNavController().navigate(action)
     }
 

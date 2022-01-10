@@ -157,6 +157,9 @@
             <argument
                 android:name="imageId"
                 app:argType="long" />
+            <argument
+                android:name="fileExtension"
+                app:argType="string" />
         </fragment>
     </navigation>
     <fragment

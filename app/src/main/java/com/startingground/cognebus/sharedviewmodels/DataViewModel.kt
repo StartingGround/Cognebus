@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import com.startingground.cognebus.database.entity.ImageDB
 import com.startingground.cognebus.utilities.FileCognebusUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.ImageUtils
@@ -25,16 +26,16 @@ class DataViewModel(app: Application) : DatabaseInputViewModel(app){
         }
     }
 
-    fun saveImageBitmapToUri(imageBitmap: Bitmap, imageId: Long){
+    fun saveImageBitmapToFileWithImageId(imageBitmap: Bitmap, imageId: Long){
         viewModelScope.launch(Dispatchers.IO) {
-            val imageFile = createImageFileOrGetExisting(imageId) ?: throw Exception("Could not get file from imageId")
+            val imageFile = createImageFileOrGetExisting(imageId, "jpg") ?: throw Exception("Could not get file from imageId")
             ImageUtils.saveBitmapToFile(imageBitmap, imageFile)
         }
     }
 
-    fun createImageFileOrGetExisting(imageId: Long): File?{
+    fun createImageFileOrGetExisting(imageId: Long, fileExtension: String): File?{
         val context = getApplication<Application>().applicationContext
-        return FileCognebusUtils.createFileOrGetExisting("images", "$imageId.jpg", context)
+        return FileCognebusUtils.createFileOrGetExisting("images", "$imageId.$fileExtension", context)
     }
 
     fun getStringFromResources(stringResource: Int): String{
@@ -42,9 +43,9 @@ class DataViewModel(app: Application) : DatabaseInputViewModel(app){
         return context.getString(stringResource)
     }
 
-    fun prepareStringForPracticeCaller(inputText: String, enableHTML: Boolean): String{
+    fun prepareStringForPracticeCaller(inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
         val context = getApplication<Application>().applicationContext
-        return FlashcardUtils.prepareStringForPractice(context, inputText, enableHTML)
+        return FlashcardUtils.prepareStringForPractice(context, inputText, enableHTML, imageList)
     }
 
 

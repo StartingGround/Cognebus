@@ -21,11 +21,13 @@ class Flashcard(private val database: CognebusDatabase,
     private val _answerText: MutableLiveData<String> = MutableLiveData("")
     val answerText: LiveData<String> get() = _answerText
 
+    private var existingFlashcardImages: List<ImageDB> = listOf()
 
-    fun setFlashcard(flashcard: FlashcardDB){
+    suspend fun setFlashcard(flashcard: FlashcardDB){
         flashcardDB = flashcard
         _questionText.value = flashcardDB.question
         _answerText.value = flashcardDB.answer
+        existingFlashcardImages = database.imageDatabaseDao.getImagesByFlashcardId(flashcard.flashcardId)
     }
 
 
@@ -41,25 +43,24 @@ class Flashcard(private val database: CognebusDatabase,
     }
 
 
-    private val pendingImages = mutableListOf<Long>()
+    private val pendingImages = mutableListOf<ImageDB>()
 
 
-    suspend fun createImageInDatabase() : Long{
-        val image = ImageDB(0L, null)
+    suspend fun createImageInDatabase(fileExtension: String){
+        var image = ImageDB(0L, null, fileExtension)
         val imageId = database.imageDatabaseDao.insert(image)
-        pendingImages.add(imageId)
-        return imageId
+        image = database.imageDatabaseDao.getImageByImageId(imageId)
+        pendingImages.add(image)
     }
 
 
-    fun getIdOfLastCreatedImageInDatabase() : Long{
+    fun getLastCreatedImageInDatabase() : ImageDB{
         return pendingImages.last()
     }
 
 
     fun deleteImages(){
-        val pendingImagesDB = pendingImages.map { ImageDB(it, 0L) }
-        dataViewModel?.deleteImages(pendingImagesDB)
+        dataViewModel?.deleteImages(pendingImages)
     }
 
 
@@ -87,17 +88,14 @@ class Flashcard(private val database: CognebusDatabase,
 
     fun addToDatabase(){
         val (usedImages, unusedImages) = getUsedAndUnusedImages()
-        val usedImagesDB = usedImages.map{ ImageDB(it, 0L) }
-        val unusedImagesDB = unusedImages.map { ImageDB(it, 0L) }
-        dataViewModel?.insertFlashcardToDatabaseAndUpdateUsedImagesInDatabaseAndDeleteUnused(flashcardDB, usedImagesDB, unusedImagesDB)
+        dataViewModel?.insertFlashcardToDatabaseAndUpdateUsedImagesInDatabaseAndDeleteUnused(flashcardDB, usedImages, unusedImages)
     }
 
-    private var existingFlashcardImages = database.imageDatabaseDao.getImageIdsByFlashcardId(flashcardDB.flashcardId)
 
     fun updateInDatabase(){
         dataViewModel?.updateFlashcardInDatabase(flashcardDB)
 
-        existingFlashcardImages.value?.let { pendingImages.addAll(it) }
+        pendingImages.addAll(existingFlashcardImages)
         assignFlashcardIdToImagesAndRemoveUnusedImages()
     }
 
@@ -107,17 +105,34 @@ class Flashcard(private val database: CognebusDatabase,
 
         val (usedImages, unusedImages) = getUsedAndUnusedImages()
 
-        val usedImagesDB = usedImages.map{ ImageDB(it, flashcardDB.flashcardId) }
+        val usedImagesDB = usedImages.map{ it.copy(flashcardId = flashcardDB.flashcardId) }
         dataViewModel?.updateImagesInDatabase(usedImagesDB)
 
-        val unusedImagesDB = unusedImages.map { ImageDB(it, 0L) }
-        dataViewModel?.deleteImages(unusedImagesDB)
+        dataViewModel?.deleteImages(unusedImages)
     }
 
 
-    private fun getUsedAndUnusedImages(): Pair<List<Long>, List<Long>>{
+    private fun getUsedAndUnusedImages(): Pair<List<ImageDB>, List<ImageDB>>{
         return pendingImages.partition {
-            flashcardDB.question.contains("src=\"$it\"") || flashcardDB.answer.contains("src=\"$it\"")
+            flashcardDB.question.contains("src=\"${it.imageId}\"") || flashcardDB.answer.contains("src=\"${it.imageId}\"")
+        }
+    }
+
+    fun getImageListForPreview(): List<ImageDB>{
+        val imageList: MutableList<ImageDB> = mutableListOf()
+        imageList.addAll(pendingImages)
+        imageList.addAll(existingFlashcardImages)
+        return imageList
+    }
+
+
+    fun changeImageFileExtension(imageId: Long, fileExtension: String){
+        var image: ImageDB? = pendingImages.find { it.imageId == imageId }
+        image = existingFlashcardImages.find { it.imageId == imageId } ?: image
+
+        image?.let {
+            it.fileExtension = fileExtension
+            dataViewModel?.updateImagesInDatabase(listOf(it))
         }
     }
 }

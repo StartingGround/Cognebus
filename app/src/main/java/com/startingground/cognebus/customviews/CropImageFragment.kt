@@ -7,25 +7,37 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.canhub.cropper.CropImageView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
+import com.startingground.cognebus.database.CognebusDatabase
+import com.startingground.cognebus.flashcard.FlashcardViewModel
+import com.startingground.cognebus.flashcard.FlashcardViewModelFactory
 
 class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener {
 
     private lateinit var dataViewModel: DataViewModel
+    private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
     private var imageId: Long? = null
+    private var fileExtension: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var fileExtensionTemp: String? = null
         arguments?.let{
             imageId = it.getLong("imageId")
+            fileExtensionTemp = it.getString("fileExtension")
         }
+
+        if(fileExtensionTemp == null) findNavController().popBackStack()
+        fileExtension = fileExtensionTemp!!
     }
 
 
@@ -34,6 +46,11 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
         savedInstanceState: Bundle?
     ): View? {
         val application = requireNotNull(this.activity).application
+        val database = CognebusDatabase.getInstance(application)
+
+        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null, application)
+        val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
+        sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 
         val dataViewModelFactory = DataViewModelFactory(application)
         dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
@@ -49,7 +66,7 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
         super.onViewCreated(view, savedInstanceState)
 
         cropImageView = view.findViewById(R.id.crop_image_view)
-        val imageFile = imageId?.let { dataViewModel.createImageFileOrGetExisting(it) }
+        val imageFile = imageId?.let { dataViewModel.createImageFileOrGetExisting(it, fileExtension) }
 
         if(imageFile == null) activity?.onBackPressed()
 
@@ -98,7 +115,9 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
 
         imageBitmap?.let { image ->
             imageId?.let { id ->
-                dataViewModel.saveImageBitmapToUri(image, id)
+                dataViewModel.saveImageBitmapToFileWithImageId(image, id)
+
+                sharedFlashcardViewModel.flashcard?.changeImageFileExtension(id, "jpg")
             }
         }
         

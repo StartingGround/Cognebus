@@ -36,7 +36,7 @@ class MainMenuFragment : Fragment() {
         val dataViewModelFactory = DataViewModelFactory(application)
         val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
 
-        val practiceViewModelFactory = PracticeViewModelFactory(application, dataViewModel)
+        val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
         sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
     }
 

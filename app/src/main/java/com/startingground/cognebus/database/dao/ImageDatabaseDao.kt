@@ -18,11 +18,14 @@ interface ImageDatabaseDao {
     @Delete
     suspend fun deleteList(images: List<ImageDB>)
 
+    @Query("SELECT * FROM image WHERE image_id = :imageId")
+    suspend fun getImageByImageId(imageId: Long): ImageDB
+
     @Query("SELECT * FROM image WHERE flashcard_id IS NULL")
     suspend fun getUnusedImages(): List<ImageDB>
 
-    @Query("SELECT image_id FROM image WHERE flashcard_id = :flashcardId")
-    fun getImageIdsByFlashcardId(flashcardId: Long): LiveData<List<Long>>
+    @Query("SELECT * FROM image WHERE flashcard_id = :flashcardId")
+    fun getLiveDataImagesByFlashcardId(flashcardId: Long): LiveData<List<ImageDB>>
 
     @Query("select * FROM image WHERE flashcard_id = :flashcardId")
     suspend fun getImagesByFlashcardId(flashcardId: Long): List<ImageDB>
