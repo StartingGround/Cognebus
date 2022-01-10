@@ -110,7 +110,7 @@ class FlashcardPagerFragment : Fragment() {
 
     private fun getCurrentFragmentAsInputToolbarInterface(): InputToolbarInterface?{
         val fragmentPosition = binding.flashcardPager.currentItem
-        val fragment = childFragmentManager.fragments[fragmentPosition]
+        val fragment = childFragmentManager.findFragmentByTag("f$fragmentPosition")
 
         return if(fragment is InputToolbarInterface) fragment else null
     }
