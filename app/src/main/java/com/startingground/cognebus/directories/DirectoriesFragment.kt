@@ -74,7 +74,9 @@ class DirectoriesFragment : Fragment() {
         val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
         sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
 
-        adapter = DirectoriesAdapter(this)
+        val folderContentDescription: String = getString(R.string.directories_folder_button_content_description_template)
+        val fileContentDescription: String = getString(R.string.directories_file_button_content_description_template)
+        adapter = DirectoriesAdapter(folderContentDescription, fileContentDescription)
 
         return binding.root
     }
@@ -131,6 +133,22 @@ class DirectoriesFragment : Fragment() {
         selectionTracker?.addObserver(selectionTrackerObserver)
 
         binding.createButton.setOnClickListener { onCreateButton() }
+
+        adapter.folderButtonClicked.observe(viewLifecycleOwner){ data ->
+            data?.let {
+                val folderId = it.first
+                val folderName = it.second
+                onFolderButton(folderId, folderName)
+            }
+        }
+
+        adapter.fileButtonClicked.observe(viewLifecycleOwner){ data ->
+            data?.let {
+                val fileId = it.first
+                val fileName = it.second
+                onFileButton(fileId, fileName)
+            }
+        }
 
         //If fragment is destroyed while selection is ongoing and recreated, we call this to show contextual top app bar again
         selectionTrackerObserver.onSelectionChanged()
@@ -231,7 +249,7 @@ class DirectoriesFragment : Fragment() {
     }
 
 
-    fun onCreateButton(){
+    private fun onCreateButton(){
         if((selectionTracker?.selection?.size() ?: 0) > 0) return
 
         val action = DirectoriesFragmentDirections.actionDirectoriesFragmentToCreateFolderOrFileSelectionFragment(
@@ -241,21 +259,25 @@ class DirectoriesFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    fun onFolderButton(selectedFolderId: Long?, folderName: String?){
+    private fun onFolderButton(selectedFolderId: Long, folderName: String){
+        adapter.clearButtonTriggers()
+
         if((selectionTracker?.selection?.size() ?: 0) > 0) return
 
         val action = DirectoriesFragmentDirections.actionDirectoriesFragmentSelf(
-            selectedFolderId ?: 0L,
-            selectedFolderId == null,
-            folderName ?: ""
+            selectedFolderId,
+            false,
+            folderName
         )
         findNavController().navigate(action)
     }
 
-    fun onFileButton(fileId: Long?, fileName: String?){
+    private fun onFileButton(fileId: Long, fileName: String){
+        adapter.clearButtonTriggers()
+
         if((selectionTracker?.selection?.size() ?: 0) > 0) return
 
-        val action = DirectoriesFragmentDirections.actionDirectoriesFragmentToNavFile(fileId ?: 0, fileName)
+        val action = DirectoriesFragmentDirections.actionDirectoriesFragmentToNavFile(fileId, fileName)
         findNavController().navigate(action)
     }
 

@@ -3,6 +3,8 @@ package com.startingground.cognebus.directories
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
@@ -14,21 +16,34 @@ import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder
 
 class DirectoriesAdapter(
-    private val directoriesFragment: DirectoriesFragment
+    private val folderButtonContentDescriptionTemplate: String,
+    private val fileButtonContentDescriptionTemplate: String
 ) : ListAdapter<DirectoryItem, RecyclerView.ViewHolder>(DirectoriesDiffCallback()){
+
 
     var selectionTracker: SelectionTracker<String>? = null
 
-    private val folderButtonContentDescriptionTemplate: String = directoriesFragment.getString(R.string.directories_folder_button_content_description_template)
-    private val fileButtonContentDescriptionTemplate: String = directoriesFragment.getString(R.string.directories_file_button_content_description_template)
+    //<Id, Name>
+    private val _folderButtonClicked: MutableLiveData<Pair<Long, String>?> = MutableLiveData(null)
+    val folderButtonClicked: LiveData<Pair<Long, String>?> get() = _folderButtonClicked
+
+    private val _fileButtonClicked: MutableLiveData<Pair<Long, String>?> = MutableLiveData(null)
+    val fileButtonClicked: LiveData<Pair<Long, String>?> get() = _fileButtonClicked
+
+    fun clearButtonTriggers(){
+        _fileButtonClicked.value = null
+        _folderButtonClicked.value = null
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
-            DirectoriesFragment.TYPE_FOLDER -> FolderViewHolder.create(parent, directoriesFragment)
-            DirectoriesFragment.TYPE_FILE -> FileViewHolder.create(parent, directoriesFragment)
+            DirectoriesFragment.TYPE_FOLDER -> FolderViewHolder.create(parent, this)
+            DirectoriesFragment.TYPE_FILE -> FileViewHolder.create(parent, this)
             else -> throw Exception("Creating this view tye not supported")
         }
     }
+
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(getItemViewType(position)){
@@ -42,6 +57,7 @@ class DirectoriesAdapter(
         }
     }
 
+
     override fun getItemViewType(position: Int): Int {
         return when(getItem(position).content){
             is Folder -> DirectoriesFragment.TYPE_FOLDER
@@ -53,6 +69,7 @@ class DirectoriesAdapter(
     fun getItemPublic(position: Int): DirectoryItem = getItem(position)
 
     fun getPosition(key: String) = currentList.indexOfFirst { it.itemId == key }
+
 
     interface ItemViewHolder{
         fun getItemDetails() : ItemDetailsLookup.ItemDetails<String>
@@ -68,6 +85,7 @@ class DirectoriesAdapter(
             }
         }
     }
+
 
     class FolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), ItemViewHolder{
         val folderButton: MaterialButton = itemView.findViewById(R.id.folder_button)
@@ -94,16 +112,23 @@ class DirectoriesAdapter(
         }
 
         companion object{
-            fun create(parent: ViewGroup, directoriesFragment: DirectoriesFragment): FolderViewHolder{
+            fun create(parent: ViewGroup, adapter: DirectoriesAdapter): FolderViewHolder{
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.folder_item, parent, false)
                 val folderViewHolder = FolderViewHolder(view)
                 folderViewHolder.folderButton.setOnClickListener {
-                    directoriesFragment.onFolderButton(folderViewHolder.folderId, folderViewHolder.folderName)
+                    adapter.onFolderButtonClicked(folderViewHolder.folderId, folderViewHolder.folderName)
                 }
                 return folderViewHolder
             }
         }
     }
+
+
+    fun onFolderButtonClicked(folderId: Long?, name: String?){
+        if(folderId == null || name == null) return
+        _folderButtonClicked.value = folderId to name
+    }
+
 
     class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), ItemViewHolder{
         val fileButton: MaterialButton = itemView.findViewById(R.id.file_button)
@@ -130,16 +155,23 @@ class DirectoriesAdapter(
         }
 
         companion object{
-            fun create(parent: ViewGroup, directoriesFragment: DirectoriesFragment): FileViewHolder{
+            fun create(parent: ViewGroup, adapter: DirectoriesAdapter): FileViewHolder{
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
                 val fileViewHolder = FileViewHolder(view)
                 fileViewHolder.fileButton.setOnClickListener {
-                    directoriesFragment.onFileButton(fileViewHolder.fileId, fileViewHolder.fileName)
+                    adapter.onFileButtonClicked(fileViewHolder.fileId, fileViewHolder.fileName)
                 }
                 return fileViewHolder
             }
         }
     }
+
+
+    fun onFileButtonClicked(fileId: Long?, name: String?){
+        if(fileId == null || name == null) return
+        _fileButtonClicked.value = fileId to name
+    }
+
 
     fun selectAll(){
         for(item in currentList){
