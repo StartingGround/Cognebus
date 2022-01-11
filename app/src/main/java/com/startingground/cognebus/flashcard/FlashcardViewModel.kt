@@ -176,7 +176,7 @@ class FlashcardViewModel(
         _answerPreviewText.value = ""
     }
 
-    private val fileDB = database.fileDatabaseDao.getFileByFileId(fileId)
+    private val fileDB = database.fileDatabaseDao.getLiveDataFileByFileId(fileId)
 
     private val _questionPreviewText: MutableLiveData<String> = MutableLiveData("")
     val questionPreviewText: LiveData<String> get() = _questionPreviewText

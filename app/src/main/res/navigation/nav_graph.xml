@@ -52,10 +52,13 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <action
+            android:id="@+id/action_directoriesFragment_to_createOrRenameFolderOrFileFragment"
+            app:destination="@id/createOrRenameFolderOrFileFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFolderOrFileSelectionFragment"
-        android:name="com.startingground.cognebus.createfolderorfile.CreateFolderOrFileSelectionFragment"
+        android:name="com.startingground.cognebus.createorrenamefolderorfile.CreateFolderOrFileSelectionFragment"
         android:label="fragment_create_folder_or_file_selection"
         tools:layout="@layout/fragment_create_folder_or_file_selection" >
         <argument
@@ -67,14 +70,14 @@
             app:argType="boolean"
             android:defaultValue="true" />
         <action
-            android:id="@+id/action_createFolderOrFileSelectionFragment_to_createFolderOrFileFragment"
-            app:destination="@id/createFolderOrFileFragment" />
+            android:id="@+id/action_createFolderOrFileSelectionFragment_to_createOrRenameFolderOrFileFragment"
+            app:destination="@id/createOrRenameFolderOrFileFragment" />
     </fragment>
     <fragment
-        android:id="@+id/createFolderOrFileFragment"
-        android:name="com.startingground.cognebus.createfolderorfile.CreateFolderOrFileFragment"
-        android:label="fragment_create_folder_or_file"
-        tools:layout="@layout/fragment_create_folder_or_file" >
+        android:id="@+id/createOrRenameFolderOrFileFragment"
+        android:name="com.startingground.cognebus.createorrenamefolderorfile.CreateOrRenameFolderOrFileFragment"
+        android:label="fragment_create_or_rename_folder_or_file"
+        tools:layout="@layout/fragment_create_or_rename_folder_or_file" >
         <argument
             android:name="folderId"
             app:argType="long" />
@@ -84,6 +87,10 @@
         <argument
             android:name="inputType"
             app:argType="integer" />
+        <argument
+            android:name="existingItemId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <navigation android:id="@+id/nav_file"
         app:startDestination="@id/fileFragment">

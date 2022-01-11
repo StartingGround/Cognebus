@@ -25,7 +25,10 @@ interface FileDatabaseDao {
     fun getLiveDataFilesByFolderId(folderId: Long?): LiveData<List<FileDB>>
 
     @Query("SELECT * FROM file WHERE file_id = :fileId")
-    fun getFileByFileId(fileId: Long): LiveData<FileDB>?
+    suspend fun getFileByFileId(fileId: Long): FileDB?
+
+    @Query("SELECT * FROM file WHERE file_id = :fileId")
+    fun getLiveDataFileByFileId(fileId: Long): LiveData<FileDB>?
 
     @Query("SELECT * FROM file WHERE (folder_id = :folderId OR (folder_id IS NULL AND :folderId IS NULL)) AND name = :name LIMIT 1")
     suspend fun getFileByFolderIdAndName(folderId: Long?, name: String): FileDB?

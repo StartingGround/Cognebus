@@ -14,6 +14,7 @@
     <string name="repetition_on_content_description">Repetition On</string>
     <string name="repetition_off">Repetition Off</string>
     <string name="repetition_off_content_description">Repetition Off</string>
+    <string name="rename">Rename</string>
 
     <!-- Flashcard -->
     <string name="image_html_tag_template"> &lt;img src=\"%d\" width=\"100%%\"&gt; </string>
@@ -59,13 +60,15 @@
     <string name="create_file_or_folder_selection_folder_button">Folder</string>
     <string name="create_file_or_folder_selection_file_button">File</string>
 
-    <!-- Create Folder Or File -->
-    <string name="create_folder_or_file_fragment_create_folder_button">Create Folder</string>
-    <string name="create_folder_or_file_fragment_create_file_button">Create File</string>
-    <string name="create_folder_or_file_fragment_invalid_input_error">Invalid input!</string>
-    <string name="create_folder_or_file_fragment_already_exists_error">Already exists!</string>
-    <string name="create_folder_or_file_fragment_folder_edit_text_hint">Folder Name</string>
-    <string name="create_folder_or_file_fragment_file_edit_text_hint">File Name</string>
+    <!-- Create Or Rename Folder Or File -->
+    <string name="create_or_rename_folder_or_file_fragment_create_folder_button">Create Folder</string>
+    <string name="create_or_rename_folder_or_file_fragment_rename_folder_button">Rename Folder</string>
+    <string name="create_or_rename_folder_or_file_fragment_create_file_button">Create File</string>
+    <string name="create_or_rename_folder_or_file_fragment_rename_file_button">Rename File</string>
+    <string name="create_or_rename_folder_or_file_fragment_invalid_input_error">Invalid input!</string>
+    <string name="create_or_rename_folder_or_file_fragment_already_exists_error">Already exists!</string>
+    <string name="create_or_rename_folder_or_file_fragment_folder_edit_text_hint">Folder Name</string>
+    <string name="create_or_rename_folder_or_file_fragment_file_edit_text_hint">File Name</string>
 
     <!-- File -->
     <string name="file_fragment_practice_button">Practice %1$d/%2$d</string>

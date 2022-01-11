@@ -28,6 +28,7 @@
         <entry key="app/src/main/res/layout/fragment_answer_practice.xml" value="0.25925925925925924" />
         <entry key="app/src/main/res/layout/fragment_create_folder_or_file.xml" value="0.15" />
         <entry key="app/src/main/res/layout/fragment_create_folder_or_file_selection.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/fragment_create_or_rename_folder_or_file.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_crop_image.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_directories.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_file.xml" value="0.25" />

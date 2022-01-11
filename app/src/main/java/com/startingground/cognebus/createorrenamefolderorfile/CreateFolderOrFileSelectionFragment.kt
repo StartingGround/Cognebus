@@ -1,4 +1,4 @@
-package com.startingground.cognebus.createfolderorfile
+package com.startingground.cognebus.createorrenamefolderorfile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -46,7 +46,7 @@ class CreateFolderOrFileSelectionFragment : Fragment() {
 
     fun onFolderButton(){
         val action = CreateFolderOrFileSelectionFragmentDirections
-            .actionCreateFolderOrFileSelectionFragmentToCreateFolderOrFileFragment(
+            .actionCreateFolderOrFileSelectionFragmentToCreateOrRenameFolderOrFileFragment(
                 folderId ?: 0L,
                 folderId == null,
                 DirectoriesFragment.TYPE_FOLDER
@@ -56,7 +56,7 @@ class CreateFolderOrFileSelectionFragment : Fragment() {
 
     fun onFileButton(){
         val action = CreateFolderOrFileSelectionFragmentDirections
-            .actionCreateFolderOrFileSelectionFragmentToCreateFolderOrFileFragment(
+            .actionCreateFolderOrFileSelectionFragmentToCreateOrRenameFolderOrFileFragment(
                 folderId ?: 0L,
                 folderId == null,
                 DirectoriesFragment.TYPE_FILE

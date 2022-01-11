@@ -201,6 +201,8 @@ class DirectoriesFragment : Fragment() {
             actionMode = (activity as AppCompatActivity).startSupportActionMode(contextualBarCallback)
         }
         actionMode?.title = getString(R.string.selected_counter, numberOfSelectedItems)
+
+        actionMode?.menu?.findItem(R.id.rename)?.isEnabled = numberOfSelectedItems == 1
     }
 
     private fun hideContextualBar(){
@@ -236,6 +238,11 @@ class DirectoriesFragment : Fragment() {
                 }
                 R.id.copy -> {
                     onCopyButton(adapter.currentList)
+                    selectionTracker?.clearSelection()
+                    true
+                }
+                R.id.rename -> {
+                    onRenameButton()
                     selectionTracker?.clearSelection()
                     true
                 }
@@ -305,4 +312,36 @@ class DirectoriesFragment : Fragment() {
     private fun onPasteButton(){
         sharedClipboardViewModel.pasteSelectedToFolder(directoriesViewModel.folderId)
     }
+
+
+    private fun onRenameButton(){
+        val numberOfSelectedItems: Int = selectionTracker?.selection?.size() ?: 0
+        if(numberOfSelectedItems != 1) return
+
+        val selectedDirectoryItem = adapter.currentList.find { selectionTracker?.isSelected(it.itemId) ?: false } ?: return
+
+        if(selectedDirectoryItem.content is Folder) {
+            val action = DirectoriesFragmentDirections.actionDirectoriesFragmentToCreateOrRenameFolderOrFileFragment(
+                directoriesViewModel.folderId ?: 0L,
+                directoriesViewModel.folderId == null,
+                TYPE_FOLDER,
+                (selectedDirectoryItem.content as Folder).folderId
+            )
+
+            findNavController().navigate(action)
+        }
+
+        if(selectedDirectoryItem.content is FileDB){
+            val action = DirectoriesFragmentDirections.actionDirectoriesFragmentToCreateOrRenameFolderOrFileFragment(
+                directoriesViewModel.folderId ?: 0L,
+                directoriesViewModel.folderId == null,
+                TYPE_FILE,
+                (selectedDirectoryItem.content as FileDB).fileId
+            )
+
+            findNavController().navigate(action)
+        }
+
+    }
+
 }

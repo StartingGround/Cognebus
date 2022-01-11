@@ -25,4 +25,10 @@
         android:title="@string/copy"
         android:contentDescription="@string/copy"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/rename"
+        android:title="@string/rename"
+        android:contentDescription="@string/rename"
+        app:showAsAction="never" />
 </menu>
