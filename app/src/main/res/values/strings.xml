@@ -96,6 +96,8 @@
     <string name="settings_fragment_flashcard_options_label">FLASHCARD OPTIONS</string>
     <string name="settings_fragment_consecutive_flashcard_creation_switch_label">Consecutive Flashcard Creation</string>
     <string name="settings_fragment_consecutive_flashcard_creation_switch_subtext">After flashcard is created start creating next flashcard.</string>
+    <string name="settings_fragment_crop_image_when_added_switch_label">Crop Image When Added</string>
+    <string name="settings_fragment_crop_image_when_added_switch_subtext">Open image for cropping when it is added.</string>
 
     <!-- Practice -->
     <string name="practice_question_fragment_top_app_bar_title">Question %1$d/%2$d</string>

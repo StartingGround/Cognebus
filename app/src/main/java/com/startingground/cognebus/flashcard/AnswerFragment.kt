@@ -29,6 +29,7 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
     private var consecutiveFlashcardCreationIsEnabled: Boolean = false
+    private var cropImageWhenAdded: Boolean = SettingsViewModel.CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE
 
 
     override fun onCreateView(
@@ -56,6 +57,11 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
         consecutiveFlashcardCreationIsEnabled = preferences.getBoolean(
             SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_KEY,
             SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE
+        )
+
+        cropImageWhenAdded = preferences.getBoolean(
+            SettingsViewModel.CROP_IMAGE_WHEN_ADDED_KEY,
+            SettingsViewModel.CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE
         )
 
         return binding.root
@@ -158,7 +164,7 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
 
         placeImageTagInsideAnswerText()
 
-        openImageForCropping()
+        if(cropImageWhenAdded) openImageForCropping()
     }
 
 
@@ -169,7 +175,7 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
         if (!imageIsSaved) return@registerForActivityResult
         placeImageTagInsideAnswerText()
 
-        openImageForCropping()
+        if(cropImageWhenAdded) openImageForCropping()
     }
 
     

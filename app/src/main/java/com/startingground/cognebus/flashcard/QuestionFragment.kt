@@ -14,16 +14,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentFlashcardQuestionBinding
+import com.startingground.cognebus.settings.SettingsViewModel
 
 class QuestionFragment : Fragment(), InputToolbarInterface {
 
     private lateinit var binding: FragmentFlashcardQuestionBinding
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
+
+    private var cropImageWhenAdded: Boolean = SettingsViewModel.CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE
 
 
     override fun onCreateView(
@@ -46,6 +50,13 @@ class QuestionFragment : Fragment(), InputToolbarInterface {
             isEnabled = false
             activity?.onBackPressed()
         }
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        cropImageWhenAdded = preferences.getBoolean(
+            SettingsViewModel.CROP_IMAGE_WHEN_ADDED_KEY,
+            SettingsViewModel.CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE
+        )
 
         return binding.root
     }
@@ -143,7 +154,7 @@ class QuestionFragment : Fragment(), InputToolbarInterface {
 
         placeImageTagInsideAnswerText()
 
-        openImageForCropping()
+        if(cropImageWhenAdded) openImageForCropping()
     }
 
 
@@ -154,7 +165,7 @@ class QuestionFragment : Fragment(), InputToolbarInterface {
         if (!imageIsSaved) return@registerForActivityResult
         placeImageTagInsideAnswerText()
 
-        openImageForCropping()
+        if(cropImageWhenAdded) openImageForCropping()
     }
 
 

@@ -169,6 +169,20 @@
                 app:summaryText="@string/settings_fragment_consecutive_flashcard_creation_switch_subtext"
                 app:titleText="@string/settings_fragment_consecutive_flashcard_creation_switch_label" />
 
+            <com.startingground.cognebus.customviews.SwitchCognebus
+                android:id="@+id/crop_image_when_added_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_small"
+                android:checked="@{settingsViewModel.cropImageWhenAdded}"
+                android:onClick="@{(view) -> settingsViewModel.onCropImageWhenAddedChanged(view)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/consecutive_flashcard_creation_switch"
+                app:summaryText="@string/settings_fragment_crop_image_when_added_switch_subtext"
+                app:titleText="@string/settings_fragment_crop_image_when_added_switch_label" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

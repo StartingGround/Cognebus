@@ -15,51 +15,26 @@ import com.startingground.cognebus.utilities.StringUtils
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object{
+        //File Default Options
         const val ENABLE_HTML_KEY = "enable_html"
         const val REPETITION_ENABLED_KEY = "repetition_enabled"
         const val CONTINUE_REPETITION_KEY = "continue_repetition"
         const val CYCLE_INCREMENT_KEY = "cycle_increment"
         const val MAX_DAYS_PER_CYCLE_KEY = "max_days_per_cycle"
-        const val CONSECUTIVE_FLASHCARD_CREATION_KEY = "consecutive_flashcard_creation"
 
         const val ENABLE_HTML_DEFAULT_VALUE = false
         const val REPETITION_ENABLED_DEFAULT_VALUE = true
         const val CONTINUE_REPETITION_DEFAULT_VALUE = false
         const val CYCLE_INCREMENT_DEFAULT_VALUE: Int = 15
         const val MAX_DAYS_PER_CYCLE_DEFAULT_VALUE: Int = 60
+
+        //Flashcard Options
+        const val CONSECUTIVE_FLASHCARD_CREATION_KEY = "consecutive_flashcard_creation"
+        const val CROP_IMAGE_WHEN_ADDED_KEY = "crop_image_when_added"
+
         const val CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE = false
+        const val CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE = true
     }
-
-    private val preferences = PreferenceManager.getDefaultSharedPreferences(application.applicationContext)
-
-    private val _enableHTML: MutableLiveData<Boolean> = MutableLiveData(
-        preferences.getBoolean(ENABLE_HTML_KEY, ENABLE_HTML_DEFAULT_VALUE)
-    )
-    val enableHTML: LiveData<Boolean> get() = _enableHTML
-
-
-    private val _repetitionEnabled: MutableLiveData<Boolean> = MutableLiveData(
-        preferences.getBoolean(REPETITION_ENABLED_KEY, REPETITION_ENABLED_DEFAULT_VALUE)
-    )
-    val repetitionEnabled: LiveData<Boolean> get() = _repetitionEnabled
-
-
-    private val _continueRepetition: MutableLiveData<Boolean> = MutableLiveData(
-        preferences.getBoolean(CONTINUE_REPETITION_KEY, CONTINUE_REPETITION_DEFAULT_VALUE)
-    )
-    val continueRepetition: LiveData<Boolean> get() = _continueRepetition
-
-
-    private val _cycleIncrement: MutableLiveData<Int> = MutableLiveData(
-        preferences.getInt(CYCLE_INCREMENT_KEY, CYCLE_INCREMENT_DEFAULT_VALUE)
-    )
-    val cycleIncrement: LiveData<Int> get() = _cycleIncrement
-
-
-    private val _maxDaysPerCycle: MutableLiveData<Int> = MutableLiveData(
-        preferences.getInt(MAX_DAYS_PER_CYCLE_KEY, MAX_DAYS_PER_CYCLE_DEFAULT_VALUE)
-    )
-    val maxDaysPerCycle: LiveData<Int> get() = _maxDaysPerCycle
 
 
     private fun switchValueChangedHandler(view: View, key: String, mutableLiveDataOfSwitch: MutableLiveData<Boolean>){
@@ -72,24 +47,47 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
 
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(application.applicationContext)
+
+
+    //File Default Options
+    private val _enableHTML: MutableLiveData<Boolean> = MutableLiveData(
+        preferences.getBoolean(ENABLE_HTML_KEY, ENABLE_HTML_DEFAULT_VALUE)
+    )
+    val enableHTML: LiveData<Boolean> get() = _enableHTML
+
     fun onEnableHtmlChanged(view: View){
         switchValueChangedHandler(view, ENABLE_HTML_KEY, _enableHTML)
     }
 
+
+    private val _repetitionEnabled: MutableLiveData<Boolean> = MutableLiveData(
+        preferences.getBoolean(REPETITION_ENABLED_KEY, REPETITION_ENABLED_DEFAULT_VALUE)
+    )
+    val repetitionEnabled: LiveData<Boolean> get() = _repetitionEnabled
 
     fun onRepetitionEnabledChanged(view: View){
         switchValueChangedHandler(view, REPETITION_ENABLED_KEY, _repetitionEnabled)
     }
 
 
+    private val _continueRepetition: MutableLiveData<Boolean> = MutableLiveData(
+        preferences.getBoolean(CONTINUE_REPETITION_KEY, CONTINUE_REPETITION_DEFAULT_VALUE)
+    )
+    val continueRepetition: LiveData<Boolean> get() = _continueRepetition
+
     fun onContinueRepetitionChanged(view: View){
         switchValueChangedHandler(view, CONTINUE_REPETITION_KEY, _continueRepetition)
     }
 
 
+    private val _cycleIncrement: MutableLiveData<Int> = MutableLiveData(
+        preferences.getInt(CYCLE_INCREMENT_KEY, CYCLE_INCREMENT_DEFAULT_VALUE)
+    )
+    val cycleIncrement: LiveData<Int> get() = _cycleIncrement
+
     private val _cycleIncrementError: MutableLiveData<String?> = MutableLiveData(null)
     val cycleIncrementError: LiveData<String?> get() = _cycleIncrementError
-
 
     fun onCycleIncrementChanged(text: String){
         val context = getApplication<Application>().applicationContext
@@ -112,9 +110,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
 
+    private val _maxDaysPerCycle: MutableLiveData<Int> = MutableLiveData(
+        preferences.getInt(MAX_DAYS_PER_CYCLE_KEY, MAX_DAYS_PER_CYCLE_DEFAULT_VALUE)
+    )
+    val maxDaysPerCycle: LiveData<Int> get() = _maxDaysPerCycle
+
     private val _maxDaysPerCycleError: MutableLiveData<String?> = MutableLiveData(null)
     val maxDaysPerCycleError: LiveData<String?> get() = _maxDaysPerCycleError
-
 
     fun onMaxDaysPerCycleChanged(text: String){
         val context = getApplication<Application>().applicationContext
@@ -136,6 +138,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         _maxDaysPerCycle.value = value
     }
 
+
+    //Flashcard Options
     private val _consecutiveFlashcardCreation: MutableLiveData<Boolean> = MutableLiveData(
         preferences.getBoolean(CONSECUTIVE_FLASHCARD_CREATION_KEY, CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE)
     )
@@ -143,5 +147,15 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun onConsecutiveFlashcardCreationChanged(view: View){
         switchValueChangedHandler(view, CONSECUTIVE_FLASHCARD_CREATION_KEY, _consecutiveFlashcardCreation)
+    }
+
+
+    private val _cropImageWhenAdded: MutableLiveData<Boolean> = MutableLiveData(
+        preferences.getBoolean(CROP_IMAGE_WHEN_ADDED_KEY, CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE)
+    )
+    val cropImageWhenAdded: LiveData<Boolean> get() = _cropImageWhenAdded
+
+    fun onCropImageWhenAddedChanged(view: View){
+        switchValueChangedHandler(view, CROP_IMAGE_WHEN_ADDED_KEY, _cropImageWhenAdded)
     }
 }
