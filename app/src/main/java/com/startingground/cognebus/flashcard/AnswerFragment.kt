@@ -28,7 +28,7 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
     private lateinit var binding: FragmentFlashcardAnswerBinding
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
-    private var consecutiveFlashcardCreationIsEnabled: Boolean = false
+    private var consecutiveFlashcardCreationIsEnabled: Boolean = SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE
     private var cropImageWhenAdded: Boolean = SettingsViewModel.CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE
 
 
