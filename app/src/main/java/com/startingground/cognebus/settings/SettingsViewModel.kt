@@ -33,7 +33,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         const val CROP_IMAGE_WHEN_ADDED_KEY = "crop_image_when_added"
 
         const val CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE = false
-        const val CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE = true
+        const val CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE = false
     }
 
 
