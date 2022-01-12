@@ -85,6 +85,9 @@ class DirectoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.clipboardViewModel = sharedClipboardViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         binding.directoriesRecyclerView.adapter = adapter
         binding.directoriesRecyclerView.setHasFixedSize(true)
 

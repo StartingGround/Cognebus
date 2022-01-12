@@ -1,5 +1,6 @@
 package com.startingground.cognebus.sharedviewmodels
 
+import android.view.View
 import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
@@ -106,21 +107,52 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
     }
 
 
+    private val _pasteInProgress: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    val pasteProgressIndicatorVisibility: LiveData<Int> = Transformations.map(_pasteInProgress){
+        if(it) View.VISIBLE else View.GONE
+    }
+
+    private val _pasteProgressPercentage: MutableLiveData<Int> = MutableLiveData(0)
+    val pasteProgressPercentage: LiveData<Int> get() = _pasteProgressPercentage
+
+
     fun pasteSelectedToFolder(destinationFolder: Long?){
         if(_thereIsContentReadyToBePastedInDirectories.value != true) return
 
         if(originFolder == destinationFolder) return
 
+        if(_pasteInProgress.value == true) return
+
+        _pasteProgressPercentage.value = 0
+        _pasteInProgress.value = true
+
         viewModelScope.launch {
             if(destinationFolderIsInOneOfSelectedFolders(destinationFolder)) {
                 _errorCopyingToSourceFolder.value = true
+                _pasteInProgress.value = false
                 return@launch
             }
+
+            var totalNumberOfItems: Int = selectedFilesDatabase.value?.size ?: 0
+            totalNumberOfItems += selectedFoldersDatabase.value?.size ?: 0
+
+            //When percentage is 0 progress indicator is not visible
+            //this will give indicator one more percentage increment that is visible at start
+            totalNumberOfItems++
+            var numberOfPastedItems = 1
+            _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
+
 
             selectedFilesDatabase.value?.let {
                 if(it.isEmpty()) return@let
 
-                FileDBUtils.copyFilesTo(it, destinationFolder, database, dataViewModel)
+                it.forEach { file ->
+                    FileDBUtils.copyFilesTo(listOf(file), destinationFolder, database, dataViewModel)
+
+                    numberOfPastedItems++
+                    _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
+                }
 
                 if(!cutSelected) return@let
 
@@ -130,7 +162,12 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
             selectedFoldersDatabase.value?.let {
                 if(it.isEmpty()) return@let
 
-                FolderUtils.copyFoldersTo(it, destinationFolder, database, dataViewModel)
+                it.forEach { folder ->
+                    FolderUtils.copyFoldersTo(listOf(folder), destinationFolder, database, dataViewModel)
+
+                    numberOfPastedItems++
+                    _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
+                }
 
                 if(!cutSelected) return@let
 
@@ -139,6 +176,7 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
 
             dataViewModel.deleteUnusedImages()
             cutSelected = false
+            _pasteInProgress.value = false
         }
     }
 
