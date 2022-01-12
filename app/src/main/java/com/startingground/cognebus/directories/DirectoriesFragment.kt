@@ -2,6 +2,7 @@ package com.startingground.cognebus.directories
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.databinding.DataBindingUtil
@@ -78,6 +79,12 @@ class DirectoriesFragment : Fragment() {
         val fileContentDescription: String = getString(R.string.directories_file_button_content_description_template)
         adapter = DirectoriesAdapter(folderContentDescription, fileContentDescription)
 
+        requireActivity().onBackPressedDispatcher.addCallback(this){
+            if(sharedClipboardViewModel.pasteInProgress.value == true) return@addCallback
+            isEnabled = false
+            activity?.onBackPressed()
+        }
+
         return binding.root
     }
 
@@ -94,10 +101,12 @@ class DirectoriesFragment : Fragment() {
         binding.topAppBar.title = title
 
         binding.topAppBar.setNavigationOnClickListener {
+            if(sharedClipboardViewModel.pasteInProgress.value == true) return@setNavigationOnClickListener
             findNavController().popBackStack()
         }
 
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            if(sharedClipboardViewModel.pasteInProgress.value == true) return@setOnMenuItemClickListener true
             when(menuItem.itemId){
                 R.id.paste -> {
                     onPasteButton()
@@ -225,6 +234,8 @@ class DirectoriesFragment : Fragment() {
         }
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            if(sharedClipboardViewModel.pasteInProgress.value == true) return true
+
             return when(item?.itemId){
                 R.id.delete -> {
                     onDeleteButton()
@@ -260,6 +271,8 @@ class DirectoriesFragment : Fragment() {
 
 
     private fun onCreateButton(){
+        if(sharedClipboardViewModel.pasteInProgress.value == true) return
+
         if((selectionTracker?.selection?.size() ?: 0) > 0) return
 
         val action = DirectoriesFragmentDirections.actionDirectoriesFragmentToCreateFolderOrFileSelectionFragment(
@@ -270,6 +283,8 @@ class DirectoriesFragment : Fragment() {
     }
 
     private fun onFolderButton(selectedFolderId: Long, folderName: String){
+        if(sharedClipboardViewModel.pasteInProgress.value == true) return
+
         adapter.clearButtonTriggers()
 
         if((selectionTracker?.selection?.size() ?: 0) > 0) return
@@ -283,6 +298,8 @@ class DirectoriesFragment : Fragment() {
     }
 
     private fun onFileButton(fileId: Long, fileName: String){
+        if(sharedClipboardViewModel.pasteInProgress.value == true) return
+
         adapter.clearButtonTriggers()
 
         if((selectionTracker?.selection?.size() ?: 0) > 0) return

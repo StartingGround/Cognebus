@@ -108,6 +108,7 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
 
 
     private val _pasteInProgress: MutableLiveData<Boolean> = MutableLiveData(false)
+    val pasteInProgress: LiveData<Boolean> get() = _pasteInProgress
 
     val pasteProgressIndicatorVisibility: LiveData<Int> = Transformations.map(_pasteInProgress){
         if(it) View.VISIBLE else View.GONE
