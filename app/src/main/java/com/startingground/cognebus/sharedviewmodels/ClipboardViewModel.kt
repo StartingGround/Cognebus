@@ -260,11 +260,29 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
         val originFileId: Long = selectedFlashcardsDatabase.value!!.first().fileId
         if(destinationFileId == originFileId) return
 
+        if(_pasteInProgress.value == true) return
+
+        _pasteProgressPercentage.value = 0
+        _pasteInProgress.value = true
+
+        var totalNumberOfFlashcards: Int = selectedFlashcardsDatabase.value?.size ?: 0
+
+        //When percentage is 0 progress indicator is not visible
+        //this will give indicator one more percentage increment that is visible at start
+        totalNumberOfFlashcards++
+        var numberOfPastedFlashcards = 1
+        _pasteProgressPercentage.value = numberOfPastedFlashcards * 100 / totalNumberOfFlashcards
+
         viewModelScope.launch {
             selectedFlashcardsDatabase.value?.let {
                 if(it.isEmpty()) return@let
 
-                FlashcardUtils.copyFlashcardsTo(it, destinationFileId, database, dataViewModel)
+                it.forEach { flashcard ->
+                    FlashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId, database, dataViewModel)
+
+                    numberOfPastedFlashcards++
+                    _pasteProgressPercentage.value = numberOfPastedFlashcards * 100 / totalNumberOfFlashcards
+                }
 
                 if(!cutSelected) return@let
 
@@ -273,6 +291,7 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
 
             dataViewModel.deleteUnusedImages()
             cutSelected = false
+            _pasteInProgress.value = false
         }
     }
 }

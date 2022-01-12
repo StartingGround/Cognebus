@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="clipboardViewModel"
+            type="com.startingground.cognebus.sharedviewmodels.ClipboardViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +35,17 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_indicator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{clipboardViewModel.pasteProgressIndicatorVisibility}"
+            android:progress="@{clipboardViewModel.pasteProgressPercentage}"
+            app:indicatorColor="?attr/colorPrimaryVariant"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_app_bar_layout"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/flashcards_list_recycler_view"
             android:layout_width="0dp"
@@ -41,7 +56,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_app_bar_layout"
+            app:layout_constraintTop_toBottomOf="@id/progress_indicator"
             tools:listitem="@layout/flashcard_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

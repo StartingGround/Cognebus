@@ -73,6 +73,9 @@ class FlashcardsListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.clipboardViewModel = sharedClipboardViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         binding.flashcardsListRecyclerView.adapter = adapter
         binding.flashcardsListRecyclerView.setHasFixedSize(true)
         binding.flashcardsListRecyclerView.setItemViewCacheSize(10)
