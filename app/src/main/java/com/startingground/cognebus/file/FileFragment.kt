@@ -19,11 +19,15 @@ import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.databinding.FragmentFileBinding
 import com.startingground.cognebus.practice.PracticeViewModel
 import com.startingground.cognebus.practice.PracticeViewModelFactory
+import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
+import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
 
 class FileFragment : Fragment() {
 
     private lateinit var fileViewModel: FileViewModel
     private lateinit var sharedPracticeViewModel: PracticeViewModel
+    private lateinit var sharedClipboardViewModel: ClipboardViewModel
+
     private var title: String? = null
     private var fileId: Long = 0L
 
@@ -47,6 +51,9 @@ class FileFragment : Fragment() {
 
         val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
         sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
+
+        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
+        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
     }
 
 
@@ -73,6 +80,16 @@ class FileFragment : Fragment() {
 
         binding.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.paste -> {
+                    onPasteButton()
+                    true
+                }
+                else -> false
+            }
         }
 
         fileViewModel.cycleIncrementError.observe(viewLifecycleOwner){
@@ -139,5 +156,9 @@ class FileFragment : Fragment() {
     fun onViewFlashcards(){
         val action = FileFragmentDirections.actionFileFragmentToFlashcardsListFragment(fileId, fileViewModel.file.value?.name ?: "", fileViewModel.file.value?.enableHtml ?: false)
         findNavController().navigate(action)
+    }
+
+    private fun onPasteButton(){
+        sharedClipboardViewModel.pasteSelectedFlashcardsToFile(fileId)
     }
 }
