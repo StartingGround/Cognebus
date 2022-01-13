@@ -147,6 +147,9 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
 
             binding.answerNestedScrollView.visibility = View.GONE
             binding.answerMathViewNestedScrollView.visibility = View.VISIBLE
+
+            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(binding.answerTextField.editText?.windowToken, 0)
         } else{
             binding.topAppBar.menu.findItem(R.id.preview).setIcon(R.drawable.ic_visibility_24)
             binding.topAppBar.menu.findItem(R.id.preview).setTitle(R.string.flashcard_top_app_bar_preview)
