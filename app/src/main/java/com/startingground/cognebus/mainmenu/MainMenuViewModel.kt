@@ -36,10 +36,16 @@ class MainMenuViewModel(private val database: CognebusDatabase): ViewModel() {
     private val flashcardsForRepetitionObserver = Observer<List<FlashcardDB>> { flashcards ->
         _readyForRepetition.value = false
         _numberOfFlashcardsForRepetition.value = 0
-        val filesToGet = flashcards.map { it.fileId }
+        var filesToGet = flashcards.map { it.fileId }.distinct()
         if(filesToGet.isEmpty()) return@Observer
 
         viewModelScope.launch {
+            //SQLite will break if we send it list of 1000 or more elements to its input
+            //Better to have wrong data than unusable app in extreme case
+            if(filesToGet.size > 999){
+                filesToGet = filesToGet.take(999)
+            }
+
             val files = database.fileDatabaseDao.getFilesInFileIdList(filesToGet)
             if(files.isEmpty()) return@launch
 

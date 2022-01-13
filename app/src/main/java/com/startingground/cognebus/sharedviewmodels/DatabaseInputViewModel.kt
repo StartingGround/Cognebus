@@ -90,9 +90,18 @@ open class DatabaseInputViewModel(app: Application) : AndroidViewModel(app){
             val context = getApplication<Application>().applicationContext
             val unusedImages = database.imageDatabaseDao.getUnusedImages()
 
+            if(unusedImages.isEmpty()) return@launch
+
             unusedImages.forEach { ImageUtils.deleteImageFileById(it.imageId, it.fileExtension, context) }
 
-            database.imageDatabaseDao.deleteList(unusedImages)
+            //SQLite will break if we send it list of 1000 or more elements to its input
+            for(startIndex in unusedImages.indices step 999){
+                var endIndex = startIndex + 999
+                if(endIndex > unusedImages.size) endIndex = unusedImages.size
+
+                val images = unusedImages.subList(startIndex, endIndex)
+                database.imageDatabaseDao.deleteList(images)
+            }
         }
     }
 
