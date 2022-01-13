@@ -131,6 +131,27 @@ class DirectoriesFragment : Fragment() {
             sharedClipboardViewModel.removeErrorCopyingToSourceFolder()
         }
 
+        sharedClipboardViewModel.foldersWillBeMergedAndFilesReplacedWarning.observe(viewLifecycleOwner){
+            val (foldersWillBeMerged, filesWillBeReplaced) = it
+            if(!foldersWillBeMerged && !filesWillBeReplaced) return@observe
+
+            sharedClipboardViewModel.removeFoldersWillBeMergedAndFilesReplacedWarning()
+
+            val title = when{
+                foldersWillBeMerged && !filesWillBeReplaced -> R.string.directories_folder_merge_warning
+                !foldersWillBeMerged && filesWillBeReplaced -> R.string.directories_file_replacement_warning
+                else -> R.string.directories_folder_merge_and_file_replacement_warning
+            }
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(title)
+                .setPositiveButton(R.string.directories_merge_and_replacement_warning_positive_button){ _, _ ->
+                    onPasteButton(true)
+                }
+                .setNegativeButton(R.string.directories_merge_and_replacement_warning_negative_button){ _, _ ->}
+                .show()
+        }
+
         directoriesViewModel.folders.observe(viewLifecycleOwner) {
             refreshRecyclerViewItems()
         }
@@ -329,8 +350,8 @@ class DirectoriesFragment : Fragment() {
         sharedClipboardViewModel.copySelectedFilesAndFolders(selectedFiles, selectedFolders, cutEnabled = cutEnabled)
     }
 
-    private fun onPasteButton(){
-        sharedClipboardViewModel.pasteSelectedToFolder(directoriesViewModel.folderId)
+    private fun onPasteButton(folderMergeAndFileReplacementApproved: Boolean = false){
+        sharedClipboardViewModel.pasteSelectedToFolder(directoriesViewModel.folderId, folderMergeAndFileReplacementApproved)
     }
 
 

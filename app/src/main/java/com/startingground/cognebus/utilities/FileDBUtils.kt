@@ -25,4 +25,14 @@ object FileDBUtils {
             FlashcardUtils.copyFlashcardsTo(flashcards, fileCopyId, database, dataViewModel)
         }
     }
+
+
+    suspend fun isThereFileWithSameName(fileList: List<FileDB>, destinationFolderId: Long?, database: CognebusDatabase): Boolean{
+        val filesInDestination = database.fileDatabaseDao.getFilesByFolderId(destinationFolderId)
+
+        val fileListNames = fileList.map { it.name }
+        val matchingFile = filesInDestination.find { it.name in fileListNames }
+
+        return matchingFile != null
+    }
 }

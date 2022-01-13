@@ -31,4 +31,36 @@ object FolderUtils {
             copyFoldersTo(subFolderList, newSubDestinationFolderId, database, dataViewModel)
         }
     }
+
+
+    suspend fun isThereFolderWithSameName(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase): Boolean{
+        val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
+
+        val folderListNames = folderList.map { it.name }
+        val matchingFolder = foldersInDestination.find { it.name in folderListNames }
+
+        return matchingFolder != null
+    }
+
+
+    suspend fun isThereSameFileWithinFolders(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase): Boolean{
+        val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
+
+        val folderListNames = folderList.map { it.name }
+        val matchingDestinationFolders = foldersInDestination.filter { it.name in folderListNames }
+
+        matchingDestinationFolders.forEach { folder ->
+            val originFolder = folderList.find { it.name == folder.name } ?: return@forEach
+            val filesInsideOriginFolder = database.fileDatabaseDao.getFilesByFolderId(originFolder.folderId)
+
+            var thereIsFileWithSameName = FileDBUtils.isThereFileWithSameName(filesInsideOriginFolder, folder.folderId, database)
+            if(thereIsFileWithSameName) return true
+
+            val foldersInsideOriginFolder = database.folderDatabaseDao.getFoldersByParentFolderId(originFolder.folderId)
+            thereIsFileWithSameName = isThereSameFileWithinFolders(foldersInsideOriginFolder, folder.folderId, database)
+            if(thereIsFileWithSameName) return true
+        }
+
+        return false
+    }
 }

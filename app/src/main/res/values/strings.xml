@@ -55,6 +55,11 @@
     <string name="directories_file_button_content_description_template">File: %s</string>
     <string name="directories_error_copying_to_source_folder_message">Can\'t copy folder into itself.</string>
     <string name="directories_error_copying_to_source_folder_positive_button">OK</string>
+    <string name="directories_folder_merge_warning">Some folders will be merged.</string>
+    <string name="directories_file_replacement_warning">Some files will be replaced.</string>
+    <string name="directories_folder_merge_and_file_replacement_warning">Some folders will be merged and some files replaced.</string>
+    <string name="directories_merge_and_replacement_warning_positive_button">Approve</string>
+    <string name="directories_merge_and_replacement_warning_negative_button">Cancel</string>
 
     <!-- Create Folder Or File Selection -->
     <string name="create_file_or_folder_selection_folder_button">Folder</string>

@@ -118,7 +118,7 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
     val pasteProgressPercentage: LiveData<Int> get() = _pasteProgressPercentage
 
 
-    fun pasteSelectedToFolder(destinationFolder: Long?){
+    fun pasteSelectedToFolder(destinationFolder: Long?, folderMergeAndFileReplacementApproved: Boolean = false){
         if(_thereIsContentReadyToBePastedInDirectories.value != true) return
 
         if(originFolder == destinationFolder) return
@@ -131,6 +131,11 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
         viewModelScope.launch {
             if(destinationFolderIsInOneOfSelectedFolders(destinationFolder)) {
                 _errorCopyingToSourceFolder.value = true
+                _pasteInProgress.value = false
+                return@launch
+            }
+
+            if(!folderMergeAndFileReplacementApproved && foldersWillBeMergedAndFilesReplaced(destinationFolder)){
                 _pasteInProgress.value = false
                 return@launch
             }
@@ -179,6 +184,32 @@ class ClipboardViewModel(private val database: CognebusDatabase, private val dat
             cutSelected = false
             _pasteInProgress.value = false
         }
+    }
+
+
+    //<FoldersWillBeMerged, FilesWillBeReplaced>
+    private val _foldersWillBeMergedAndFilesReplacedWarning: MutableLiveData<Pair<Boolean, Boolean>> = MutableLiveData(false to false)
+    val foldersWillBeMergedAndFilesReplacedWarning: LiveData<Pair<Boolean, Boolean>> get() = _foldersWillBeMergedAndFilesReplacedWarning
+
+    fun removeFoldersWillBeMergedAndFilesReplacedWarning(){
+        _foldersWillBeMergedAndFilesReplacedWarning.value = false to false
+    }
+
+
+    private suspend fun foldersWillBeMergedAndFilesReplaced(destinationFolderId: Long?): Boolean{
+        val foldersWillBeMerged: Boolean = selectedFoldersDatabase.value?.let{
+            FolderUtils.isThereFolderWithSameName(it, destinationFolderId, database) } ?: false
+
+        var filesWillBeReplaced: Boolean = selectedFilesDatabase.value?.let{
+            FileDBUtils.isThereFileWithSameName(it, destinationFolderId, database)} ?: false
+
+        if(!filesWillBeReplaced){
+            filesWillBeReplaced = selectedFoldersDatabase.value?.let{
+                FolderUtils.isThereSameFileWithinFolders(it, destinationFolderId, database) } ?: false
+        }
+
+        _foldersWillBeMergedAndFilesReplacedWarning.value = foldersWillBeMerged to filesWillBeReplaced
+        return foldersWillBeMerged || filesWillBeReplaced
     }
 
 
