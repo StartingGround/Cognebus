@@ -17,12 +17,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     companion object{
         //File Default Options
         const val ENABLE_HTML_KEY = "enable_html"
+        const val ONLY_PRACTICE_ENABLED_KEY = "only_practice_enabled"
         const val REPETITION_ENABLED_KEY = "repetition_enabled"
         const val CONTINUE_REPETITION_KEY = "continue_repetition"
         const val CYCLE_INCREMENT_KEY = "cycle_increment"
         const val MAX_DAYS_PER_CYCLE_KEY = "max_days_per_cycle"
 
         const val ENABLE_HTML_DEFAULT_VALUE = false
+        const val ONLY_PRACTICE_ENABLED_DEFAULT_VALUE = false
         const val REPETITION_ENABLED_DEFAULT_VALUE = true
         const val CONTINUE_REPETITION_DEFAULT_VALUE = false
         const val CYCLE_INCREMENT_DEFAULT_VALUE: Int = 15
@@ -58,6 +60,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun onEnableHtmlChanged(view: View){
         switchValueChangedHandler(view, ENABLE_HTML_KEY, _enableHTML)
+    }
+
+
+    private val _onlyPracticeEnabled: MutableLiveData<Boolean> = MutableLiveData(
+        preferences.getBoolean(ONLY_PRACTICE_ENABLED_KEY, ONLY_PRACTICE_ENABLED_DEFAULT_VALUE)
+    )
+    val onlyPracticeEnabled: LiveData<Boolean> get() = _onlyPracticeEnabled
+
+    fun onOnlyPracticeEnabledChanged(view: View){
+        switchValueChangedHandler(view, ONLY_PRACTICE_ENABLED_KEY, _onlyPracticeEnabled)
     }
 
 

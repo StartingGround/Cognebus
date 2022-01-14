@@ -56,6 +56,20 @@
                 app:titleText="@string/file_fragment_enable_html_switch_label" />
 
             <com.startingground.cognebus.customviews.SwitchCognebus
+                android:id="@+id/only_practice_enabled"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginTop="@dimen/margin_small"
+                android:checked="@{settingsViewModel.onlyPracticeEnabled}"
+                android:onClick="@{(view) -> settingsViewModel.onOnlyPracticeEnabledChanged(view)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/enable_html_switch"
+                app:summaryText="@string/file_fragment_only_practice_enabled_subtext"
+                app:titleText="@string/file_fragment_only_practice_enabled_label" />
+
+            <com.startingground.cognebus.customviews.SwitchCognebus
                 android:id="@+id/repetition_switch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -65,7 +79,7 @@
                 android:onClick="@{(view) -> settingsViewModel.onRepetitionEnabledChanged(view)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/enable_html_switch"
+                app:layout_constraintTop_toBottomOf="@id/only_practice_enabled"
                 app:summaryText="@string/file_fragment_repetition_switch_subtext"
                 app:titleText="@string/file_fragment_repetition_switch_label" />
 

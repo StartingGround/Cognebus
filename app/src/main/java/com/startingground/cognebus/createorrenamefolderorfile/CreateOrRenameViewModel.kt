@@ -122,6 +122,10 @@ class CreateOrRenameViewModel(
                         SettingsViewModel.ENABLE_HTML_DEFAULT_VALUE
                     ),
                     preferences.getBoolean(
+                        SettingsViewModel.ONLY_PRACTICE_ENABLED_KEY,
+                        SettingsViewModel.ONLY_PRACTICE_ENABLED_DEFAULT_VALUE
+                    ),
+                    preferences.getBoolean(
                         SettingsViewModel.REPETITION_ENABLED_KEY,
                         SettingsViewModel.REPETITION_ENABLED_DEFAULT_VALUE
                     ),

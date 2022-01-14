@@ -33,8 +33,14 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
     }
 
     val numberOfFlashcardsForPractice: LiveData<Pair<Int, Int>> = Transformations.map(_flashcards){ flashcards ->
-        val totalNumberOfFlashcards: Int = flashcards.size
-        var numberOfFlashcardsForPractice: Int = flashcards.filter { !it.answeredInPractice }.size
+        var flashcardList = flashcards
+
+        if(_file.value?.onlyPracticeEnabled == true){
+            flashcardList = flashcardList.filter{ it.repetitionEnabled }
+        }
+
+        val totalNumberOfFlashcards: Int = flashcardList.size
+        var numberOfFlashcardsForPractice: Int = flashcardList.filter { !it.answeredInPractice }.size
         if (numberOfFlashcardsForPractice == 0) numberOfFlashcardsForPractice = totalNumberOfFlashcards
 
         Pair(numberOfFlashcardsForPractice, totalNumberOfFlashcards)
@@ -51,6 +57,20 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
         if(view !is SwitchMaterial) return
         _file.value?.enableHtml = view.isChecked
         updateFile()
+    }
+
+
+    fun onOnlyPracticeEnabledChanged(view: View){
+        if(view !is SwitchMaterial) return
+        _file.value?.onlyPracticeEnabled = view.isChecked
+        updateFile()
+
+        //Needed to make _flashcards look like they changed to trigger
+        // update of other transformations of _flashcards liveData
+        _flashcards.value?.let {
+            if(it.isEmpty()) return@let
+            dataViewModel.updateFlashcardInDatabase(it.first())
+        }
     }
 
 
@@ -133,13 +153,19 @@ class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataVi
         val flashcardsForPractice = mutableListOf<FlashcardDB>()
 
         _flashcards.value?.let { flashcards ->
-            val unansweredFlashcards = flashcards.filter { !it.answeredInPractice }
+            var flashcardsInUse = flashcards
+            if(_file.value?.onlyPracticeEnabled == true){
+                flashcardsInUse = flashcardsInUse.filter { it.repetitionEnabled }
+            }
+
+            val unansweredFlashcards = flashcardsInUse.filter { !it.answeredInPractice }
+
             flashcardsForPractice.addAll(unansweredFlashcards)
 
             if(unansweredFlashcards.isNotEmpty()) return@let
 
-            changeFlashcardsToUnansweredInPracticeAndUpdateInDatabase(flashcards)
-            flashcardsForPractice.addAll(flashcards)
+            changeFlashcardsToUnansweredInPracticeAndUpdateInDatabase(flashcardsInUse)
+            flashcardsForPractice.addAll(flashcardsInUse)
         }
 
         when(_file.value?.sortingId){

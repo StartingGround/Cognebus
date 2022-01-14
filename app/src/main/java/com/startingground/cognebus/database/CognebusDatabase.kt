@@ -11,7 +11,7 @@ import com.startingground.cognebus.database.entity.*
 
 @Database(
     entities = [FileDB::class, Folder::class, ImageDB::class, FlashcardDB::class, Sorting::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class CognebusDatabase : RoomDatabase() {
@@ -35,7 +35,7 @@ abstract class CognebusDatabase : RoomDatabase() {
                         context.applicationContext,
                         CognebusDatabase::class.java,
                         "cognebus_database"
-                    ).addMigrations(MIGRATION_1_2)
+                    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .addCallback(callback).build()
 
                     INSTANCE = instance
@@ -73,5 +73,11 @@ abstract class CognebusDatabase : RoomDatabase() {
 private val MIGRATION_1_2 = object : Migration(1,2){
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE image ADD COLUMN file_extension TEXT NOT NULL DEFAULT 'jpg'")
+    }
+}
+
+private val MIGRATION_2_3 = object : Migration(2,3){
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE file ADD COLUMN only_practice_enabled INTEGER NOT NULL DEFAULT 0")
     }
 }

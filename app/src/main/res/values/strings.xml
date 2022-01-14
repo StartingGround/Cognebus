@@ -95,6 +95,8 @@
     <string name="file_fragment_cycle_increment_edit_text_value_under_error">Value under %1$d!</string>
     <string name="file_fragment_max_days_per_cycle_edit_text_invalid_input_error">Invalid input!</string>
     <string name="file_fragment_max_days_per_cycle_edit_text_value_under_error">Value under %1$d</string>
+    <string name="file_fragment_only_practice_enabled_label">Only Practice Enabled</string>
+    <string name="file_fragment_only_practice_enabled_subtext">Flashcards set to repetition off won\'t show in practice.</string>
 
     <!-- Settings -->
     <string name="settings_fragment_default_file_options_label">DEFAULT FILE OPTIONS</string>

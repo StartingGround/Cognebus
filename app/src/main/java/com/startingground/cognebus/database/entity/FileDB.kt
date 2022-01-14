@@ -40,6 +40,9 @@ data class FileDB(
     @ColumnInfo(name = "enable_html")
     var enableHtml: Boolean = false,
 
+    @ColumnInfo(name = "only_practice_enabled")
+    var onlyPracticeEnabled: Boolean,
+
     @ColumnInfo(name = "repetition_enabled")
     var repetitionEnabled: Boolean,
 
