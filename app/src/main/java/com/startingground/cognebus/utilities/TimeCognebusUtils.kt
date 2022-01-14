@@ -9,6 +9,7 @@ object TimeCognebusUtils {
             this.set(Calendar.SECOND, 1)
             this.set(Calendar.MINUTE, 0)
             this.set(Calendar.HOUR_OF_DAY, 0)
+            this.set(Calendar.MILLISECOND, 0)
         }.timeInMillis
     }
 
@@ -17,6 +18,7 @@ object TimeCognebusUtils {
             set(Calendar.SECOND, 1)
             set(Calendar.MINUTE, 0)
             set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MILLISECOND, 0)
         }
     }
 }

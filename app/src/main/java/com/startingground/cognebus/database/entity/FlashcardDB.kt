@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.startingground.cognebus.utilities.TimeCognebusUtils
 
 const val FLASHCARD_ID = "flashcard_id"
 
@@ -34,7 +35,7 @@ data class FlashcardDB(
     var repetitionEnabled: Boolean = true,
 
     @ColumnInfo(name = "repetition_date")
-    var repetitionDate: Long = System.currentTimeMillis(),
+    var repetitionDate: Long = TimeCognebusUtils.getBeginningOfCurrentDay().timeInMillis,
 
     @ColumnInfo(name = "last_increase")
     var lastIncrease: Int = 0,
