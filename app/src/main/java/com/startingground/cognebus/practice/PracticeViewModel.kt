@@ -9,6 +9,7 @@ import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
+import com.startingground.cognebus.utilities.TimeCognebusUtils
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -154,8 +155,7 @@ class PracticeViewModel(application: Application,private val database: CognebusD
         if(flashcard.lastIncrease > maxDaysPerCycle){
             flashcard.lastIncrease = maxDaysPerCycle
         }
-        val time = Calendar.getInstance()
-        time.timeInMillis = flashcard.repetitionDate
+        val time = TimeCognebusUtils.getBeginningOfCurrentDay()
         time.add(Calendar.DAY_OF_YEAR, flashcard.lastIncrease)
         flashcard.repetitionDate = time.timeInMillis
     }

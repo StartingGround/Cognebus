@@ -11,4 +11,12 @@ object TimeCognebusUtils {
             this.set(Calendar.HOUR_OF_DAY, 0)
         }.timeInMillis
     }
+
+    fun getBeginningOfCurrentDay(): Calendar{
+        return Calendar.getInstance().apply {
+            set(Calendar.SECOND, 1)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.HOUR_OF_DAY, 0)
+        }
+    }
 }
