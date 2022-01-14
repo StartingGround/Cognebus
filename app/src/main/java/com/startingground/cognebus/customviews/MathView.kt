@@ -110,6 +110,7 @@ class MathView : WebView {
     }
 
     init {
+        settings.allowFileAccess = true
         setOnTouchListener { view, event ->
             if(event.action == MotionEvent.ACTION_DOWN){
                 clickDownTime = event.eventTime

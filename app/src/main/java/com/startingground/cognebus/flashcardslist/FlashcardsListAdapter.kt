@@ -89,7 +89,6 @@ class FlashcardsListAdapter : ListAdapter<FlashcardAdapterItem, FlashcardViewHol
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.flashcard_item, parent, false)
                 val flashcardViewHolder = FlashcardViewHolder(view)
 
-                flashcardViewHolder.questionMathView.settings.allowFileAccess = true
                 flashcardViewHolder.questionMathView.setCustomClickHandler {
                     adapter.onFlashcardClicked(flashcardViewHolder.flashcard)
                 }

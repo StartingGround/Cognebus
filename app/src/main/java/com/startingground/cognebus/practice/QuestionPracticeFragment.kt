@@ -47,7 +47,6 @@ class QuestionPracticeFragment : Fragment() {
 
         binding?.sharedPracticeViewModel = sharedPracticeViewModel
         binding?.lifecycleOwner = viewLifecycleOwner
-        binding?.questionMathView?.settings?.allowFileAccess = true
 
         sharedPracticeViewModel?.currentFlashcard?.observe(viewLifecycleOwner){
             if(it == null) {

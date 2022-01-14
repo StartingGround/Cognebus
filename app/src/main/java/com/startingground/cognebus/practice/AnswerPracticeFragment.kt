@@ -51,7 +51,6 @@ class AnswerPracticeFragment : Fragment() {
 
         binding?.sharedPracticeViewModel = sharedPracticeViewModel
         binding?.lifecycleOwner = viewLifecycleOwner
-        binding?.answerMathView?.settings?.allowFileAccess = true
 
         viewPager = activity?.findViewById(R.id.practice_pager)
 

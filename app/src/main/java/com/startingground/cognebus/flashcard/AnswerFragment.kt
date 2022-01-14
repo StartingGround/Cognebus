@@ -74,7 +74,6 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
         binding.answerFragment = this
         binding.sharedFlashcardViewModel = sharedFlashcardViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.answerMathView.settings.allowFileAccess = true
 
         val viewPager: ViewPager2? = activity?.findViewById(R.id.flashcard_pager)
 

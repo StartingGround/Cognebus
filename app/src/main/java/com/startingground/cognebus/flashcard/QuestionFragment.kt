@@ -68,7 +68,6 @@ class QuestionFragment : Fragment(), InputToolbarInterface {
         binding.questionFragment = this
         binding.sharedFlashcardViewModel = sharedFlashcardViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.questionMathView.settings.allowFileAccess = true
 
         binding.topAppBar.setNavigationOnClickListener {
             activity?.onBackPressed()
