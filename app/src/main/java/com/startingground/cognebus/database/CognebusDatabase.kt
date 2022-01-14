@@ -35,36 +35,14 @@ abstract class CognebusDatabase : RoomDatabase() {
                         context.applicationContext,
                         CognebusDatabase::class.java,
                         "cognebus_database"
-                    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
-                        .addCallback(callback).build()
+                    ).createFromAsset("database/cognebus_database.db")
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                        .build()
 
                     INSTANCE = instance
 
                 }
                 return instance
-            }
-        }
-
-        private val callback = object : RoomDatabase.Callback(){
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-
-                val allSortingTypes: List<String> = listOf(
-                    "In Order",
-                    "Reverse Order",
-                    "Shuffled"
-                )
-
-                var queryValues = ""
-                repeat(allSortingTypes.size){
-                    queryValues += " (\"${allSortingTypes[it]}\")"
-                    if(it != (allSortingTypes.size - 1)){
-                        queryValues += ","
-                    }
-                }
-
-                val queryString = "INSERT INTO $SORTING ($SORTING_TYPE) VALUES $queryValues"
-                db.execSQL(queryString)
             }
         }
     }
