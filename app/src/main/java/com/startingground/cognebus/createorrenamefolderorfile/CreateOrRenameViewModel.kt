@@ -1,6 +1,7 @@
 package com.startingground.cognebus.createorrenamefolderorfile
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
@@ -10,16 +11,21 @@ import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.directories.DirectoriesFragment
 import com.startingground.cognebus.settings.SettingsViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
-class CreateOrRenameViewModel(
-    private val database: CognebusDatabase?,
-    private val folderId: Long?,
-    val inputType: Int,
-    val existingFolderOrFileId: Long?,
-    private val dataViewModel: DataViewModel,
-    application: Application
+class CreateOrRenameViewModel @AssistedInject constructor(
+    @Assisted("folderId") private val folderId: Long?,
+    @Assisted val inputType: Int,
+    @Assisted("existingFolderOrFileId") val existingFolderOrFileId: Long?,
+    @Assisted private val dataViewModel: DataViewModel,
+    application: Application,
+    @ApplicationContext context: Context
 ) : AndroidViewModel(application) {
+
+    private val database = CognebusDatabase.getInstance(context)
 
     private val _fileOrFolderText: MutableLiveData<String> = MutableLiveData("")
     val fileOrFolderText: LiveData<String> get() = _fileOrFolderText
@@ -38,12 +44,12 @@ class CreateOrRenameViewModel(
                 when (inputType) {
 
                     DirectoriesFragment.TYPE_FOLDER -> {
-                        val folder = database?.folderDatabaseDao?.getFolderByFolderId(existingFolderOrFileId)
-                        currentFileOrFolderText = folder?.name ?: return@launch
+                        val folder = database.folderDatabaseDao.getFolderByFolderId(existingFolderOrFileId)
+                        currentFileOrFolderText = folder.name
                     }
 
                     DirectoriesFragment.TYPE_FILE -> {
-                        val file = database?.fileDatabaseDao?.getFileByFileId(existingFolderOrFileId)
+                        val file = database.fileDatabaseDao.getFileByFileId(existingFolderOrFileId)
                         currentFileOrFolderText = file?.name ?: return@launch
                     }
 
@@ -77,7 +83,7 @@ class CreateOrRenameViewModel(
                 return@launch
             }
 
-            val existingFolder = database?.folderDatabaseDao?.getFolderByParentFolderIdAndName(folderId, text)
+            val existingFolder = database.folderDatabaseDao.getFolderByParentFolderIdAndName(folderId, text)
             if (existingFolder != null && existingFolder.folderId != existingFolderOrFileId) {
                 _fileOrFolderErrorText.value = dataViewModel.getStringFromResources(R.string.create_or_rename_folder_or_file_fragment_already_exists_error)
                 return@launch
@@ -88,7 +94,7 @@ class CreateOrRenameViewModel(
                 dataViewModel.insertFolderToDatabase(folder)
             } else{
                 val folder = Folder(existingFolderOrFileId, text, folderId)
-                database?.folderDatabaseDao?.update(folder)
+                database.folderDatabaseDao.update(folder)
             }
             _goBackToDirectoriesTrigger.value = true
         }
@@ -103,7 +109,7 @@ class CreateOrRenameViewModel(
                 return@launch
             }
 
-            val existingFile = database?.fileDatabaseDao?.getFileByFolderIdAndName(folderId, text)
+            val existingFile = database.fileDatabaseDao.getFileByFolderIdAndName(folderId, text)
             if (existingFile != null && existingFile.fileId != existingFolderOrFileId) {
                 _fileOrFolderErrorText.value = dataViewModel.getStringFromResources(R.string.create_or_rename_folder_or_file_fragment_already_exists_error)
                 return@launch
@@ -144,10 +150,10 @@ class CreateOrRenameViewModel(
                 )
                 dataViewModel.insertFileToDatabase(file)
             } else{
-                var file = database?.fileDatabaseDao?.getFileByFileId(existingFolderOrFileId)
+                var file = database.fileDatabaseDao.getFileByFileId(existingFolderOrFileId)
                 file = file?.copy(name = text)
                 file?.let {
-                    database?.fileDatabaseDao?.update(it)
+                    database.fileDatabaseDao.update(it)
                 }
             }
 

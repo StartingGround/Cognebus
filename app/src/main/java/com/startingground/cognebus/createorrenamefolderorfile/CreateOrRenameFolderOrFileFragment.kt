@@ -12,13 +12,15 @@ import androidx.navigation.fragment.findNavController
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentCreateOrRenameFolderOrFileBinding
 import com.startingground.cognebus.directories.DirectoriesFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class CreateOrRenameFolderOrFileFragment : Fragment() {
 
+    @Inject lateinit var createOrRenameViewModelAssistedFactory: CreateOrRenameViewModelAssistedFactory
     private lateinit var createOrRenameViewModel: CreateOrRenameViewModel
     private lateinit var dataViewModel: DataViewModel
 
@@ -42,21 +44,19 @@ class CreateOrRenameFolderOrFileFragment : Fragment() {
         }
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
         val dataViewModelFactory = DataViewModelFactory(application)
         dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory)
             .get(DataViewModel::class.java)
 
         val createOrRenameViewModelFactory = CreateOrRenameViewModelFactory(
-            database,
+            createOrRenameViewModelAssistedFactory,
             folderId,
             inputType,
             existingItemId,
-            dataViewModel,
-            application
+            dataViewModel
         )
-        createOrRenameViewModel = ViewModelProvider(this, createOrRenameViewModelFactory).get(CreateOrRenameViewModel::class.java)
+        createOrRenameViewModel = ViewModelProvider(this, createOrRenameViewModelFactory)[CreateOrRenameViewModel::class.java]
     }
 
 

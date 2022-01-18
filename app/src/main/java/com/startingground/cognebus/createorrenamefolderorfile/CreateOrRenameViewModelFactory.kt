@@ -1,24 +1,34 @@
 package com.startingground.cognebus.createorrenamefolderorfile
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.database.CognebusDatabase
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 
 @Suppress("UNCHECKED_CAST")
 class CreateOrRenameViewModelFactory(
-    private val database: CognebusDatabase?,
+    private val assistedFactory: CreateOrRenameViewModelAssistedFactory,
     private val folderId: Long?,
     private val inputType: Int,
     private val existingItemId: Long?,
-    private val dataViewModel: DataViewModel,
-    private val application: Application
+    private val dataViewModel: DataViewModel
 ) : ViewModelProvider.Factory {
     override fun<T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(CreateOrRenameViewModel::class.java)) {
-            return CreateOrRenameViewModel(database, folderId, inputType, existingItemId, dataViewModel, application) as T
+            return assistedFactory.create(folderId, inputType, existingItemId, dataViewModel) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+}
+
+
+@AssistedFactory
+interface CreateOrRenameViewModelAssistedFactory{
+    fun create(
+        @Assisted("folderId") folderId: Long?,
+        @Assisted inputType: Int,
+        @Assisted("existingFolderOrFileId") existingFolderOrFileId: Long?,
+        @Assisted dataViewModel: DataViewModel
+    ): CreateOrRenameViewModel
 }
