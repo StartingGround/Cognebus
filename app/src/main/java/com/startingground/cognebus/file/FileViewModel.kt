@@ -1,5 +1,6 @@
 package com.startingground.cognebus.file
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,8 +14,17 @@ import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Sorting
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.utilities.*
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 
-class FileViewModel(database: CognebusDatabase, fileId: Long, private val dataViewModel: DataViewModel): ViewModel(){
+class FileViewModel @AssistedInject constructor(
+    @Assisted fileId: Long,
+    @Assisted private val dataViewModel: DataViewModel,
+    @ApplicationContext context: Context
+    ): ViewModel(){
+
+    private val database = CognebusDatabase.getInstance(context)
 
     private var _sortingList: LiveData<List<Sorting>> = database.sortingDatabaseDao.getAll()
     val sortingList: LiveData<Array<String>> = Transformations.map(_sortingList){

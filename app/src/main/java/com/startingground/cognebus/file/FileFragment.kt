@@ -21,9 +21,13 @@ import com.startingground.cognebus.practice.PracticeViewModel
 import com.startingground.cognebus.practice.PracticeViewModelFactory
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FileFragment : Fragment() {
 
+    @Inject lateinit var fileViewModelAssistedFactory: FileViewModelAssistedFactory
     private lateinit var fileViewModel: FileViewModel
     private lateinit var sharedPracticeViewModel: PracticeViewModel
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
@@ -46,8 +50,8 @@ class FileFragment : Fragment() {
         val dataViewModelFactory = DataViewModelFactory(application)
         val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
 
-        val fileViewModelFactory = FileViewModelFactory(database, fileId, dataViewModel)
-        fileViewModel = ViewModelProvider(this, fileViewModelFactory).get(FileViewModel::class.java)
+        val fileViewModelFactory = FileViewModelFactory(fileViewModelAssistedFactory, fileId, dataViewModel)
+        fileViewModel = ViewModelProvider(this, fileViewModelFactory)[FileViewModel::class.java]
 
         val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
         sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
