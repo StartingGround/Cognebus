@@ -19,13 +19,16 @@ import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentFlashcardAnswerBinding
 import com.startingground.cognebus.settings.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AnswerFragment : Fragment(), InputToolbarInterface {
 
     private lateinit var binding: FragmentFlashcardAnswerBinding
+    @Inject lateinit var sharedFlashcardViewModelAssistedFactory: FlashcardViewModelAssistedFactory
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
     private var consecutiveFlashcardCreationIsEnabled: Boolean = SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_DEFAULT_VALUE
@@ -40,9 +43,8 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_flashcard_answer, container, false)
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
-        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null, application)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L, null, application)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 

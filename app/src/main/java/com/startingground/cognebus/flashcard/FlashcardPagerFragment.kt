@@ -11,12 +11,16 @@ import androidx.navigation.navGraphViewModels
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentFlashcardPagerBinding
+import dagger.hilt.android.AndroidEntryPoint
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FlashcardPagerFragment : Fragment() {
+
+    @Inject lateinit var sharedFlashcardViewModelAssistedFactory: FlashcardViewModelAssistedFactory
 
     private var fileId: Long? = null
     private var flashcardId: Long? = null
@@ -47,14 +51,13 @@ class FlashcardPagerFragment : Fragment() {
     ): View {
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
         val dataViewModelFactory = DataViewModelFactory(application)
         val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory)
             .get(DataViewModel::class.java)
 
         val flashcardViewModelFactory = FlashcardViewModelFactory(
-            database,
+            sharedFlashcardViewModelAssistedFactory,
             fileId ?: throw IllegalArgumentException("fileId can't be null"),
             dataViewModel,
             application

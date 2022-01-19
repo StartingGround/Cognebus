@@ -18,13 +18,16 @@ import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentFlashcardQuestionBinding
 import com.startingground.cognebus.settings.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class QuestionFragment : Fragment(), InputToolbarInterface {
 
     private lateinit var binding: FragmentFlashcardQuestionBinding
+    @Inject lateinit var sharedFlashcardViewModelAssistedFactory: FlashcardViewModelAssistedFactory
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
     private var cropImageWhenAdded: Boolean = SettingsViewModel.CROP_IMAGE_WHEN_ADDED_DEFAULT_VALUE
@@ -39,9 +42,8 @@ class QuestionFragment : Fragment(), InputToolbarInterface {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_flashcard_question, container, false)
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
-        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null, application)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L, null, application)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 

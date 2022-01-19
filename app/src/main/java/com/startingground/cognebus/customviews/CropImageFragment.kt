@@ -15,13 +15,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.flashcard.FlashcardViewModel
+import com.startingground.cognebus.flashcard.FlashcardViewModelAssistedFactory
 import com.startingground.cognebus.flashcard.FlashcardViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener {
 
     private lateinit var dataViewModel: DataViewModel
+    @Inject lateinit var sharedFlashcardViewModelAssistedFactory: FlashcardViewModelAssistedFactory
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
     private var imageId: Long? = null
@@ -46,9 +50,8 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
         savedInstanceState: Bundle?
     ): View? {
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
-        val flashcardViewModelFactory = FlashcardViewModelFactory(database, 0L, null, application)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L, null, application)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 
