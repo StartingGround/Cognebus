@@ -11,8 +11,11 @@ import com.startingground.cognebus.R
 import com.startingground.cognebus.utilities.MINIMAL_CYCLE_INCREMENT
 import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
 import com.startingground.cognebus.utilities.StringUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class SettingsViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
 
     companion object{
         //File Default Options

@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentSettingsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
-    private lateinit var settingsViewModel: SettingsViewModel
+    private val settingsViewModel: SettingsViewModel by viewModels()
     private lateinit var binding: FragmentSettingsBinding
 
     override fun onCreateView(
@@ -21,9 +23,6 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false)
-
-        val settingsViewModelFactory = SettingViewModelFactory(this.requireActivity().application)
-        settingsViewModel = ViewModelProvider(this, settingsViewModelFactory).get(SettingsViewModel::class.java)
 
         return binding.root
     }
