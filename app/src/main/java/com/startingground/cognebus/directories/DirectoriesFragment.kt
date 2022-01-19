@@ -20,7 +20,10 @@ import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DirectoriesFragment : Fragment() {
 
     companion object{
@@ -30,6 +33,7 @@ class DirectoriesFragment : Fragment() {
 
     private lateinit var binding: FragmentDirectoriesBinding
     private lateinit var adapter: DirectoriesAdapter
+    @Inject lateinit var directoriesViewModelAssistedFactory: DirectoriesViewModelAssistedFactory
     private lateinit var directoriesViewModel: DirectoriesViewModel
     private lateinit var dataViewModel: DataViewModel
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
@@ -68,9 +72,8 @@ class DirectoriesFragment : Fragment() {
         dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory)
             .get(DataViewModel::class.java)
 
-        val directoriesViewModelFactory = DirectoriesViewModelFactory(database, folderId, dataViewModel)
-        directoriesViewModel = ViewModelProvider(this, directoriesViewModelFactory)
-            .get(DirectoriesViewModel::class.java)
+        val directoriesViewModelFactory = DirectoriesViewModelFactory(directoriesViewModelAssistedFactory, folderId, dataViewModel)
+        directoriesViewModel = ViewModelProvider(this, directoriesViewModelFactory)[DirectoriesViewModel::class.java]
 
         val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
         sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
