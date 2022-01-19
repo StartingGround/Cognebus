@@ -11,17 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.databinding.FragmentFileBinding
 import com.startingground.cognebus.practice.PracticeViewModel
 import com.startingground.cognebus.practice.PracticeViewModelAssistedFactory
 import com.startingground.cognebus.practice.PracticeViewModelFactory
-import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
-import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
+import com.startingground.cognebus.sharedviewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,6 +28,7 @@ class FileFragment : Fragment() {
     private lateinit var fileViewModel: FileViewModel
     @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
     private lateinit var sharedPracticeViewModel: PracticeViewModel
+    @Inject lateinit var sharedClipboardViewModelAssistedFactory: ClipboardViewModelAssistedFactory
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
 
     private var title: String? = null
@@ -42,7 +39,6 @@ class FileFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
         arguments?.let {
             fileId = it.getLong("fileId")
@@ -58,8 +54,8 @@ class FileFragment : Fragment() {
         val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
         sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
 
-        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
-        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
+        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(sharedClipboardViewModelAssistedFactory, dataViewModel)
+        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory)[ClipboardViewModel::class.java]
     }
 
 

@@ -10,14 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.databinding.FragmentFlashcardsListBinding
-import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
-import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
+import com.startingground.cognebus.sharedviewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -28,6 +24,7 @@ class FlashcardsListFragment : Fragment() {
     @Inject lateinit var flashcardsListViewModelAssistedFactory: FlashcardsListViewModelAssistedFactory
     private lateinit var flashcardsListViewModel: FlashcardsListViewModel
     private lateinit var dataViewModel: DataViewModel
+    @Inject lateinit var sharedClipboardViewModelAssistedFactory: ClipboardViewModelAssistedFactory
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
 
     private lateinit var binding: FragmentFlashcardsListBinding
@@ -49,7 +46,6 @@ class FlashcardsListFragment : Fragment() {
         }
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
         val dataViewModelFactory = DataViewModelFactory(application)
         dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
@@ -57,8 +53,8 @@ class FlashcardsListFragment : Fragment() {
         val flashcardsListViewModelFactory = FlashcardsListVieModelFactory(flashcardsListViewModelAssistedFactory, fileId, dataViewModel, enableHtml)
         flashcardsListViewModel = ViewModelProvider(this, flashcardsListViewModelFactory)[FlashcardsListViewModel::class.java]
 
-        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
-        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
+        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(sharedClipboardViewModelAssistedFactory, dataViewModel)
+        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory)[ClipboardViewModel::class.java]
 
         adapter = FlashcardsListAdapter()
     }

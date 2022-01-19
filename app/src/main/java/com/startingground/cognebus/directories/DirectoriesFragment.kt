@@ -12,14 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.*
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.databinding.FragmentDirectoriesBinding
-import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
-import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
+import com.startingground.cognebus.sharedviewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,6 +32,7 @@ class DirectoriesFragment : Fragment() {
     @Inject lateinit var directoriesViewModelAssistedFactory: DirectoriesViewModelAssistedFactory
     private lateinit var directoriesViewModel: DirectoriesViewModel
     private lateinit var dataViewModel: DataViewModel
+    @Inject lateinit var sharedClipboardViewModelAssistedFactory: ClipboardViewModelAssistedFactory
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
 
     private var selectionTracker: SelectionTracker<String>? = null
@@ -56,7 +53,6 @@ class DirectoriesFragment : Fragment() {
         )
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
         var folderId: Long? = null
 
         arguments?.let{
@@ -75,8 +71,8 @@ class DirectoriesFragment : Fragment() {
         val directoriesViewModelFactory = DirectoriesViewModelFactory(directoriesViewModelAssistedFactory, folderId, dataViewModel)
         directoriesViewModel = ViewModelProvider(this, directoriesViewModelFactory)[DirectoriesViewModel::class.java]
 
-        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
-        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)
+        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(sharedClipboardViewModelAssistedFactory, dataViewModel)
+        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory)[ClipboardViewModel::class.java]
 
         val folderContentDescription: String = getString(R.string.directories_folder_button_content_description_template)
         val fileContentDescription: String = getString(R.string.directories_file_button_content_description_template)

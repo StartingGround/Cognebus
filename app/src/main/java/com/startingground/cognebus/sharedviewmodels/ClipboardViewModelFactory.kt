@@ -2,14 +2,26 @@ package com.startingground.cognebus.sharedviewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.startingground.cognebus.database.CognebusDatabase
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 
 @Suppress("UNCHECKED_CAST")
-class ClipboardViewModelFactory(private val database: CognebusDatabase, private val dataViewModel: DataViewModel) : ViewModelProvider.Factory {
+class ClipboardViewModelFactory(
+    private val assistedFactory: ClipboardViewModelAssistedFactory,
+    private val dataViewModel: DataViewModel
+    ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ClipboardViewModel::class.java)){
-            return ClipboardViewModel(database, dataViewModel) as T
+            return assistedFactory.create(dataViewModel) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+}
+
+
+@AssistedFactory
+interface ClipboardViewModelAssistedFactory{
+    fun create(
+        @Assisted dataViewModel: DataViewModel
+    ): ClipboardViewModel
 }

@@ -1,5 +1,6 @@
 package com.startingground.cognebus.sharedviewmodels
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
@@ -9,12 +10,20 @@ import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.utilities.FileDBUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.FolderUtils
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
 
 enum class SelectedType{ DIRECTORIES, FLASHCARDS }
 
-class ClipboardViewModel(private val database: CognebusDatabase, private val dataViewModel: DataViewModel) : ViewModel(){
+class ClipboardViewModel @AssistedInject constructor(
+    @Assisted private val dataViewModel: DataViewModel,
+    @ApplicationContext context: Context
+    ) : ViewModel(){
+
+    private val database = CognebusDatabase.getInstance(context)
 
     //Files and folders part ----------------------------------------------------------------------------------------------------
 
