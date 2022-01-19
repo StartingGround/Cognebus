@@ -18,10 +18,14 @@ import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.databinding.FragmentFlashcardsListBinding
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FlashcardsListFragment : Fragment() {
 
     private lateinit var adapter: FlashcardsListAdapter
+    @Inject lateinit var flashcardsListViewModelAssistedFactory: FlashcardsListViewModelAssistedFactory
     private lateinit var flashcardsListViewModel: FlashcardsListViewModel
     private lateinit var dataViewModel: DataViewModel
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
@@ -50,8 +54,8 @@ class FlashcardsListFragment : Fragment() {
         val dataViewModelFactory = DataViewModelFactory(application)
         dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
 
-        val flashcardsListViewModelFactory = FlashcardsListVieModelFactory(database, fileId, dataViewModel, enableHtml)
-        flashcardsListViewModel = ViewModelProvider(this, flashcardsListViewModelFactory).get(FlashcardsListViewModel::class.java)
+        val flashcardsListViewModelFactory = FlashcardsListVieModelFactory(flashcardsListViewModelAssistedFactory, fileId, dataViewModel, enableHtml)
+        flashcardsListViewModel = ViewModelProvider(this, flashcardsListViewModelFactory)[FlashcardsListViewModel::class.java]
 
         val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
         sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)

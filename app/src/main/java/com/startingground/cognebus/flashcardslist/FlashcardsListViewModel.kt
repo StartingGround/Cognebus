@@ -1,5 +1,6 @@
 package com.startingground.cognebus.flashcardslist
 
+import android.content.Context
 import androidx.lifecycle.*
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -8,14 +9,19 @@ import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
-class FlashcardsListViewModel(
-    database: CognebusDatabase,
-    fileId: Long,
-    private val dataViewModel: DataViewModel,
-    private val enableHtml: Boolean
+class FlashcardsListViewModel @AssistedInject constructor(
+    @Assisted fileId: Long,
+    @Assisted private val dataViewModel: DataViewModel,
+    @Assisted private val enableHtml: Boolean,
+    @ApplicationContext context: Context
     ): ViewModel() {
+
+    private val database = CognebusDatabase.getInstance(context)
 
     private val flashcards = database.flashcardDatabaseDao.getLiveDataFlashcardsByFileId(fileId)
     private val _flashcardsAdapter: MutableLiveData<List<FlashcardAdapterItem>> = MutableLiveData()
