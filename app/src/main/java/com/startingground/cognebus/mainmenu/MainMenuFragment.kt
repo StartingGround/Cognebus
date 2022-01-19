@@ -12,16 +12,18 @@ import androidx.navigation.fragment.findNavController
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentMainMenuBinding
 import com.startingground.cognebus.practice.PracticeViewModel
+import com.startingground.cognebus.practice.PracticeViewModelAssistedFactory
 import com.startingground.cognebus.practice.PracticeViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainMenuFragment : Fragment() {
 
     private lateinit var binding: FragmentMainMenuBinding
+    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
     private lateinit var sharedPracticeViewModel: PracticeViewModel
     private val mainMenuViewModel: MainMenuViewModel by viewModels()
 
@@ -29,13 +31,12 @@ class MainMenuFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
         val dataViewModelFactory = DataViewModelFactory(application)
         val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
 
-        val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
+        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
+        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
     }
 
 

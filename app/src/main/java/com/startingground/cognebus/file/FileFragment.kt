@@ -18,6 +18,7 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.databinding.FragmentFileBinding
 import com.startingground.cognebus.practice.PracticeViewModel
+import com.startingground.cognebus.practice.PracticeViewModelAssistedFactory
 import com.startingground.cognebus.practice.PracticeViewModelFactory
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModel
 import com.startingground.cognebus.sharedviewmodels.ClipboardViewModelFactory
@@ -29,6 +30,7 @@ class FileFragment : Fragment() {
 
     @Inject lateinit var fileViewModelAssistedFactory: FileViewModelAssistedFactory
     private lateinit var fileViewModel: FileViewModel
+    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
     private lateinit var sharedPracticeViewModel: PracticeViewModel
     private lateinit var sharedClipboardViewModel: ClipboardViewModel
 
@@ -53,8 +55,8 @@ class FileFragment : Fragment() {
         val fileViewModelFactory = FileViewModelFactory(fileViewModelAssistedFactory, fileId, dataViewModel)
         fileViewModel = ViewModelProvider(this, fileViewModelFactory)[FileViewModel::class.java]
 
-        val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
+        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
+        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
 
         val sharedClipboardViewModelFactory = ClipboardViewModelFactory(database, dataViewModel)
         sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory).get(ClipboardViewModel::class.java)

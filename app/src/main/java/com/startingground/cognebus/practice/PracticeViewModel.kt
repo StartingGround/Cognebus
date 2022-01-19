@@ -10,11 +10,17 @@ import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
 import com.startingground.cognebus.utilities.TimeCognebusUtils
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import java.util.*
 
-class PracticeViewModel(application: Application,private val database: CognebusDatabase, private val dataViewModel: DataViewModel) : AndroidViewModel(application){
+class PracticeViewModel @AssistedInject constructor(
+    application: Application,
+    @Assisted private val dataViewModel: DataViewModel
+    ) : AndroidViewModel(application){
 
+    private val database = CognebusDatabase.getInstance(application.applicationContext)
 
     private var flashcardsForPractice: MutableList<FlashcardDB> = mutableListOf()
     private var incorrectlyAnsweredFlashcards: MutableList<FlashcardDB> = mutableListOf()

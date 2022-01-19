@@ -11,12 +11,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
-import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.databinding.FragmentAnswerPracticeBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AnswerPracticeFragment : Fragment() {
 
     private var binding: FragmentAnswerPracticeBinding? = null
+    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
     private var sharedPracticeViewModel: PracticeViewModel? = null
 
     private var viewPager: ViewPager2? = null
@@ -28,13 +31,12 @@ class AnswerPracticeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val application = requireNotNull(this.activity).application
-        val database = CognebusDatabase.getInstance(application)
 
         val dataViewModelFactory = DataViewModelFactory(application)
         val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
 
-        val practiceViewModelFactory = PracticeViewModelFactory(application, database, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory).get(PracticeViewModel::class.java)
+        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
+        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
     }
 
     override fun onCreateView(
