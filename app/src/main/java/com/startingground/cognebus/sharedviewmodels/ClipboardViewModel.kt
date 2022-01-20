@@ -21,7 +21,8 @@ enum class SelectedType{ DIRECTORIES, FLASHCARDS }
 class ClipboardViewModel @AssistedInject constructor(
     @Assisted private val dataViewModel: DataViewModel,
     @ApplicationContext context: Context,
-    private val folderUtils: FolderUtils
+    private val folderUtils: FolderUtils,
+    private val fileDBUtils: FileDBUtils
     ) : ViewModel(){
 
     private val database = CognebusDatabase.getInstance(context)
@@ -164,7 +165,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { file ->
-                    FileDBUtils.copyFilesTo(listOf(file), destinationFolder, database, dataViewModel)
+                    fileDBUtils.copyFilesTo(listOf(file), destinationFolder, database, dataViewModel)
 
                     numberOfPastedItems++
                     _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
@@ -211,7 +212,7 @@ class ClipboardViewModel @AssistedInject constructor(
             folderUtils.isThereFolderWithSameName(it, destinationFolderId, database) } ?: false
 
         var filesWillBeReplaced: Boolean = selectedFilesDatabase.value?.let{
-            FileDBUtils.isThereFileWithSameName(it, destinationFolderId, database)} ?: false
+            fileDBUtils.isThereFileWithSameName(it, destinationFolderId, database)} ?: false
 
         if(!filesWillBeReplaced){
             filesWillBeReplaced = selectedFoldersDatabase.value?.let{

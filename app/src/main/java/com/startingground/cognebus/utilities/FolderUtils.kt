@@ -5,7 +5,9 @@ import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import javax.inject.Inject
 
-class FolderUtils @Inject constructor(){
+class FolderUtils @Inject constructor(
+    private val fileDBUtils: FileDBUtils
+){
 
     suspend fun copyFoldersTo(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase, dataViewModel: DataViewModel){
         val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
@@ -24,7 +26,7 @@ class FolderUtils @Inject constructor(){
 
             val filesInFolder = database.fileDatabaseDao.getFilesByFolderId(folder.folderId)
             if(filesInFolder.isNotEmpty()){
-                FileDBUtils.copyFilesTo(filesInFolder, newSubDestinationFolderId, database, dataViewModel)
+                fileDBUtils.copyFilesTo(filesInFolder, newSubDestinationFolderId, database, dataViewModel)
             }
 
             val subFolderList = database.folderDatabaseDao.getFoldersByParentFolderId(folder.folderId)
@@ -55,7 +57,7 @@ class FolderUtils @Inject constructor(){
             val originFolder = folderList.find { it.name == folder.name } ?: return@forEach
             val filesInsideOriginFolder = database.fileDatabaseDao.getFilesByFolderId(originFolder.folderId)
 
-            var thereIsFileWithSameName = FileDBUtils.isThereFileWithSameName(filesInsideOriginFolder, folder.folderId, database)
+            var thereIsFileWithSameName = fileDBUtils.isThereFileWithSameName(filesInsideOriginFolder, folder.folderId, database)
             if(thereIsFileWithSameName) return true
 
             val foldersInsideOriginFolder = database.folderDatabaseDao.getFoldersByParentFolderId(originFolder.folderId)

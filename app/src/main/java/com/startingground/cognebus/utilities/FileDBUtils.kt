@@ -3,8 +3,10 @@ package com.startingground.cognebus.utilities
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import javax.inject.Inject
 
-object FileDBUtils {
+class FileDBUtils @Inject constructor(){
+
     suspend fun copyFilesTo(fileList: List<FileDB>, destinationFolderId: Long?, database: CognebusDatabase, dataViewModel: DataViewModel){
         val filesInDestination = database.fileDatabaseDao.getFilesByFolderId(destinationFolderId)
 
