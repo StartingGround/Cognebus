@@ -3,8 +3,10 @@ package com.startingground.cognebus.utilities
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.Folder
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import javax.inject.Inject
 
-object FolderUtils {
+class FolderUtils @Inject constructor(){
+
     suspend fun copyFoldersTo(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase, dataViewModel: DataViewModel){
         val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
         val folderNamesInDestination = foldersInDestination.map { it.name }

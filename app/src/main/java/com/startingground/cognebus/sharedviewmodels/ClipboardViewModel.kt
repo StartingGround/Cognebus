@@ -20,7 +20,8 @@ enum class SelectedType{ DIRECTORIES, FLASHCARDS }
 
 class ClipboardViewModel @AssistedInject constructor(
     @Assisted private val dataViewModel: DataViewModel,
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val folderUtils: FolderUtils
     ) : ViewModel(){
 
     private val database = CognebusDatabase.getInstance(context)
@@ -178,7 +179,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { folder ->
-                    FolderUtils.copyFoldersTo(listOf(folder), destinationFolder, database, dataViewModel)
+                    folderUtils.copyFoldersTo(listOf(folder), destinationFolder, database, dataViewModel)
 
                     numberOfPastedItems++
                     _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
@@ -207,14 +208,14 @@ class ClipboardViewModel @AssistedInject constructor(
 
     private suspend fun foldersWillBeMergedAndFilesReplaced(destinationFolderId: Long?): Boolean{
         val foldersWillBeMerged: Boolean = selectedFoldersDatabase.value?.let{
-            FolderUtils.isThereFolderWithSameName(it, destinationFolderId, database) } ?: false
+            folderUtils.isThereFolderWithSameName(it, destinationFolderId, database) } ?: false
 
         var filesWillBeReplaced: Boolean = selectedFilesDatabase.value?.let{
             FileDBUtils.isThereFileWithSameName(it, destinationFolderId, database)} ?: false
 
         if(!filesWillBeReplaced){
             filesWillBeReplaced = selectedFoldersDatabase.value?.let{
-                FolderUtils.isThereSameFileWithinFolders(it, destinationFolderId, database) } ?: false
+                folderUtils.isThereSameFileWithinFolders(it, destinationFolderId, database) } ?: false
         }
 
         _foldersWillBeMergedAndFilesReplacedWarning.value = foldersWillBeMerged to filesWillBeReplaced
