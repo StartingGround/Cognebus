@@ -9,6 +9,7 @@ import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
+import com.startingground.cognebus.utilities.FlashcardUtils
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,7 +19,8 @@ class FlashcardsListViewModel @AssistedInject constructor(
     @Assisted fileId: Long,
     @Assisted private val dataViewModel: DataViewModel,
     @Assisted private val enableHtml: Boolean,
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val flashcardUtils: FlashcardUtils
     ): ViewModel() {
 
     private val database = CognebusDatabase.getInstance(context)
@@ -31,7 +33,7 @@ class FlashcardsListViewModel @AssistedInject constructor(
         viewModelScope.launch {
              _flashcardsAdapter.value = it.map { flashcard ->
                  val imageList: List<ImageDB> = database.imageDatabaseDao.getImagesByFlashcardId(flashcard.flashcardId)
-                 val questionText = dataViewModel.prepareStringForPracticeCaller(flashcard.question, enableHtml, imageList)
+                 val questionText = flashcardUtils.prepareStringForPractice(flashcard.question, enableHtml, imageList)
                  FlashcardAdapterItem(questionText, flashcard)
             }
         }

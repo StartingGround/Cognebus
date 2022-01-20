@@ -17,7 +17,8 @@ import java.util.*
 
 class PracticeViewModel @AssistedInject constructor(
     application: Application,
-    @Assisted private val dataViewModel: DataViewModel
+    @Assisted private val dataViewModel: DataViewModel,
+    private val flashcardUtils: FlashcardUtils
     ) : AndroidViewModel(application){
 
     private val database = CognebusDatabase.getInstance(application.applicationContext)
@@ -61,14 +62,12 @@ class PracticeViewModel @AssistedInject constructor(
     init {
         _currentQuestionText.value = ""
         _currentQuestionText.addSource(_currentFlashcard){
-            val context = getApplication<Application>().applicationContext
-
             _currentQuestionText.value = ""
             viewModelScope.launch {
                 val enableHTML = files[it?.fileId]?.enableHtml ?: false
                 val text = it?.question ?: return@launch
                 val imageList = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
-                _currentQuestionText.value = FlashcardUtils.prepareStringForPractice(context, text, enableHTML, imageList)
+                _currentQuestionText.value = flashcardUtils.prepareStringForPractice(text, enableHTML, imageList)
             }
         }
     }
@@ -81,14 +80,12 @@ class PracticeViewModel @AssistedInject constructor(
     init {
         _currentAnswerText.value = ""
         _currentAnswerText.addSource(_currentFlashcard){
-            val context = getApplication<Application>().applicationContext
-
             _currentAnswerText.value = ""
             viewModelScope.launch {
                 val enableHTML = files[it?.fileId]?.enableHtml ?: false
                 val text = it?.answer ?: return@launch
                 val imageList = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
-                _currentAnswerText.value = FlashcardUtils.prepareStringForPractice(context, text, enableHTML, imageList)
+                _currentAnswerText.value = flashcardUtils.prepareStringForPractice(text, enableHTML, imageList)
             }
         }
     }

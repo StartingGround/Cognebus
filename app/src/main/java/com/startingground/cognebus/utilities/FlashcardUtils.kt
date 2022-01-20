@@ -5,9 +5,14 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
 import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-object FlashcardUtils {
-    fun prepareStringForPractice(context: Context, inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
+class FlashcardUtils @Inject constructor(
+    @ApplicationContext private val context: Context
+){
+
+    fun prepareStringForPractice(inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
         val imageRegex = Regex("src=\"\\d+\"")
         val imageIdRegex = Regex("\\d+")
 

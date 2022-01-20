@@ -6,9 +6,7 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import com.startingground.cognebus.database.entity.ImageDB
 import com.startingground.cognebus.utilities.FileCognebusUtils
-import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.ImageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,11 +40,6 @@ class DataViewModel(app: Application) : DatabaseInputViewModel(app){
     fun getStringFromResources(stringResource: Int): String{
         val context = getApplication<Application>().applicationContext
         return context.getString(stringResource)
-    }
-
-    fun prepareStringForPracticeCaller(inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
-        val context = getApplication<Application>().applicationContext
-        return FlashcardUtils.prepareStringForPractice(context, inputText, enableHTML, imageList)
     }
 
 

@@ -20,7 +20,8 @@ class FlashcardViewModel @AssistedInject constructor(
     @Assisted val fileId: Long,
     @Assisted private val dataViewModel: DataViewModel?,
     @Assisted app: Application,
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val flashcardUtils: FlashcardUtils
     ): AndroidViewModel(app){
 
     private val database = CognebusDatabase.getInstance(context)
@@ -192,17 +193,15 @@ class FlashcardViewModel @AssistedInject constructor(
 
 
     private fun prepareFlashcardForPreview(){
-        val context = getApplication<Application>().applicationContext
-
         val enableHTML = fileDB?.value?.enableHtml ?: false
 
         val imageList: List<ImageDB> = _flashcard?.getImageListForPreview() ?: listOf()
 
         val questionText = _flashcard?.questionText?.value ?: ""
-        _questionPreviewText.value = FlashcardUtils.prepareStringForPractice(context, questionText, enableHTML, imageList)
+        _questionPreviewText.value = flashcardUtils.prepareStringForPractice(questionText, enableHTML, imageList)
 
         val answerText = _flashcard?.answerText?.value ?: ""
-        _answerPreviewText.value = FlashcardUtils.prepareStringForPractice(context, answerText, enableHTML, imageList)
+        _answerPreviewText.value = flashcardUtils.prepareStringForPractice(answerText, enableHTML, imageList)
     }
 }
 

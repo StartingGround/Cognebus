@@ -22,7 +22,8 @@ class ClipboardViewModel @AssistedInject constructor(
     @Assisted private val dataViewModel: DataViewModel,
     @ApplicationContext context: Context,
     private val folderUtils: FolderUtils,
-    private val fileDBUtils: FileDBUtils
+    private val fileDBUtils: FileDBUtils,
+    private val flashcardUtils: FlashcardUtils
     ) : ViewModel(){
 
     private val database = CognebusDatabase.getInstance(context)
@@ -321,7 +322,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { flashcard ->
-                    FlashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId, database, dataViewModel)
+                    flashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId, database, dataViewModel)
 
                     numberOfPastedFlashcards++
                     _pasteProgressPercentage.value = numberOfPastedFlashcards * 100 / totalNumberOfFlashcards
