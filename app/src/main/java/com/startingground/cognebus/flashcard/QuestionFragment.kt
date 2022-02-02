@@ -53,7 +53,7 @@ class QuestionFragment : Fragment(), InputToolbarInterface {
             activity?.onBackPressed()
         }
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         cropImageWhenAdded = preferences.getBoolean(
             SettingsViewModel.CROP_IMAGE_WHEN_ADDED_KEY,

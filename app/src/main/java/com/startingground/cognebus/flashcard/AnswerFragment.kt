@@ -54,7 +54,7 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
             activity?.onBackPressed()
         }
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         consecutiveFlashcardCreationIsEnabled = preferences.getBoolean(
             SettingsViewModel.CONSECUTIVE_FLASHCARD_CREATION_KEY,
