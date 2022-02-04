@@ -2,14 +2,14 @@ package com.startingground.cognebus.flashcard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
 
 class Flashcard(private val database: CognebusDatabase,
-                private val dataViewModel: DataViewModel?,
+                private val dataUtils: DataUtils?,
                 fileId: Long
 ) {
 
@@ -60,7 +60,7 @@ class Flashcard(private val database: CognebusDatabase,
 
 
     fun deleteImages(){
-        dataViewModel?.deleteImages(pendingImages)
+        dataUtils?.deleteImages(pendingImages)
     }
 
 
@@ -71,13 +71,13 @@ class Flashcard(private val database: CognebusDatabase,
 
     fun checkForErrors() : Pair<String?, String?>{
         val questionError = if (flashcardDB.question.isBlank()) {
-            dataViewModel?.getStringFromResources(R.string.flashcard_question_fragment_question_text_empty_field_error) ?: "error"
+            dataUtils?.getStringFromResources(R.string.flashcard_question_fragment_question_text_empty_field_error) ?: "error"
         } else {
             null
         }
 
         val answerError = if (flashcardDB.answer.isBlank()) {
-            dataViewModel?.getStringFromResources(R.string.flashcard_answer_fragment_answer_text_empty_field_error) ?: "error"
+            dataUtils?.getStringFromResources(R.string.flashcard_answer_fragment_answer_text_empty_field_error) ?: "error"
         } else {
             null
         }
@@ -88,12 +88,12 @@ class Flashcard(private val database: CognebusDatabase,
 
     fun addToDatabase(){
         val (usedImages, unusedImages) = getUsedAndUnusedImages()
-        dataViewModel?.insertFlashcardToDatabaseAndUpdateUsedImagesInDatabaseAndDeleteUnused(flashcardDB, usedImages, unusedImages)
+        dataUtils?.insertFlashcardToDatabaseAndUpdateUsedImagesInDatabaseAndDeleteUnused(flashcardDB, usedImages, unusedImages)
     }
 
 
     fun updateInDatabase(){
-        dataViewModel?.updateFlashcardInDatabase(flashcardDB)
+        dataUtils?.updateFlashcardInDatabase(flashcardDB)
 
         pendingImages.addAll(existingFlashcardImages)
         assignFlashcardIdToImagesAndRemoveUnusedImages()
@@ -106,9 +106,9 @@ class Flashcard(private val database: CognebusDatabase,
         val (usedImages, unusedImages) = getUsedAndUnusedImages()
 
         val usedImagesDB = usedImages.map{ it.copy(flashcardId = flashcardDB.flashcardId) }
-        dataViewModel?.updateImagesInDatabase(usedImagesDB)
+        dataUtils?.updateImagesInDatabase(usedImagesDB)
 
-        dataViewModel?.deleteImages(unusedImages)
+        dataUtils?.deleteImages(unusedImages)
     }
 
 
@@ -132,7 +132,7 @@ class Flashcard(private val database: CognebusDatabase,
 
         image?.let {
             it.fileExtension = fileExtension
-            dataViewModel?.updateImagesInDatabase(listOf(it))
+            dataUtils?.updateImagesInDatabase(listOf(it))
         }
     }
 }

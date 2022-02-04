@@ -4,12 +4,12 @@ import android.content.Context
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class FlashcardUtils @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val dataUtils: DataUtils
 ){
 
     fun prepareStringForPractice(inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
@@ -86,7 +86,7 @@ class FlashcardUtils @Inject constructor(
     }
 
 
-    suspend fun copyFlashcardsTo(flashcardList: List<FlashcardDB>, destinationFileId: Long, database: CognebusDatabase, dataViewModel: DataViewModel){
+    suspend fun copyFlashcardsTo(flashcardList: List<FlashcardDB>, destinationFileId: Long, database: CognebusDatabase){
         flashcardList.forEach {
             val flashcardCopy = it.copy(flashcardId = 0L, fileId = destinationFileId)
             val flashcardCopyId = database.flashcardDatabaseDao.insert(flashcardCopy)
@@ -94,7 +94,7 @@ class FlashcardUtils @Inject constructor(
             val images = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
             if(images.isEmpty()) return@forEach
 
-            ImageUtils.copyImagesTo(images, flashcardCopyId, database, dataViewModel)
+            ImageUtils.copyImagesTo(images, flashcardCopyId, database, dataUtils)
         }
     }
 }

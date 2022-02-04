@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navGraphViewModels
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentFlashcardPagerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,14 +49,9 @@ class FlashcardPagerFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
-        val dataViewModelFactory = DataViewModelFactory(application)
-        val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory)
-            .get(DataViewModel::class.java)
-
         val flashcardViewModelFactory = FlashcardViewModelFactory(
             sharedFlashcardViewModelAssistedFactory,
             fileId ?: throw IllegalArgumentException("fileId can't be null"),
-            dataViewModel,
             application
         )
         val sharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}

@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,8 +16,6 @@ import com.startingground.cognebus.R
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.databinding.FragmentFileBinding
 import com.startingground.cognebus.practice.PracticeViewModel
-import com.startingground.cognebus.practice.PracticeViewModelAssistedFactory
-import com.startingground.cognebus.practice.PracticeViewModelFactory
 import com.startingground.cognebus.sharedviewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,10 +25,8 @@ class FileFragment : Fragment() {
 
     @Inject lateinit var fileViewModelAssistedFactory: FileViewModelAssistedFactory
     private lateinit var fileViewModel: FileViewModel
-    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
-    private lateinit var sharedPracticeViewModel: PracticeViewModel
-    @Inject lateinit var sharedClipboardViewModelAssistedFactory: ClipboardViewModelAssistedFactory
-    private lateinit var sharedClipboardViewModel: ClipboardViewModel
+    private val sharedPracticeViewModel: PracticeViewModel by activityViewModels()
+    private val sharedClipboardViewModel: ClipboardViewModel by activityViewModels()
 
     private var title: String? = null
     private var fileId: Long = 0L
@@ -38,24 +35,13 @@ class FileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val application = requireNotNull(this.activity).application
-
         arguments?.let {
             fileId = it.getLong("fileId")
             title = it.getString("title")
         }
 
-        val dataViewModelFactory = DataViewModelFactory(application)
-        val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
-
-        val fileViewModelFactory = FileViewModelFactory(fileViewModelAssistedFactory, fileId, dataViewModel)
+        val fileViewModelFactory = FileViewModelFactory(fileViewModelAssistedFactory, fileId)
         fileViewModel = ViewModelProvider(this, fileViewModelFactory)[FileViewModel::class.java]
-
-        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
-
-        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(sharedClipboardViewModelAssistedFactory, dataViewModel)
-        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory)[ClipboardViewModel::class.java]
     }
 
 

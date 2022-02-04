@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.canhub.cropper.CropImageView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.R
 import com.startingground.cognebus.flashcard.FlashcardViewModel
 import com.startingground.cognebus.flashcard.FlashcardViewModelAssistedFactory
@@ -24,7 +22,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener {
 
-    private lateinit var dataViewModel: DataViewModel
+    @Inject lateinit var dataUtils: DataUtils
     @Inject lateinit var sharedFlashcardViewModelAssistedFactory: FlashcardViewModelAssistedFactory
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
@@ -51,12 +49,9 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
     ): View? {
         val application = requireNotNull(this.activity).application
 
-        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L, null, application)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L, application)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
-
-        val dataViewModelFactory = DataViewModelFactory(application)
-        dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
 
         return inflater.inflate(R.layout.fragment_crop_image, container, false)
     }
@@ -69,7 +64,7 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
         super.onViewCreated(view, savedInstanceState)
 
         cropImageView = view.findViewById(R.id.crop_image_view)
-        val imageFile = imageId?.let { dataViewModel.createImageFileOrGetExisting(it, fileExtension) }
+        val imageFile = imageId?.let { dataUtils.createImageFileOrGetExisting(it, fileExtension) }
 
         if(imageFile == null) activity?.onBackPressed()
 
@@ -118,7 +113,7 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
 
         imageBitmap?.let { image ->
             imageId?.let { id ->
-                dataViewModel.saveImageBitmapToFileWithImageId(image, id)
+                dataUtils.saveImageBitmapToFileWithImageId(image, id)
 
                 sharedFlashcardViewModel.flashcard?.changeImageFileExtension(id, "jpg")
             }

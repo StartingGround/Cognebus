@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.R
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
@@ -20,7 +20,7 @@ class CreateOrRenameViewModel @AssistedInject constructor(
     @Assisted("folderId") private val folderId: Long?,
     @Assisted val inputType: Int,
     @Assisted("existingFolderOrFileId") val existingFolderOrFileId: Long?,
-    @Assisted private val dataViewModel: DataViewModel,
+    private val dataUtils: DataUtils,
     application: Application,
     @ApplicationContext context: Context
 ) : AndroidViewModel(application) {
@@ -93,7 +93,7 @@ class CreateOrRenameViewModel @AssistedInject constructor(
 
             if(existingFolderOrFileId == null) {
                 val folder = Folder(0, text, folderId)
-                dataViewModel.insertFolderToDatabase(folder)
+                dataUtils.insertFolderToDatabase(folder)
             } else{
                 val folder = Folder(existingFolderOrFileId, text, folderId)
                 database.folderDatabaseDao.update(folder)
@@ -151,7 +151,7 @@ class CreateOrRenameViewModel @AssistedInject constructor(
                         SettingsViewModel.MAX_DAYS_PER_CYCLE_DEFAULT_VALUE
                     )
                 )
-                dataViewModel.insertFileToDatabase(file)
+                dataUtils.insertFileToDatabase(file)
             } else{
                 var file = database.fileDatabaseDao.getFileByFileId(existingFolderOrFileId)
                 file = file?.copy(name = text)

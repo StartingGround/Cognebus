@@ -2,14 +2,13 @@ package com.startingground.cognebus.utilities
 
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.Folder
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import javax.inject.Inject
 
 class FolderUtils @Inject constructor(
     private val fileDBUtils: FileDBUtils
 ){
 
-    suspend fun copyFoldersTo(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase, dataViewModel: DataViewModel){
+    suspend fun copyFoldersTo(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase){
         val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
         val folderNamesInDestination = foldersInDestination.map { it.name }
 
@@ -26,13 +25,13 @@ class FolderUtils @Inject constructor(
 
             val filesInFolder = database.fileDatabaseDao.getFilesByFolderId(folder.folderId)
             if(filesInFolder.isNotEmpty()){
-                fileDBUtils.copyFilesTo(filesInFolder, newSubDestinationFolderId, database, dataViewModel)
+                fileDBUtils.copyFilesTo(filesInFolder, newSubDestinationFolderId, database)
             }
 
             val subFolderList = database.folderDatabaseDao.getFoldersByParentFolderId(folder.folderId)
             if(subFolderList.isEmpty()) continue
 
-            copyFoldersTo(subFolderList, newSubDestinationFolderId, database, dataViewModel)
+            copyFoldersTo(subFolderList, newSubDestinationFolderId, database)
         }
     }
 

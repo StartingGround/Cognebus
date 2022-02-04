@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class FlashcardsListViewModel @AssistedInject constructor(
     @Assisted fileId: Long,
-    @Assisted private val dataViewModel: DataViewModel,
+    private val dataUtils: DataUtils,
     @Assisted private val enableHtml: Boolean,
     @ApplicationContext context: Context,
     private val flashcardUtils: FlashcardUtils
@@ -100,7 +100,7 @@ class FlashcardsListViewModel @AssistedInject constructor(
                 tracker.deselect(flashcard.flashcardId)
             }
 
-            dataViewModel.deleteFlashcardList(selectedFlashcards)
+            dataUtils.deleteFlashcardList(selectedFlashcards)
         }
     }
 
@@ -114,6 +114,6 @@ class FlashcardsListViewModel @AssistedInject constructor(
             it.repetitionEnabled = state
         }
 
-        dataViewModel.updateFlashcardsInDatabase(selectedFlashcards)
+        dataUtils.updateFlashcardsInDatabase(selectedFlashcards)
     }
 }

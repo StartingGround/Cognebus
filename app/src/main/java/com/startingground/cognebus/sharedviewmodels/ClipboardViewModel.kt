@@ -7,19 +7,21 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Folder
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.utilities.FileDBUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.FolderUtils
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 enum class SelectedType{ DIRECTORIES, FLASHCARDS }
 
-class ClipboardViewModel @AssistedInject constructor(
-    @Assisted private val dataViewModel: DataViewModel,
+@HiltViewModel
+class ClipboardViewModel @Inject constructor(
+    private val dataUtils: DataUtils,
     @ApplicationContext context: Context,
     private val folderUtils: FolderUtils,
     private val fileDBUtils: FileDBUtils,
@@ -166,7 +168,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { file ->
-                    fileDBUtils.copyFilesTo(listOf(file), destinationFolder, database, dataViewModel)
+                    fileDBUtils.copyFilesTo(listOf(file), destinationFolder, database)
 
                     numberOfPastedItems++
                     _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
@@ -181,7 +183,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { folder ->
-                    folderUtils.copyFoldersTo(listOf(folder), destinationFolder, database, dataViewModel)
+                    folderUtils.copyFoldersTo(listOf(folder), destinationFolder, database)
 
                     numberOfPastedItems++
                     _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
@@ -192,7 +194,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 database.folderDatabaseDao.deleteList(it)
             }
 
-            dataViewModel.deleteUnusedImages()
+            dataUtils.deleteUnusedImages()
             cutSelected = false
             _pasteInProgress.value = false
         }
@@ -322,7 +324,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { flashcard ->
-                    flashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId, database, dataViewModel)
+                    flashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId, database)
 
                     numberOfPastedFlashcards++
                     _pasteProgressPercentage.value = numberOfPastedFlashcards * 100 / totalNumberOfFlashcards
@@ -333,7 +335,7 @@ class ClipboardViewModel @AssistedInject constructor(
                 database.flashcardDatabaseDao.deleteList(it)
             }
 
-            dataViewModel.deleteUnusedImages()
+            dataUtils.deleteUnusedImages()
             cutSelected = false
             _pasteInProgress.value = false
         }

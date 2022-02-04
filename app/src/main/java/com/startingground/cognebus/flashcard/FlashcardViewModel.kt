@@ -3,12 +3,12 @@ package com.startingground.cognebus.flashcard
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import androidx.core.content.FileProvider
 import androidx.lifecycle.*
-import com.startingground.cognebus.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.utilities.FileCognebusUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import dagger.assisted.Assisted
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class FlashcardViewModel @AssistedInject constructor(
     @Assisted val fileId: Long,
-    @Assisted private val dataViewModel: DataViewModel?,
+    private val dataUtils: DataUtils?,
     @Assisted app: Application,
     @ApplicationContext context: Context,
     private val flashcardUtils: FlashcardUtils
@@ -30,12 +30,12 @@ class FlashcardViewModel @AssistedInject constructor(
     val flashcard: Flashcard? get() = _flashcard
 
     fun createNewFlashcard(){
-        _flashcard = Flashcard(database, dataViewModel, fileId)
+        _flashcard = Flashcard(database, dataUtils, fileId)
     }
 
     fun setExistingFlashcard(flashcardId: Long){
         viewModelScope.launch {
-            _flashcard = Flashcard(database, dataViewModel, fileId)
+            _flashcard = Flashcard(database, dataUtils, fileId)
             val flashcardDB: FlashcardDB = database.flashcardDatabaseDao.getFlashcardByFlashcardId(flashcardId)
             _flashcard?.setFlashcard(flashcardDB)
         }
@@ -79,10 +79,10 @@ class FlashcardViewModel @AssistedInject constructor(
         val fileExtension = FileCognebusUtils.getFileExtensionFromExternalUri(galleryImageUri, context) ?: return false
         val image = getAddedImage()
         image.fileExtension = fileExtension
-        dataViewModel?.updateImagesInDatabase(listOf(image))
-        val imageFile = dataViewModel?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return false
+        dataUtils?.updateImagesInDatabase(listOf(image))
+        val imageFile = dataUtils?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return false
 
-        dataViewModel.copyFileFromUri(galleryImageUri, imageFile)
+        dataUtils.copyFileFromUri(galleryImageUri, imageFile)
         return true
     }
 
@@ -92,11 +92,13 @@ class FlashcardViewModel @AssistedInject constructor(
 
 
     fun getImageFromCamera(caller: IntentCaller){
+        val context = getApplication<Application>().applicationContext
+
         viewModelScope.launch {
             _flashcard?.createImageInDatabase("jpg")
             val image = getAddedImage()
-            val imageFile = dataViewModel?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return@launch
-            val imageUri =dataViewModel.getUriForFile(imageFile)
+            val imageFile = dataUtils?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return@launch
+            val imageUri = FileProvider.getUriForFile(context, "com.startingground.cognebus", imageFile)
 
             _getImageFromCameraTrigger.value = caller to imageUri
         }
@@ -157,11 +159,11 @@ class FlashcardViewModel @AssistedInject constructor(
     }
 
 
-    val showDollarSignAlert: Boolean get() = dataViewModel?.getShowDollarSignAlert() ?: true
+    val showDollarSignAlert: Boolean get() = dataUtils?.getShowDollarSignAlert() ?: true
 
 
     fun disableDollarSignAlert(){
-        dataViewModel?.setShowDollarSignAlert(false)
+        dataUtils?.setShowDollarSignAlert(false)
     }
 
 

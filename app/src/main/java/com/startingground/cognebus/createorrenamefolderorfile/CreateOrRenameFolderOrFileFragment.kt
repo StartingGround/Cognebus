@@ -9,8 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentCreateOrRenameFolderOrFileBinding
 import com.startingground.cognebus.directories.DirectoriesFragment
@@ -22,7 +20,6 @@ class CreateOrRenameFolderOrFileFragment : Fragment() {
 
     @Inject lateinit var createOrRenameViewModelAssistedFactory: CreateOrRenameViewModelAssistedFactory
     private lateinit var createOrRenameViewModel: CreateOrRenameViewModel
-    private lateinit var dataViewModel: DataViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +40,11 @@ class CreateOrRenameFolderOrFileFragment : Fragment() {
             if(existingItemId == 0L) existingItemId = null
         }
 
-        val application = requireNotNull(this.activity).application
-
-        val dataViewModelFactory = DataViewModelFactory(application)
-        dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory)
-            .get(DataViewModel::class.java)
-
         val createOrRenameViewModelFactory = CreateOrRenameViewModelFactory(
             createOrRenameViewModelAssistedFactory,
             folderId,
             inputType,
-            existingItemId,
-            dataViewModel
+            existingItemId
         )
         createOrRenameViewModel = ViewModelProvider(this, createOrRenameViewModelFactory)[CreateOrRenameViewModel::class.java]
     }

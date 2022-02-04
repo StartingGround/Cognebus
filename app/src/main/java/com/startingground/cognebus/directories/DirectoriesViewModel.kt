@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder
@@ -15,7 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 class DirectoriesViewModel @AssistedInject constructor(
     @Assisted val folderId: Long?,
-    @Assisted private val dataViewModel: DataViewModel,
+    private val dataUtils: DataUtils,
     @ApplicationContext context: Context
     ) : ViewModel() {
 
@@ -73,7 +73,7 @@ class DirectoriesViewModel @AssistedInject constructor(
             }
         }
 
-        dataViewModel.deleteFileList(selectedFiles)
-        dataViewModel.deleteFolderList(selectedFolders)
+        dataUtils.deleteFileList(selectedFiles)
+        dataUtils.deleteFolderList(selectedFolders)
     }
 }

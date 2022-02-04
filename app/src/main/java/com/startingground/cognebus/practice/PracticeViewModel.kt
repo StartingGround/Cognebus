@@ -2,22 +2,22 @@ package com.startingground.cognebus.practice
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.startingground.cognebus.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.MINIMAL_MAX_DAYS_PER_CYCLE
 import com.startingground.cognebus.utilities.TimeCognebusUtils
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class PracticeViewModel @AssistedInject constructor(
+@HiltViewModel
+class PracticeViewModel @Inject constructor(
     application: Application,
-    @Assisted private val dataViewModel: DataViewModel,
+    private val dataUtils: DataUtils,
     private val flashcardUtils: FlashcardUtils
     ) : AndroidViewModel(application){
 
@@ -100,7 +100,7 @@ class PracticeViewModel @AssistedInject constructor(
             } else {
                 it.answeredInPractice = true
             }
-            dataViewModel.updateFlashcardInDatabase(it)
+            dataUtils.updateFlashcardInDatabase(it)
         }
         getNextFlashcard()
     }

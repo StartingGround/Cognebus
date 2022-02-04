@@ -6,38 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentMainMenuBinding
 import com.startingground.cognebus.practice.PracticeViewModel
-import com.startingground.cognebus.practice.PracticeViewModelAssistedFactory
-import com.startingground.cognebus.practice.PracticeViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainMenuFragment : Fragment() {
 
     private lateinit var binding: FragmentMainMenuBinding
-    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
-    private lateinit var sharedPracticeViewModel: PracticeViewModel
+    private val sharedPracticeViewModel: PracticeViewModel by activityViewModels()
     private val mainMenuViewModel: MainMenuViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val application = requireNotNull(this.activity).application
-
-        val dataViewModelFactory = DataViewModelFactory(application)
-        val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
-
-        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
-    }
 
 
     override fun onCreateView(

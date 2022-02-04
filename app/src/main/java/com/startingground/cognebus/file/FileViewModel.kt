@@ -12,7 +12,7 @@ import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.Sorting
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
+import com.startingground.cognebus.utilities.DataUtils
 import com.startingground.cognebus.utilities.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -20,7 +20,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 class FileViewModel @AssistedInject constructor(
     @Assisted fileId: Long,
-    @Assisted private val dataViewModel: DataViewModel,
+    private val dataUtils: DataUtils,
     @ApplicationContext context: Context
     ): ViewModel(){
 
@@ -79,7 +79,7 @@ class FileViewModel @AssistedInject constructor(
         // update of other transformations of _flashcards liveData
         _flashcards.value?.let {
             if(it.isEmpty()) return@let
-            dataViewModel.updateFlashcardInDatabase(it.first())
+            dataUtils.updateFlashcardInDatabase(it.first())
         }
     }
 
@@ -107,9 +107,9 @@ class FileViewModel @AssistedInject constructor(
 
         val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
-            dataViewModel.getStringFromResources(R.string.file_fragment_cycle_increment_edit_text_invalid_input_error),
+            dataUtils.getStringFromResources(R.string.file_fragment_cycle_increment_edit_text_invalid_input_error),
             MINIMAL_CYCLE_INCREMENT,
-            dataViewModel.getStringFromResources(R.string.file_fragment_cycle_increment_edit_text_value_under_error).format(MINIMAL_CYCLE_INCREMENT)
+            dataUtils.getStringFromResources(R.string.file_fragment_cycle_increment_edit_text_value_under_error).format(MINIMAL_CYCLE_INCREMENT)
         )
         _cycleIncrementError.value = errorText
 
@@ -130,9 +130,9 @@ class FileViewModel @AssistedInject constructor(
 
         val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
-            dataViewModel.getStringFromResources(R.string.file_fragment_max_days_per_cycle_edit_text_invalid_input_error),
+            dataUtils.getStringFromResources(R.string.file_fragment_max_days_per_cycle_edit_text_invalid_input_error),
             MINIMAL_MAX_DAYS_PER_CYCLE,
-            dataViewModel.getStringFromResources(R.string.file_fragment_max_days_per_cycle_edit_text_value_under_error).format(MINIMAL_MAX_DAYS_PER_CYCLE)
+            dataUtils.getStringFromResources(R.string.file_fragment_max_days_per_cycle_edit_text_value_under_error).format(MINIMAL_MAX_DAYS_PER_CYCLE)
         )
         _maxDaysPerCycleError.value = errorText
 
@@ -146,7 +146,7 @@ class FileViewModel @AssistedInject constructor(
 
     private fun updateFile(){
         file.value?.let {
-            dataViewModel.updateFileInDatabase(it)
+            dataUtils.updateFileInDatabase(it)
         }
     }
 
@@ -190,6 +190,6 @@ class FileViewModel @AssistedInject constructor(
 
     private fun changeFlashcardsToUnansweredInPracticeAndUpdateInDatabase(flashcards: List<FlashcardDB>){
         flashcards.forEach { it.answeredInPractice = false }
-        dataViewModel.updateFlashcardsInDatabase(flashcards)
+        dataUtils.updateFlashcardsInDatabase(flashcards)
     }
 }

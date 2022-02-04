@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
@@ -23,9 +24,7 @@ class FlashcardsListFragment : Fragment() {
     private lateinit var adapter: FlashcardsListAdapter
     @Inject lateinit var flashcardsListViewModelAssistedFactory: FlashcardsListViewModelAssistedFactory
     private lateinit var flashcardsListViewModel: FlashcardsListViewModel
-    private lateinit var dataViewModel: DataViewModel
-    @Inject lateinit var sharedClipboardViewModelAssistedFactory: ClipboardViewModelAssistedFactory
-    private lateinit var sharedClipboardViewModel: ClipboardViewModel
+    private val sharedClipboardViewModel: ClipboardViewModel by activityViewModels()
 
     private lateinit var binding: FragmentFlashcardsListBinding
 
@@ -45,16 +44,8 @@ class FlashcardsListFragment : Fragment() {
             title = it.getString("title", "")
         }
 
-        val application = requireNotNull(this.activity).application
-
-        val dataViewModelFactory = DataViewModelFactory(application)
-        dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
-
-        val flashcardsListViewModelFactory = FlashcardsListVieModelFactory(flashcardsListViewModelAssistedFactory, fileId, dataViewModel, enableHtml)
+        val flashcardsListViewModelFactory = FlashcardsListVieModelFactory(flashcardsListViewModelAssistedFactory, fileId, enableHtml)
         flashcardsListViewModel = ViewModelProvider(this, flashcardsListViewModelFactory)[FlashcardsListViewModel::class.java]
-
-        val sharedClipboardViewModelFactory = ClipboardViewModelFactory(sharedClipboardViewModelAssistedFactory, dataViewModel)
-        sharedClipboardViewModel = ViewModelProvider(requireActivity(), sharedClipboardViewModelFactory)[ClipboardViewModel::class.java]
 
         adapter = FlashcardsListAdapter()
     }

@@ -2,14 +2,13 @@ package com.startingground.cognebus.utilities
 
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
 import javax.inject.Inject
 
 class FileDBUtils @Inject constructor(
     private val flashcardUtils: FlashcardUtils
 ){
 
-    suspend fun copyFilesTo(fileList: List<FileDB>, destinationFolderId: Long?, database: CognebusDatabase, dataViewModel: DataViewModel){
+    suspend fun copyFilesTo(fileList: List<FileDB>, destinationFolderId: Long?, database: CognebusDatabase){
         val filesInDestination = database.fileDatabaseDao.getFilesByFolderId(destinationFolderId)
 
         val fileListNames = fileList.map { it.name }
@@ -26,7 +25,7 @@ class FileDBUtils @Inject constructor(
             val flashcards = database.flashcardDatabaseDao.getFlashcardsByFileId(it.fileId)
             if(flashcards.isEmpty()) return@forEach
 
-            flashcardUtils.copyFlashcardsTo(flashcards, fileCopyId, database, dataViewModel)
+            flashcardUtils.copyFlashcardsTo(flashcards, fileCopyId, database)
         }
     }
 

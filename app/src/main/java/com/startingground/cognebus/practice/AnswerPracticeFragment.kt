@@ -6,38 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentAnswerPracticeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AnswerPracticeFragment : Fragment() {
 
     private var binding: FragmentAnswerPracticeBinding? = null
-    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
-    private var sharedPracticeViewModel: PracticeViewModel? = null
+    private val sharedPracticeViewModel: PracticeViewModel by activityViewModels()
 
     private var viewPager: ViewPager2? = null
 
     //If we navigate to this fragment, initial current flashcard will trigger observer and set viewpager to show question fragment
     private var currentFlashcardsFirstChange: Boolean = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val application = requireNotNull(this.activity).application
-
-        val dataViewModelFactory = DataViewModelFactory(application)
-        val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
-
-        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +41,7 @@ class AnswerPracticeFragment : Fragment() {
 
         viewPager = activity?.findViewById(R.id.practice_pager)
 
-        sharedPracticeViewModel?.currentFlashcard?.observe(viewLifecycleOwner){
+        sharedPracticeViewModel.currentFlashcard.observe(viewLifecycleOwner){
             if(currentFlashcardsFirstChange){
                 currentFlashcardsFirstChange = false
                 return@observe

@@ -6,34 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.startingground.cognebus.sharedviewmodels.DataViewModel
-import com.startingground.cognebus.sharedviewmodels.DataViewModelFactory
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentQuestionPracticeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuestionPracticeFragment : Fragment() {
 
     private var binding: FragmentQuestionPracticeBinding? = null
-    @Inject lateinit var sharedPracticeViewModelAssistedFactory: PracticeViewModelAssistedFactory
-    private var sharedPracticeViewModel: PracticeViewModel? = null
+    private val sharedPracticeViewModel: PracticeViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val application = requireNotNull(this.activity).application
-
-        val dataViewModelFactory = DataViewModelFactory(application)
-        val dataViewModel = ViewModelProvider(this.requireActivity(), dataViewModelFactory).get(DataViewModel::class.java)
-
-        val practiceViewModelFactory = PracticeViewModelFactory(sharedPracticeViewModelAssistedFactory, dataViewModel)
-        sharedPracticeViewModel = ViewModelProvider(this.requireActivity(), practiceViewModelFactory)[PracticeViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +35,7 @@ class QuestionPracticeFragment : Fragment() {
         binding?.sharedPracticeViewModel = sharedPracticeViewModel
         binding?.lifecycleOwner = viewLifecycleOwner
 
-        sharedPracticeViewModel?.currentFlashcard?.observe(viewLifecycleOwner){
+        sharedPracticeViewModel.currentFlashcard.observe(viewLifecycleOwner){
             if(it == null) {
                 findNavController().popBackStack()
             }
@@ -74,7 +59,7 @@ class QuestionPracticeFragment : Fragment() {
 
         binding?.topAppBar?.title = getString(R.string.practice_question_fragment_top_app_bar_title, 0, 0)
 
-        sharedPracticeViewModel?.flashcardNumber?.observe(viewLifecycleOwner){
+        sharedPracticeViewModel.flashcardNumber.observe(viewLifecycleOwner){
             val (currentFlashcardNumber, totalNumberOfFlashcards) = it
             binding?.topAppBar?.title = getString(R.string.practice_question_fragment_top_app_bar_title, currentFlashcardNumber, totalNumberOfFlashcards)
         }
