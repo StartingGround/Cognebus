@@ -80,6 +80,10 @@ class FileFragment : Fragment() {
             }
         }
 
+        sharedClipboardViewModel.thereAreFlashcardsToBePasted.observe(viewLifecycleOwner){
+            binding.topAppBar.menu.findItem(R.id.paste).isEnabled = it
+        }
+
         fileViewModel.cycleIncrementError.observe(viewLifecycleOwner){
             binding.cycleIncrementEditText.error = it
         }
