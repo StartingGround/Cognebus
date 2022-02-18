@@ -13,6 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class DataUtils @Inject constructor(
     @ApplicationContext applicationContext: Context,
+    private val fileCognebusUtils: FileCognebusUtils
 ) : DatabaseCognebusUtils(applicationContext){
 
     companion object{
@@ -22,21 +23,21 @@ class DataUtils @Inject constructor(
 
     fun copyFileFromUri(uri: Uri, destinationFile: File) {
         scope?.launch {
-            FileCognebusUtils.copyFileFromUri(uri, destinationFile, appContext)
+            fileCognebusUtils.copyFileFromUri(uri, destinationFile)
         }
     }
 
 
     fun saveImageBitmapToFileWithImageId(imageBitmap: Bitmap, imageId: Long){
         scope?.launch {
-            val imageFile = FileCognebusUtils.createFileOrGetExisting("images", "$imageId.jpg", appContext)
+            val imageFile = fileCognebusUtils.createFileOrGetExisting("images", "$imageId.jpg")
                 ?: throw Exception("Could not get file from imageId")
             ImageUtils.saveBitmapToFile(imageBitmap, imageFile)
         }
     }
 
     fun createImageFileOrGetExisting(imageId: Long, fileExtension: String): File?{
-        return FileCognebusUtils.createFileOrGetExisting("images", "$imageId.$fileExtension", appContext)
+        return fileCognebusUtils.createFileOrGetExisting("images", "$imageId.$fileExtension")
     }
 
     fun getStringFromResources(stringResource: Int): String{

@@ -16,6 +16,7 @@ import com.startingground.cognebus.R
 import com.startingground.cognebus.flashcard.FlashcardViewModel
 import com.startingground.cognebus.flashcard.FlashcardViewModelAssistedFactory
 import com.startingground.cognebus.flashcard.FlashcardViewModelFactory
+import com.startingground.cognebus.utilities.FileCognebusUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener {
 
     @Inject lateinit var dataUtils: DataUtils
+    @Inject lateinit var fileCognebusUtils: FileCognebusUtils
     @Inject lateinit var sharedFlashcardViewModelAssistedFactory: FlashcardViewModelAssistedFactory
     private lateinit var sharedFlashcardViewModel: FlashcardViewModel
 
@@ -64,7 +66,9 @@ class CropImageFragment : Fragment(), CropImageView.OnCropImageCompleteListener 
         super.onViewCreated(view, savedInstanceState)
 
         cropImageView = view.findViewById(R.id.crop_image_view)
-        val imageFile = imageId?.let { dataUtils.createImageFileOrGetExisting(it, fileExtension) }
+        val imageFile = imageId?.let {
+            fileCognebusUtils.createFileOrGetExisting("images", "$it.$fileExtension")
+        }
 
         if(imageFile == null) activity?.onBackPressed()
 
