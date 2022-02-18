@@ -21,7 +21,8 @@ class FlashcardViewModel @AssistedInject constructor(
     private val dataUtils: DataUtils?,
     @Assisted app: Application,
     @ApplicationContext context: Context,
-    private val flashcardUtils: FlashcardUtils
+    private val flashcardUtils: FlashcardUtils,
+    private val fileCognebusUtils: FileCognebusUtils
     ): AndroidViewModel(app){
 
     private val database = CognebusDatabase.getInstance(context)
@@ -74,15 +75,13 @@ class FlashcardViewModel @AssistedInject constructor(
 
 
     fun saveImageToFileFromGalleryImageUri(galleryImageUri: Uri): Boolean{
-        val context = getApplication<Application>().applicationContext
-
-        val fileExtension = FileCognebusUtils.getFileExtensionFromExternalUri(galleryImageUri, context) ?: return false
+        val fileExtension = fileCognebusUtils.getFileExtensionFromExternalUri(galleryImageUri) ?: return false
         val image = getAddedImage()
         image.fileExtension = fileExtension
         dataUtils?.updateImagesInDatabase(listOf(image))
-        val imageFile = dataUtils?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return false
+        val imageFile = fileCognebusUtils.createFileOrGetExisting("images", "${image.imageId}.${image.fileExtension}") ?: return false
 
-        dataUtils.copyFileFromUri(galleryImageUri, imageFile)
+        dataUtils?.copyFileFromUri(galleryImageUri, imageFile)
         return true
     }
 
@@ -97,7 +96,7 @@ class FlashcardViewModel @AssistedInject constructor(
         viewModelScope.launch {
             _flashcard?.createImageInDatabase("jpg")
             val image = getAddedImage()
-            val imageFile = dataUtils?.createImageFileOrGetExisting(image.imageId, image.fileExtension) ?: return@launch
+            val imageFile = fileCognebusUtils.createFileOrGetExisting("images", "${image.imageId}.${image.fileExtension}") ?: return@launch
             val imageUri = FileProvider.getUriForFile(context, "com.startingground.cognebus", imageFile)
 
             _getImageFromCameraTrigger.value = caller to imageUri
