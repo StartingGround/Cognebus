@@ -1,16 +1,11 @@
 package com.startingground.cognebus.utilities
 
-import android.content.Context
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class FlashcardUtils @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val dataUtils: DataUtils
-){
+class FlashcardUtils @Inject constructor( private val imageUtils: ImageUtils ){
 
     fun prepareStringForPractice(inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
         val imageRegex = Regex("src=\"\\d+\"")
@@ -22,7 +17,7 @@ class FlashcardUtils @Inject constructor(
                 val imageIdNumber = imageId.value.toLong()
                 val imageDB = imageList.find {img -> imageIdNumber == img.imageId } ?: return@index imageId.value
 
-                val imageFile = ImageUtils.getImageFile(imageDB.imageId, imageDB.fileExtension, context) ?: return@index imageId.value
+                val imageFile = imageUtils.getImageFile(imageDB.imageId, imageDB.fileExtension) ?: return@index imageId.value
 
                 "file://" + imageFile.absolutePath
             }
@@ -94,7 +89,7 @@ class FlashcardUtils @Inject constructor(
             val images = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
             if(images.isEmpty()) return@forEach
 
-            ImageUtils.copyImagesTo(images, flashcardCopyId, database, dataUtils)
+            imageUtils.copyImagesTo(images, flashcardCopyId, database)
         }
     }
 }

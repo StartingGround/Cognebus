@@ -5,23 +5,28 @@ import android.graphics.Bitmap
 import androidx.core.net.toUri
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.ImageDB
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import javax.inject.Inject
 
-object ImageUtils {
-    fun deleteImageFileById(imageId: Long, fileExtension: String, context: Context){
-        val imageFile = getImageFile(imageId, fileExtension, context) ?: return
+class ImageUtils @Inject constructor(
+    @ApplicationContext private val appContext: Context,
+    private val fileCognebusUtils: FileCognebusUtils
+) {
+    fun deleteImageFileById(imageId: Long, fileExtension: String){
+        val imageFile = getImageFile(imageId, fileExtension) ?: return
         if(imageFile.exists()){
             imageFile.delete()
         }
     }
 
 
-    fun getImageFile(imageId: Long, fileExtension: String, context: Context): File?{
+    fun getImageFile(imageId: Long, fileExtension: String): File?{
         return try {
-            val imageDirectory = context.getExternalFilesDir("images")
+            val imageDirectory = appContext.getExternalFilesDir("images")
             File(imageDirectory, "$imageId.$fileExtension")
         } catch(e: Exception) {
             null
@@ -41,15 +46,19 @@ object ImageUtils {
     }
 
 
-    suspend fun copyImagesTo(imageList: List<ImageDB>, destinationFlashcardId: Long, database: CognebusDatabase, dataUtils: DataUtils){
+    suspend fun copyImagesTo(imageList: List<ImageDB>, destinationFlashcardId: Long, database: CognebusDatabase){
         imageList.forEach {
             var imageCopy = it.copy(imageId = 0L, flashcardId = destinationFlashcardId)
             val imageCopyId = database.imageDatabaseDao.insert(imageCopy)
             imageCopy = database.imageDatabaseDao.getImageByImageId(imageCopyId)
 
-            val imageFile = dataUtils.createImageFileOrGetExisting(it.imageId, it.fileExtension) ?: throw Exception("Could not get original image file!")
-            val imageCopyFile = dataUtils.createImageFileOrGetExisting(imageCopy.imageId, imageCopy.fileExtension) ?: throw Exception("Could not create copy of image file")
-            dataUtils.copyFileFromUri(imageFile.toUri(), imageCopyFile)
+            val imageFile = fileCognebusUtils.createFileOrGetExisting("images", "${it.imageId}.${it.fileExtension}")
+                ?: throw Exception("Could not get original image file!")
+
+            val imageCopyFile = fileCognebusUtils.createFileOrGetExisting("images", "${imageCopy.imageId}.${imageCopy.fileExtension}")
+                ?: throw Exception("Could not create copy of image file")
+
+            fileCognebusUtils.copyFileFromUri(imageFile.toUri(), imageCopyFile)
 
             replaceImageIdsInsideFlashcard(it.imageId, imageCopy.imageId, destinationFlashcardId, database)
         }

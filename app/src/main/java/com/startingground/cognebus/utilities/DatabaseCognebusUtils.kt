@@ -11,6 +11,7 @@ import kotlinx.coroutines.*
 
 open class DatabaseCognebusUtils(
     protected val appContext: Context,
+    protected val imageUtils: ImageUtils,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ){
 
@@ -99,7 +100,7 @@ open class DatabaseCognebusUtils(
 
             if(unusedImages.isEmpty()) return@launch
 
-            unusedImages.forEach { ImageUtils.deleteImageFileById(it.imageId, it.fileExtension, appContext) }
+            unusedImages.forEach { imageUtils.deleteImageFileById(it.imageId, it.fileExtension) }
 
             //SQLite will break if we send it list of 1000 or more elements to its input
             for(startIndex in unusedImages.indices step 999){
@@ -114,7 +115,7 @@ open class DatabaseCognebusUtils(
 
     fun deleteImages(images: List<ImageDB>){
         scope?.launch {
-            images.forEach { ImageUtils.deleteImageFileById(it.imageId, it.fileExtension, appContext) }
+            images.forEach { imageUtils.deleteImageFileById(it.imageId, it.fileExtension) }
             database.imageDatabaseDao.deleteList(images)
         }
     }

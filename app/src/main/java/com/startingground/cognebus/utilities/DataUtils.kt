@@ -13,8 +13,9 @@ import javax.inject.Singleton
 @Singleton
 class DataUtils @Inject constructor(
     @ApplicationContext applicationContext: Context,
-    private val fileCognebusUtils: FileCognebusUtils
-) : DatabaseCognebusUtils(applicationContext){
+    private val fileCognebusUtils: FileCognebusUtils,
+    imageUtils: ImageUtils
+) : DatabaseCognebusUtils(applicationContext, imageUtils){
 
     companion object{
         const val SHOW_DOLLAR_SIGN_ALERT = "dollar_sign_alert"
@@ -32,13 +33,10 @@ class DataUtils @Inject constructor(
         scope?.launch {
             val imageFile = fileCognebusUtils.createFileOrGetExisting("images", "$imageId.jpg")
                 ?: throw Exception("Could not get file from imageId")
-            ImageUtils.saveBitmapToFile(imageBitmap, imageFile)
+            imageUtils.saveBitmapToFile(imageBitmap, imageFile)
         }
     }
 
-    fun createImageFileOrGetExisting(imageId: Long, fileExtension: String): File?{
-        return fileCognebusUtils.createFileOrGetExisting("images", "$imageId.$fileExtension")
-    }
 
     fun getStringFromResources(stringResource: Int): String{
         return appContext.getString(stringResource)
