@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentAnswerPracticeBinding
+import com.startingground.cognebus.utilities.OnTouchListenerForScrollingInsideViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,5 +56,9 @@ class AnswerPracticeFragment : Fragment() {
         binding?.topAppBar?.setNavigationOnClickListener {
             viewPager?.currentItem = 0
         }
+
+        binding?.answerMathView?.setOnTouchListener(
+            OnTouchListenerForScrollingInsideViewPager2(binding?.answerMathView, requireContext())
+        )
     }
 }

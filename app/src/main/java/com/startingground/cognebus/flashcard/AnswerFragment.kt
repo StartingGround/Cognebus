@@ -21,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentFlashcardAnswerBinding
 import com.startingground.cognebus.settings.SettingsViewModel
+import com.startingground.cognebus.utilities.OnTouchListenerForScrollingInsideViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -136,6 +137,14 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
                     .show()
             }
         }
+
+        binding.answerTextField.editText?.setOnTouchListener(
+            OnTouchListenerForScrollingInsideViewPager2(binding.answerTextField.editText, requireContext())
+        )
+
+        binding.answerMathView.setOnTouchListener(
+            OnTouchListenerForScrollingInsideViewPager2(binding.answerMathView, requireContext())
+        )
     }
 
 
@@ -146,8 +155,8 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
             binding.topAppBar.menu.findItem(R.id.preview).contentDescription =
                 getString(R.string.flashcard_top_app_bar_disable_preview_content_description)
 
-            binding.answerNestedScrollView.visibility = View.GONE
-            binding.answerMathViewNestedScrollView.visibility = View.VISIBLE
+            binding.answerTextField.visibility = View.GONE
+            binding.answerMathView.visibility = View.VISIBLE
 
             val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(binding.answerTextField.editText?.windowToken, 0)
@@ -157,8 +166,8 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
             binding.topAppBar.menu.findItem(R.id.preview).contentDescription =
                 getString(R.string.flashcard_top_app_bar_preview_content_description)
 
-            binding.answerNestedScrollView.visibility = View.VISIBLE
-            binding.answerMathViewNestedScrollView.visibility = View.GONE
+            binding.answerTextField.visibility = View.VISIBLE
+            binding.answerMathView.visibility = View.GONE
         }
     }
 

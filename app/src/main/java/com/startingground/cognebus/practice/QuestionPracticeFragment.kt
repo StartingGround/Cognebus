@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.startingground.cognebus.R
 import com.startingground.cognebus.databinding.FragmentQuestionPracticeBinding
+import com.startingground.cognebus.utilities.OnTouchListenerForScrollingInsideViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,5 +64,9 @@ class QuestionPracticeFragment : Fragment() {
             val (currentFlashcardNumber, totalNumberOfFlashcards) = it
             binding?.topAppBar?.title = getString(R.string.practice_question_fragment_top_app_bar_title, currentFlashcardNumber, totalNumberOfFlashcards)
         }
+
+        binding?.questionMathView?.setOnTouchListener(
+            OnTouchListenerForScrollingInsideViewPager2(binding?.questionMathView, requireContext())
+        )
     }
 }
