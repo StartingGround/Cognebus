@@ -12,10 +12,10 @@ import kotlinx.coroutines.*
 open class DatabaseCognebusUtils(
     protected val appContext: Context,
     protected val imageUtils: ImageUtils,
+    private val database: CognebusDatabase,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ){
 
-    protected val database = CognebusDatabase.getInstance(appContext)
     protected var scope: CoroutineScope? = null
 
     fun createScope(){

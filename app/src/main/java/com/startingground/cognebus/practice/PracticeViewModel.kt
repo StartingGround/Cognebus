@@ -18,10 +18,9 @@ import javax.inject.Inject
 class PracticeViewModel @Inject constructor(
     application: Application,
     private val dataUtils: DataUtils,
-    private val flashcardUtils: FlashcardUtils
+    private val flashcardUtils: FlashcardUtils,
+    private val database: CognebusDatabase
     ) : AndroidViewModel(application){
-
-    private val database = CognebusDatabase.getInstance(application.applicationContext)
 
     private var flashcardsForPractice: MutableList<FlashcardDB> = mutableListOf()
     private var incorrectlyAnsweredFlashcards: MutableList<FlashcardDB> = mutableListOf()

@@ -1,19 +1,16 @@
 package com.startingground.cognebus.mainmenu
 
-import android.content.Context
 import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.utilities.TimeCognebusUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainMenuViewModel @Inject constructor(@ApplicationContext context: Context): ViewModel() {
-    private val database = CognebusDatabase.getInstance(context)
+class MainMenuViewModel @Inject constructor(private val database: CognebusDatabase): ViewModel() {
 
     private var flashcardsForRepetition:  LiveData<List<FlashcardDB>>? = null
 

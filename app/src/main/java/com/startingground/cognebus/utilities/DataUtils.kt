@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.preference.PreferenceManager
+import com.startingground.cognebus.database.CognebusDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.io.File
@@ -14,8 +15,9 @@ import javax.inject.Singleton
 class DataUtils @Inject constructor(
     @ApplicationContext applicationContext: Context,
     private val fileCognebusUtils: FileCognebusUtils,
-    imageUtils: ImageUtils
-) : DatabaseCognebusUtils(applicationContext, imageUtils){
+    imageUtils: ImageUtils,
+    database: CognebusDatabase,
+) : DatabaseCognebusUtils(applicationContext, imageUtils, database){
 
     companion object{
         const val SHOW_DOLLAR_SIGN_ALERT = "dollar_sign_alert"

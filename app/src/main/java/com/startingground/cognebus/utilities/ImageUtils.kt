@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class ImageUtils @Inject constructor(
     @ApplicationContext private val appContext: Context,
-    private val fileCognebusUtils: FileCognebusUtils
+    private val fileCognebusUtils: FileCognebusUtils,
+    private val database: CognebusDatabase
 ) {
     fun deleteImageFileById(imageId: Long, fileExtension: String){
         val imageFile = getImageFile(imageId, fileExtension) ?: return
@@ -46,7 +47,7 @@ class ImageUtils @Inject constructor(
     }
 
 
-    suspend fun copyImagesTo(imageList: List<ImageDB>, destinationFlashcardId: Long, database: CognebusDatabase){
+    suspend fun copyImagesTo(imageList: List<ImageDB>, destinationFlashcardId: Long){
         imageList.forEach {
             var imageCopy = it.copy(imageId = 0L, flashcardId = destinationFlashcardId)
             val imageCopyId = database.imageDatabaseDao.insert(imageCopy)
@@ -60,12 +61,12 @@ class ImageUtils @Inject constructor(
 
             fileCognebusUtils.copyFileFromUri(imageFile.toUri(), imageCopyFile)
 
-            replaceImageIdsInsideFlashcard(it.imageId, imageCopy.imageId, destinationFlashcardId, database)
+            replaceImageIdsInsideFlashcard(it.imageId, imageCopy.imageId, destinationFlashcardId)
         }
     }
 
 
-    private suspend fun replaceImageIdsInsideFlashcard(oldImageId: Long, newImageId: Long, flashcardId: Long, database: CognebusDatabase){
+    private suspend fun replaceImageIdsInsideFlashcard(oldImageId: Long, newImageId: Long, flashcardId: Long){
         val flashcard = database.flashcardDatabaseDao.getFlashcardByFlashcardId(flashcardId)
         flashcard.question = flashcard.question.replace("src=\"$oldImageId\"", "src=\"$newImageId\"")
         flashcard.answer = flashcard.answer.replace("src=\"$oldImageId\"", "src=\"$newImageId\"")

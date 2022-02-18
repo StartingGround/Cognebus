@@ -5,10 +5,11 @@ import com.startingground.cognebus.database.entity.FileDB
 import javax.inject.Inject
 
 class FileDBUtils @Inject constructor(
-    private val flashcardUtils: FlashcardUtils
+    private val flashcardUtils: FlashcardUtils,
+    private val database: CognebusDatabase
 ){
 
-    suspend fun copyFilesTo(fileList: List<FileDB>, destinationFolderId: Long?, database: CognebusDatabase){
+    suspend fun copyFilesTo(fileList: List<FileDB>, destinationFolderId: Long?){
         val filesInDestination = database.fileDatabaseDao.getFilesByFolderId(destinationFolderId)
 
         val fileListNames = fileList.map { it.name }
@@ -25,12 +26,12 @@ class FileDBUtils @Inject constructor(
             val flashcards = database.flashcardDatabaseDao.getFlashcardsByFileId(it.fileId)
             if(flashcards.isEmpty()) return@forEach
 
-            flashcardUtils.copyFlashcardsTo(flashcards, fileCopyId, database)
+            flashcardUtils.copyFlashcardsTo(flashcards, fileCopyId)
         }
     }
 
 
-    suspend fun isThereFileWithSameName(fileList: List<FileDB>, destinationFolderId: Long?, database: CognebusDatabase): Boolean{
+    suspend fun isThereFileWithSameName(fileList: List<FileDB>, destinationFolderId: Long?): Boolean{
         val filesInDestination = database.fileDatabaseDao.getFilesByFolderId(destinationFolderId)
 
         val fileListNames = fileList.map { it.name }

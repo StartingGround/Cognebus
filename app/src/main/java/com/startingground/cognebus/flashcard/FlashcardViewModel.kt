@@ -1,7 +1,6 @@
 package com.startingground.cognebus.flashcard
 
 import android.app.Application
-import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
@@ -13,19 +12,16 @@ import com.startingground.cognebus.utilities.FileCognebusUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
 class FlashcardViewModel @AssistedInject constructor(
     @Assisted val fileId: Long,
     private val dataUtils: DataUtils?,
     @Assisted app: Application,
-    @ApplicationContext context: Context,
+    private val database: CognebusDatabase,
     private val flashcardUtils: FlashcardUtils,
     private val fileCognebusUtils: FileCognebusUtils
     ): AndroidViewModel(app){
-
-    private val database = CognebusDatabase.getInstance(context)
 
     private var _flashcard: Flashcard? = null
     val flashcard: Flashcard? get() = _flashcard

@@ -1,6 +1,5 @@
 package com.startingground.cognebus.sharedviewmodels
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
@@ -12,7 +11,6 @@ import com.startingground.cognebus.utilities.FileDBUtils
 import com.startingground.cognebus.utilities.FlashcardUtils
 import com.startingground.cognebus.utilities.FolderUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,13 +20,11 @@ enum class SelectedType{ DIRECTORIES, FLASHCARDS }
 @HiltViewModel
 class ClipboardViewModel @Inject constructor(
     private val dataUtils: DataUtils,
-    @ApplicationContext context: Context,
+    private val database: CognebusDatabase,
     private val folderUtils: FolderUtils,
     private val fileDBUtils: FileDBUtils,
     private val flashcardUtils: FlashcardUtils
     ) : ViewModel(){
-
-    private val database = CognebusDatabase.getInstance(context)
 
     //Files and folders part ----------------------------------------------------------------------------------------------------
 
@@ -168,7 +164,7 @@ class ClipboardViewModel @Inject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { file ->
-                    fileDBUtils.copyFilesTo(listOf(file), destinationFolder, database)
+                    fileDBUtils.copyFilesTo(listOf(file), destinationFolder)
 
                     numberOfPastedItems++
                     _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
@@ -183,7 +179,7 @@ class ClipboardViewModel @Inject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { folder ->
-                    folderUtils.copyFoldersTo(listOf(folder), destinationFolder, database)
+                    folderUtils.copyFoldersTo(listOf(folder), destinationFolder)
 
                     numberOfPastedItems++
                     _pasteProgressPercentage.value = numberOfPastedItems * 100 / totalNumberOfItems
@@ -212,14 +208,14 @@ class ClipboardViewModel @Inject constructor(
 
     private suspend fun foldersWillBeMergedAndFilesReplaced(destinationFolderId: Long?): Boolean{
         val foldersWillBeMerged: Boolean = selectedFoldersDatabase.value?.let{
-            folderUtils.isThereFolderWithSameName(it, destinationFolderId, database) } ?: false
+            folderUtils.isThereFolderWithSameName(it, destinationFolderId) } ?: false
 
         var filesWillBeReplaced: Boolean = selectedFilesDatabase.value?.let{
-            fileDBUtils.isThereFileWithSameName(it, destinationFolderId, database)} ?: false
+            fileDBUtils.isThereFileWithSameName(it, destinationFolderId)} ?: false
 
         if(!filesWillBeReplaced){
             filesWillBeReplaced = selectedFoldersDatabase.value?.let{
-                folderUtils.isThereSameFileWithinFolders(it, destinationFolderId, database) } ?: false
+                folderUtils.isThereSameFileWithinFolders(it, destinationFolderId) } ?: false
         }
 
         _foldersWillBeMergedAndFilesReplacedWarning.value = foldersWillBeMerged to filesWillBeReplaced
@@ -324,7 +320,7 @@ class ClipboardViewModel @Inject constructor(
                 if(it.isEmpty()) return@let
 
                 it.forEach { flashcard ->
-                    flashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId, database)
+                    flashcardUtils.copyFlashcardsTo(listOf(flashcard), destinationFileId)
 
                     numberOfPastedFlashcards++
                     _pasteProgressPercentage.value = numberOfPastedFlashcards * 100 / totalNumberOfFlashcards

@@ -1,7 +1,6 @@
 package com.startingground.cognebus.createorrenamefolderorfile
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import com.startingground.cognebus.utilities.DataUtils
@@ -13,7 +12,6 @@ import com.startingground.cognebus.directories.DirectoriesFragment
 import com.startingground.cognebus.settings.SettingsViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
 class CreateOrRenameViewModel @AssistedInject constructor(
@@ -21,11 +19,9 @@ class CreateOrRenameViewModel @AssistedInject constructor(
     @Assisted val inputType: Int,
     @Assisted("existingFolderOrFileId") val existingFolderOrFileId: Long?,
     private val dataUtils: DataUtils,
+    private val database: CognebusDatabase,
     application: Application,
-    @ApplicationContext context: Context
 ) : AndroidViewModel(application) {
-
-    private val database = CognebusDatabase.getInstance(context)
 
     private val _fileOrFolderText: MutableLiveData<String> = MutableLiveData("")
     val fileOrFolderText: LiveData<String> get() = _fileOrFolderText

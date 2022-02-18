@@ -5,7 +5,10 @@ import com.startingground.cognebus.database.entity.FlashcardDB
 import com.startingground.cognebus.database.entity.ImageDB
 import javax.inject.Inject
 
-class FlashcardUtils @Inject constructor( private val imageUtils: ImageUtils ){
+class FlashcardUtils @Inject constructor(
+    private val imageUtils: ImageUtils,
+    private val database: CognebusDatabase
+){
 
     fun prepareStringForPractice(inputText: String, enableHTML: Boolean, imageList: List<ImageDB>): String{
         val imageRegex = Regex("src=\"\\d+\"")
@@ -81,7 +84,7 @@ class FlashcardUtils @Inject constructor( private val imageUtils: ImageUtils ){
     }
 
 
-    suspend fun copyFlashcardsTo(flashcardList: List<FlashcardDB>, destinationFileId: Long, database: CognebusDatabase){
+    suspend fun copyFlashcardsTo(flashcardList: List<FlashcardDB>, destinationFileId: Long){
         flashcardList.forEach {
             val flashcardCopy = it.copy(flashcardId = 0L, fileId = destinationFileId)
             val flashcardCopyId = database.flashcardDatabaseDao.insert(flashcardCopy)
@@ -89,7 +92,7 @@ class FlashcardUtils @Inject constructor( private val imageUtils: ImageUtils ){
             val images = database.imageDatabaseDao.getImagesByFlashcardId(it.flashcardId)
             if(images.isEmpty()) return@forEach
 
-            imageUtils.copyImagesTo(images, flashcardCopyId, database)
+            imageUtils.copyImagesTo(images, flashcardCopyId)
         }
     }
 }

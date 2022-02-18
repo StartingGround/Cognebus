@@ -1,6 +1,5 @@
 package com.startingground.cognebus.directories
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -11,15 +10,12 @@ import com.startingground.cognebus.database.entity.FileDB
 import com.startingground.cognebus.database.entity.Folder
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 class DirectoriesViewModel @AssistedInject constructor(
     @Assisted val folderId: Long?,
     private val dataUtils: DataUtils,
-    @ApplicationContext context: Context
+    database: CognebusDatabase
     ) : ViewModel() {
-
-    private val database = CognebusDatabase.getInstance(context)
 
     val folders = database.folderDatabaseDao.getLiveDataFoldersByParentFolderId(folderId)
     val files = database.fileDatabaseDao.getLiveDataFilesByFolderId(folderId)

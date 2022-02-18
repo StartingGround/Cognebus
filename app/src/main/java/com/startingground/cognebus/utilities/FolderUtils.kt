@@ -5,10 +5,11 @@ import com.startingground.cognebus.database.entity.Folder
 import javax.inject.Inject
 
 class FolderUtils @Inject constructor(
-    private val fileDBUtils: FileDBUtils
+    private val fileDBUtils: FileDBUtils,
+    private val database: CognebusDatabase
 ){
 
-    suspend fun copyFoldersTo(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase){
+    suspend fun copyFoldersTo(folderList: List<Folder>, destinationFolderId: Long?){
         val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
         val folderNamesInDestination = foldersInDestination.map { it.name }
 
@@ -25,18 +26,18 @@ class FolderUtils @Inject constructor(
 
             val filesInFolder = database.fileDatabaseDao.getFilesByFolderId(folder.folderId)
             if(filesInFolder.isNotEmpty()){
-                fileDBUtils.copyFilesTo(filesInFolder, newSubDestinationFolderId, database)
+                fileDBUtils.copyFilesTo(filesInFolder, newSubDestinationFolderId)
             }
 
             val subFolderList = database.folderDatabaseDao.getFoldersByParentFolderId(folder.folderId)
             if(subFolderList.isEmpty()) continue
 
-            copyFoldersTo(subFolderList, newSubDestinationFolderId, database)
+            copyFoldersTo(subFolderList, newSubDestinationFolderId)
         }
     }
 
 
-    suspend fun isThereFolderWithSameName(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase): Boolean{
+    suspend fun isThereFolderWithSameName(folderList: List<Folder>, destinationFolderId: Long?): Boolean{
         val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
 
         val folderListNames = folderList.map { it.name }
@@ -46,7 +47,7 @@ class FolderUtils @Inject constructor(
     }
 
 
-    suspend fun isThereSameFileWithinFolders(folderList: List<Folder>, destinationFolderId: Long?, database: CognebusDatabase): Boolean{
+    suspend fun isThereSameFileWithinFolders(folderList: List<Folder>, destinationFolderId: Long?): Boolean{
         val foldersInDestination = database.folderDatabaseDao.getFoldersByParentFolderId(destinationFolderId)
 
         val folderListNames = folderList.map { it.name }
@@ -56,11 +57,11 @@ class FolderUtils @Inject constructor(
             val originFolder = folderList.find { it.name == folder.name } ?: return@forEach
             val filesInsideOriginFolder = database.fileDatabaseDao.getFilesByFolderId(originFolder.folderId)
 
-            var thereIsFileWithSameName = fileDBUtils.isThereFileWithSameName(filesInsideOriginFolder, folder.folderId, database)
+            var thereIsFileWithSameName = fileDBUtils.isThereFileWithSameName(filesInsideOriginFolder, folder.folderId)
             if(thereIsFileWithSameName) return true
 
             val foldersInsideOriginFolder = database.folderDatabaseDao.getFoldersByParentFolderId(originFolder.folderId)
-            thereIsFileWithSameName = isThereSameFileWithinFolders(foldersInsideOriginFolder, folder.folderId, database)
+            thereIsFileWithSameName = isThereSameFileWithinFolders(foldersInsideOriginFolder, folder.folderId)
             if(thereIsFileWithSameName) return true
         }
 
