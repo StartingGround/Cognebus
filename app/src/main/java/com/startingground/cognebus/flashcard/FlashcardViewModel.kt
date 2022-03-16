@@ -17,11 +17,11 @@ import kotlinx.coroutines.launch
 class FlashcardViewModel @AssistedInject constructor(
     @Assisted val fileId: Long,
     private val dataUtils: DataUtils?,
-    @Assisted app: Application,
     private val database: CognebusDatabase,
     private val flashcardUtils: FlashcardUtils,
-    private val fileCognebusUtils: FileCognebusUtils
-    ): AndroidViewModel(app){
+    private val fileCognebusUtils: FileCognebusUtils,
+    private val applicationContext: Application
+    ): ViewModel(){
 
     private var _flashcard: Flashcard? = null
     val flashcard: Flashcard? get() = _flashcard
@@ -87,13 +87,11 @@ class FlashcardViewModel @AssistedInject constructor(
 
 
     fun getImageFromCamera(caller: IntentCaller){
-        val context = getApplication<Application>().applicationContext
-
         viewModelScope.launch {
             _flashcard?.createImageInDatabase("jpg")
             val image = getAddedImage()
             val imageFile = fileCognebusUtils.createFileOrGetExisting("images", "${image.imageId}.${image.fileExtension}") ?: return@launch
-            val imageUri = FileProvider.getUriForFile(context, "com.startingground.cognebus", imageFile)
+            val imageUri = FileProvider.getUriForFile(applicationContext, "com.startingground.cognebus", imageFile)
 
             _getImageFromCameraTrigger.value = caller to imageUri
         }

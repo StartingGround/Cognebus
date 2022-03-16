@@ -43,9 +43,7 @@ class AnswerFragment : Fragment(), InputToolbarInterface {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_flashcard_answer, container, false)
 
-        val application = requireNotNull(this.activity).application
-
-        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L, application)
+        val flashcardViewModelFactory = FlashcardViewModelFactory(sharedFlashcardViewModelAssistedFactory, 0L)
         val temporarySharedFlashcardViewModel: FlashcardViewModel by navGraphViewModels(R.id.nav_file){flashcardViewModelFactory}
         sharedFlashcardViewModel = temporarySharedFlashcardViewModel
 
