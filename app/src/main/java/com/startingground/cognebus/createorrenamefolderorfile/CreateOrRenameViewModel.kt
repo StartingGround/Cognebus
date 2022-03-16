@@ -20,8 +20,8 @@ class CreateOrRenameViewModel @AssistedInject constructor(
     @Assisted("existingFolderOrFileId") val existingFolderOrFileId: Long?,
     private val dataUtils: DataUtils,
     private val database: CognebusDatabase,
-    application: Application,
-) : AndroidViewModel(application) {
+    private val applicationContext: Application,
+) : ViewModel() {
 
     private val _fileOrFolderText: MutableLiveData<String> = MutableLiveData("")
     val fileOrFolderText: LiveData<String> get() = _fileOrFolderText
@@ -72,18 +72,16 @@ class CreateOrRenameViewModel @AssistedInject constructor(
     val goBackToDirectoriesTrigger: LiveData<Boolean> get() = _goBackToDirectoriesTrigger
 
     private fun createOrRenameFolder(){
-        val context = getApplication<Application>().applicationContext
-
         viewModelScope.launch {
             val text = _fileOrFolderText.value?.trim()
             if (text.isNullOrEmpty()) {
-                _fileOrFolderErrorText.value = context.getString(R.string.create_or_rename_folder_or_file_fragment_invalid_input_error)
+                _fileOrFolderErrorText.value = applicationContext.getString(R.string.create_or_rename_folder_or_file_fragment_invalid_input_error)
                 return@launch
             }
 
             val existingFolder = database.folderDatabaseDao.getFolderByParentFolderIdAndName(folderId, text)
             if (existingFolder != null && existingFolder.folderId != existingFolderOrFileId) {
-                _fileOrFolderErrorText.value = context.getString(R.string.create_or_rename_folder_or_file_fragment_already_exists_error)
+                _fileOrFolderErrorText.value = applicationContext.getString(R.string.create_or_rename_folder_or_file_fragment_already_exists_error)
                 return@launch
             }
 
@@ -100,23 +98,21 @@ class CreateOrRenameViewModel @AssistedInject constructor(
 
 
     private fun createOrRenameFile(){
-        val context = getApplication<Application>().applicationContext
-
         viewModelScope.launch {
             val text = _fileOrFolderText.value?.trim()
             if (text.isNullOrEmpty()) {
-                _fileOrFolderErrorText.value = context.getString(R.string.create_or_rename_folder_or_file_fragment_invalid_input_error)
+                _fileOrFolderErrorText.value = applicationContext.getString(R.string.create_or_rename_folder_or_file_fragment_invalid_input_error)
                 return@launch
             }
 
             val existingFile = database.fileDatabaseDao.getFileByFolderIdAndName(folderId, text)
             if (existingFile != null && existingFile.fileId != existingFolderOrFileId) {
-                _fileOrFolderErrorText.value = context.getString(R.string.create_or_rename_folder_or_file_fragment_already_exists_error)
+                _fileOrFolderErrorText.value = applicationContext.getString(R.string.create_or_rename_folder_or_file_fragment_already_exists_error)
                 return@launch
             }
 
             if(existingFolderOrFileId == null) {
-                val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+                val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val file = FileDB(
                     0L,
                     text,
