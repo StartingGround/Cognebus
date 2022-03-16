@@ -2,9 +2,9 @@ package com.startingground.cognebus.settings
 
 import android.app.Application
 import android.view.View
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceManager
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.startingground.cognebus.R
@@ -15,7 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
+class SettingsViewModel @Inject constructor(private val applicationContext: Application) : ViewModel() {
 
     companion object{
         //File Default Options
@@ -52,7 +52,7 @@ class SettingsViewModel @Inject constructor(application: Application) : AndroidV
     }
 
 
-    private val preferences = PreferenceManager.getDefaultSharedPreferences(application.applicationContext)
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
 
     //File Default Options
@@ -105,12 +105,11 @@ class SettingsViewModel @Inject constructor(application: Application) : AndroidV
     val cycleIncrementError: LiveData<String?> get() = _cycleIncrementError
 
     fun onCycleIncrementChanged(text: String){
-        val context = getApplication<Application>().applicationContext
         val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
-            context.getString(R.string.file_fragment_cycle_increment_edit_text_invalid_input_error),
+            applicationContext.getString(R.string.file_fragment_cycle_increment_edit_text_invalid_input_error),
             MINIMAL_CYCLE_INCREMENT,
-            context.getString(R.string.file_fragment_cycle_increment_edit_text_value_under_error, MINIMAL_CYCLE_INCREMENT)
+            applicationContext.getString(R.string.file_fragment_cycle_increment_edit_text_value_under_error, MINIMAL_CYCLE_INCREMENT)
         )
         _cycleIncrementError.value = errorText
 
@@ -134,12 +133,11 @@ class SettingsViewModel @Inject constructor(application: Application) : AndroidV
     val maxDaysPerCycleError: LiveData<String?> get() = _maxDaysPerCycleError
 
     fun onMaxDaysPerCycleChanged(text: String){
-        val context = getApplication<Application>().applicationContext
         val errorText = StringUtils.getErrorForInvalidIntegerValueInString(
             text,
-            context.getString(R.string.file_fragment_max_days_per_cycle_edit_text_invalid_input_error),
+            applicationContext.getString(R.string.file_fragment_max_days_per_cycle_edit_text_invalid_input_error),
             MINIMAL_MAX_DAYS_PER_CYCLE,
-            context.getString(R.string.file_fragment_max_days_per_cycle_edit_text_value_under_error, MINIMAL_MAX_DAYS_PER_CYCLE)
+            applicationContext.getString(R.string.file_fragment_max_days_per_cycle_edit_text_value_under_error, MINIMAL_MAX_DAYS_PER_CYCLE)
         )
         _maxDaysPerCycleError.value = errorText
 
