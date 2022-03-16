@@ -1,6 +1,5 @@
 package com.startingground.cognebus.practice
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.startingground.cognebus.database.CognebusDatabase
 import com.startingground.cognebus.database.entity.FileDB
@@ -16,11 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PracticeViewModel @Inject constructor(
-    application: Application,
     private val dataUtils: DataUtils,
     private val flashcardUtils: FlashcardUtils,
     private val database: CognebusDatabase
-    ) : AndroidViewModel(application){
+    ) : ViewModel(){
 
     private var flashcardsForPractice: MutableList<FlashcardDB> = mutableListOf()
     private var incorrectlyAnsweredFlashcards: MutableList<FlashcardDB> = mutableListOf()
